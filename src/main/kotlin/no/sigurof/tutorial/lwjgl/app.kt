@@ -54,7 +54,7 @@ fun billboard() {
 fun thinmatrix() {
     val scale = Vector3f(1f, 1f, 1f)
     val eulerAngles = Vector3f(0f, 0f, 0f)
-    val position = Vector3f(0f, 0f, -25f)
+    val position = Vector3f(0f, -7f, -20f)
 
 
     // Open the window
@@ -65,10 +65,13 @@ fun thinmatrix() {
     val loader = Loader()
     val objLoader = ObjLoader()
     val model = objLoader.loadObjModel("src/main/resources/model/stamford-dragon/dragon.obj", loader)
-    val texture = Texture(loader.loadTexture("src/main/resources/model/stamford-dragon/white.png"))
+    val texture = Texture(
+        loader.loadTexture("src/main/resources/model/stamford-dragon/white.png"),
+        10f, 5f
+    )
     val texturedModel = TexturedModel(model, texture)
     val entity = Entity(texturedModel, position, eulerAngles, scale)
-    val light = Light(Vector3f(0f, 0f, -20f), Vector3f(1f, 1f, 1f))
+    val light = Light(Vector3f(0f, 0f, -15f), Vector3f(0.8f, 0.8f, 0.9f))
 
     val camera = Camera(window = DisplayManager.window ?: error("Need to have a window!"))
     val shader = TextureShader()

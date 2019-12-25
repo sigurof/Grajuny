@@ -53,6 +53,7 @@ class Renderer(
     fun render(entity: Entity) {
         val texturedModel = entity.texturedModel
         val model = texturedModel.rawModel
+        val texture = texturedModel.texture
         shader.start()
         glBindVertexArray(model.vao)
         for (attr in shader.boundAttribs) {
@@ -62,8 +63,9 @@ class Renderer(
         shader.loadTransformationMatrix(transformationMatrix)
         shader.loadViewMatrix(camera)
         shader.loadLight(light)
+        shader.loadSpecularValues(texture.shineDamper, texture.reflectivity)
         glActiveTexture(GL_TEXTURE0)
-        glBindTexture(GL_TEXTURE_2D, texturedModel.texture.tex)
+        glBindTexture(GL_TEXTURE_2D, texture.tex)
         glDrawElements(GL_TRIANGLES, model.vertexCount, GL_UNSIGNED_INT, 0)
         for (attr in shader.boundAttribs) {
             glDisableVertexAttribArray(attr)

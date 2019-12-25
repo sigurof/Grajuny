@@ -1,6 +1,8 @@
 package no.sigurof.tutorial.lwjgl.textures
 
-class Texture constructor(id: Int) {
-    val tex: Int = id
+class Texture constructor(
+    val tex: Int,
+    val shineDamper: Float,
+    val reflectivity: Float
+)
 
-}
