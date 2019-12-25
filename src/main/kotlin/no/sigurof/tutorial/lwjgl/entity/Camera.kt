@@ -8,21 +8,22 @@ class Camera(
     internal val pitch: Float = 0f,
     internal val yaw: Float = 0f,
     internal val roll: Float = 0f,
-    private val window: Long
+    private val window: Long,
+    private val speed: Float = 10f
 ) {
 
     fun move() {
         if (glfwGetKey(window, GLFW_KEY_W) == 1) {
-            position.z -= 0.02f
+            position.z -= speed * 0.02f
         }
         if (glfwGetKey(window, GLFW_KEY_S) == 1) {
-            position.z += 0.02f
+            position.z += speed * 0.02f
         }
         if (glfwGetKey(window, GLFW_KEY_D) == 1) {
-            position.x += 0.02f
+            position.x += speed * 0.02f
         }
         if (glfwGetKey(window, GLFW_KEY_A) == 1) {
-            position.x -= 0.02f
+            position.x -= speed * 0.02f
         }
     }
 }

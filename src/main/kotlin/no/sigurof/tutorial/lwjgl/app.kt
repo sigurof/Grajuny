@@ -5,6 +5,7 @@ import no.sigurof.tutorial.lwjgl.engine.Loader
 import no.sigurof.tutorial.lwjgl.engine.Renderer
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Entity
+import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.entity.SphereBillboard
 import no.sigurof.tutorial.lwjgl.model.TexturedModel
 import no.sigurof.tutorial.lwjgl.shaders.BillboardShader
@@ -53,7 +54,7 @@ fun billboard() {
 fun thinmatrix() {
     val scale = Vector3f(1f, 1f, 1f)
     val eulerAngles = Vector3f(0f, 0f, 0f)
-    val position = Vector3f(0f, 0f, -1f)
+    val position = Vector3f(0f, 0f, -25f)
 
 
     // Open the window
@@ -63,10 +64,11 @@ fun thinmatrix() {
     // Make an object
     val loader = Loader()
     val objLoader = ObjLoader()
-    val model = objLoader.loadObjModel("src/main/resources/model/stall/stall.obj", loader)
-    val texture = Texture(loader.loadTexture("src/main/resources/model/stall/stall-texture.png"))
+    val model = objLoader.loadObjModel("src/main/resources/model/stamford-dragon/dragon.obj", loader)
+    val texture = Texture(loader.loadTexture("src/main/resources/model/stamford-dragon/white.png"))
     val texturedModel = TexturedModel(model, texture)
     val entity = Entity(texturedModel, position, eulerAngles, scale)
+    val light = Light(Vector3f(0f, 0f, -20f), Vector3f(1f, 1f, 1f))
 
     val camera = Camera(window = DisplayManager.window ?: error("Need to have a window!"))
     val shader = TextureShader()
@@ -76,12 +78,12 @@ fun thinmatrix() {
     //  renderer.uploadProjectionMatrix(shader)
     //  entity.uploadTransformationMatrix(shader)
     //  Shader vil ikke kunne endres fra disse funksjonene, da alle shaders felter er val
-    val renderer = Renderer(shader, camera)
+    val renderer = Renderer(shader, camera, light)
 
     DisplayManager.FPS = 60
     while (DisplayManager.isOpen()) {
         DisplayManager.eachFrameDo {
-            entity.increaseRotation(Vector3f(-0.01f, -0.02f, -0.021f))
+            entity.increaseRotation(Vector3f(-0.00f, -0.01f, -0.0f))
             camera.move()
             renderer.prepare()
             renderer.render(entity)
@@ -91,96 +93,3 @@ fun thinmatrix() {
     loader.cleanUp()
     DisplayManager.closeDisplay()
 }
-
-var vertices = floatArrayOf(
-    -0.5f, 0.5f, -0.5f,
-    -0.5f, -0.5f, -0.5f,
-    0.5f, -0.5f, -0.5f,
-    0.5f, 0.5f, -0.5f,
-    -0.5f, 0.5f, 0.5f,
-    -0.5f, -0.5f, 0.5f,
-    0.5f, -0.5f, 0.5f,
-    0.5f, 0.5f, 0.5f,
-    0.5f, 0.5f, -0.5f,
-    0.5f, -0.5f, -0.5f,
-    0.5f, -0.5f, 0.5f,
-    0.5f, 0.5f, 0.5f,
-    -0.5f, 0.5f, -0.5f,
-    -0.5f, -0.5f, -0.5f,
-    -0.5f, -0.5f, 0.5f,
-    -0.5f, 0.5f, 0.5f,
-    -0.5f, 0.5f, 0.5f,
-    -0.5f, 0.5f, -0.5f,
-    0.5f, 0.5f, -0.5f,
-    0.5f, 0.5f, 0.5f,
-    -0.5f, -0.5f, 0.5f,
-    -0.5f, -0.5f, -0.5f,
-    0.5f, -0.5f, -0.5f,
-    0.5f, -0.5f, 0.5f
-)
-
-var uvs = floatArrayOf(
-    0f,
-    0f,
-    0f,
-    1f,
-    1f,
-    1f,
-    1f,
-    0f,
-    0f,
-    0f,
-    0f,
-    1f,
-    1f,
-    1f,
-    1f,
-    0f,
-    0f,
-    0f,
-    0f,
-    1f,
-    1f,
-    1f,
-    1f,
-    0f,
-    0f,
-    0f,
-    0f,
-    1f,
-    1f,
-    1f,
-    1f,
-    0f,
-    0f,
-    0f,
-    0f,
-    1f,
-    1f,
-    1f,
-    1f,
-    0f,
-    0f,
-    0f,
-    0f,
-    1f,
-    1f,
-    1f,
-    1f,
-    0f
-)
-
-var indices = intArrayOf(
-    0, 1, 3,
-    3, 1, 2,
-    4, 5, 7,
-    7, 5, 6,
-    8, 9, 11,
-    11, 9, 10,
-    12, 13, 15,
-    15, 13, 14,
-    16, 17, 19,
-    19, 17, 18,
-    20, 21, 23,
-    23, 21, 22
-)

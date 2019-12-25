@@ -27,6 +27,8 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
         glAttachShader(this, vtxShader)
         glAttachShader(this, frgShader)
         bindAttributes()
+        // Trenger ikke følgende kall, da det uansett gjøres i den spesifikke implementasjons initialisering
+        // getAllUniformLocations()
         glLinkProgram(this)
         if (glGetProgrami(this, GL_LINK_STATUS) == GL_FALSE) {
             val info = glGetProgramInfoLog(this, 512)
@@ -35,6 +37,7 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
         return@run this
     }
 
+    // Trenger ikke denne, da jeg holder en oversikt over alle
 //    protected abstract fun getAllUniformLocations()
 
     protected fun getUniformLocation(uniformName: String): Int {

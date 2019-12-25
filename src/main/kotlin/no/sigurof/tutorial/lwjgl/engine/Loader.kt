@@ -19,16 +19,18 @@ class Loader {
     private val vbos = ArrayList<Int>()
     private val textures = ArrayList<Int>()
 
-    fun loadToVao(positions: FloatArray, uvs: FloatArray, indices: IntArray): RawModel {
+    fun loadToVao(positions: FloatArray, uvs: FloatArray, indices: IntArray, normals: FloatArray): RawModel {
         val vao = createVao()
         bindIndicesBuffer(indices)
         storeDataInAttributeList(0, 3, positions)
         storeDataInAttributeList(1, 2, uvs)
+        storeDataInAttributeList(2, 3, normals)
         unbindVao()
         return RawModel(vao, indices.size)
     }
 
 
+    // Kan brukes for å fjerne det ekstra oversettelsessteget for å oversette fra array til buffer
     fun loadBuffersToVao(positions: FloatBuffer, uvs: FloatBuffer, indices: IntBuffer): RawModel {
         val vao = createVao()
         // Indices

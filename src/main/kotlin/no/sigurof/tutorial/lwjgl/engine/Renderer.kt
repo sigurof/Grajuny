@@ -2,6 +2,7 @@ package no.sigurof.tutorial.lwjgl.engine
 
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Entity
+import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.model.RawModel
 import no.sigurof.tutorial.lwjgl.shaders.TextureShader
 import no.sigurof.tutorial.lwjgl.utils.Maths
@@ -11,7 +12,8 @@ import org.lwjgl.opengl.GL30.*
 // TODO Dette lager avhengighet til hvilken shader man bruker...
 class Renderer(
     private var shader: TextureShader,
-    private var camera: Camera
+    private var camera: Camera,
+    private var light: Light
 ) {
 
     companion object {
@@ -59,6 +61,7 @@ class Renderer(
         val transformationMatrix = Maths.createTransformationMatrix(entity)
         shader.loadTransformationMatrix(transformationMatrix)
         shader.loadViewMatrix(camera)
+        shader.loadLight(light)
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, texturedModel.texture.tex)
         glDrawElements(GL_TRIANGLES, model.vertexCount, GL_UNSIGNED_INT, 0)

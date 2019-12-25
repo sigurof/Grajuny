@@ -79,7 +79,7 @@ class ObjLoader {
         // corresponds to the element at the same index in the other two arrays,
         val newIndices = indices.toIntArray()
         val newUvCoords = FloatArray(2 * numVtxCoords) { 0f }
-        val newNormCoords = Array(3 * numVtxCoords) { 0f }
+        val newNormCoords = FloatArray(3 * numVtxCoords) { 0f }
         for (entry in uvAndNormIndsByVtxInds) {
             newUvCoords[2 * entry.key + 0] = uvCoords[2 * entry.value.uvIndex + 0]
             newUvCoords[2 * entry.key + 1] = uvCoords[2 * entry.value.uvIndex + 1] * (-1f) + 1f // invert y
@@ -87,7 +87,7 @@ class ObjLoader {
             newNormCoords[3 * entry.key + 1] = normCoords[3 * entry.value.normalIndex + 1]
             newNormCoords[3 * entry.key + 2] = normCoords[3 * entry.value.normalIndex + 2]
         }
-        return loader.loadToVao(vtxCoords, newUvCoords, newIndices);
+        return loader.loadToVao(vtxCoords, newUvCoords, newIndices, newNormCoords)
 
     }
 
