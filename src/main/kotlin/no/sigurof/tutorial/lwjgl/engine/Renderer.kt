@@ -4,6 +4,7 @@ import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Entity
 import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.model.RawModel
+import no.sigurof.tutorial.lwjgl.model.TexturedModel
 import no.sigurof.tutorial.lwjgl.shaders.TextureShader
 import no.sigurof.tutorial.lwjgl.utils.Maths
 import org.joml.Matrix4f
@@ -15,6 +16,8 @@ class Renderer(
     private var camera: Camera,
     private var light: Light
 ) {
+
+    private var textureShader: TextureShader = TextureShader() // TODO kan ikke låse meg til én shader...
 
     companion object {
         private val FOV = 70f
@@ -38,6 +41,8 @@ class Renderer(
 
     fun prepare() {
         glEnable(GL_DEPTH_TEST)
+        glEnable(GL_CULL_FACE)
+        glCullFace(GL_BACK)
         glClearColor(0.2f, 0.3f, 0.1f, 1.0f)
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
@@ -50,6 +55,44 @@ class Renderer(
         glBindVertexArray(0)
     }
 
+    fun render(entitiesByModel: Map<TexturedModel, List<Entity>>) {
+        for (model in entitiesByModel.keys) {
+            prepareTexturedModel(model)
+            val entities = entitiesByModel.get(model)!!
+            for (entity in entities) {
+                prepareInstance(entity)
+                glDrawElements(GL_TRIANGLES, model.rawModel.vertexCount, GL_UNSIGNED_INT, 0)
+            }
+            unbindTexturedModel()
+        }
+    }
+
+    fun prepareTexturedModel(texturedModel: TexturedModel) {
+        val rawModel = texturedModel.rawModel
+        glBindVertexArray(rawModel.vao)
+        for (attr in shader.boundAttribs) {
+            glEnableVertexAttribArray(attr)
+        }
+        val texture = texturedModel.texture
+        shader.loadSpecularValues(texture.shineDamper, texture.reflectivity)
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, texture.tex)
+    }
+
+    fun unbindTexturedModel() {
+        for (attr in shader.boundAttribs) {
+            glDisableVertexAttribArray(attr)
+        }
+        glBindVertexArray(0)
+    }
+
+    fun prepareInstance(entity: Entity) {
+
+        val transformationMatrix = Maths.createTransformationMatrix(entity)
+        shader.loadTransformationMatrix(transformationMatrix)
+    }
+
+/*
     fun render(entity: Entity) {
         val texturedModel = entity.texturedModel
         val model = texturedModel.rawModel
@@ -73,6 +116,7 @@ class Renderer(
         glBindVertexArray(0)
         shader.stop()
     }
+*/
 
     fun stop() {
         shader.cleanUp()

@@ -11,12 +11,13 @@ uniform sampler2D textureSampler;
 uniform vec3 lightCol;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform float ambient;
 
 void main(void){
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitToLight = normalize(toLightVec);
     float nDotL = dot(unitNormal, unitToLight);
-    float brightness = max(nDotL, 0.0);
+    float brightness = max(nDotL, ambient);
     vec3 diffuse = brightness * lightCol;
 
     // Specular

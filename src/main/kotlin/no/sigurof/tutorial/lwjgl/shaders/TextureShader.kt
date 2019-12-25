@@ -14,6 +14,7 @@ class TextureShader : ShaderProgram(vtxSource, frgSource) {
     private val locationLightCol: Int = getUniformLocation("lightCol")
     private val locationShineDamper: Int = getUniformLocation("shineDamper")
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
+    private val locationAmbient: Int = getUniformLocation("ambient")
 
 
     companion object {
@@ -43,6 +44,7 @@ class TextureShader : ShaderProgram(vtxSource, frgSource) {
     fun loadLight(light: Light) {
         loadVector3(locationLightPos, light.position)
         loadVector3(locationLightCol, light.color)
+        loadFloat(locationAmbient, light.ambient)
     }
 
     fun loadSpecularValues(damper: Float, reflectivity: Float) {
