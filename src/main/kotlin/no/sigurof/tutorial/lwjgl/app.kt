@@ -3,23 +3,16 @@ package no.sigurof.tutorial.lwjgl
 import no.sigurof.tutorial.lwjgl.engine.DisplayManager
 import no.sigurof.tutorial.lwjgl.engine.Loader
 import no.sigurof.tutorial.lwjgl.engine.MasterRenderer
-import no.sigurof.tutorial.lwjgl.engine.Renderer
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Entity
 import no.sigurof.tutorial.lwjgl.entity.Light
-import no.sigurof.tutorial.lwjgl.entity.SphereBillboard
+import no.sigurof.tutorial.lwjgl.mesh.MeshManager
 import no.sigurof.tutorial.lwjgl.model.TexturedModel
-import no.sigurof.tutorial.lwjgl.shaders.BillboardShader
 import no.sigurof.tutorial.lwjgl.shaders.TextureShader
 import no.sigurof.tutorial.lwjgl.textures.Texture
-import no.sigurof.tutorial.lwjgl.utils.ObjLoader
+import no.sigurof.tutorial.lwjgl.mesh.ObjLoader
 import no.sigurof.tutorial.lwjgl.utils.randomVector3f
 import org.joml.Vector3f
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL30.glBindVertexArray
-import org.lwjgl.opengl.GL30.glGenVertexArrays
-import java.lang.System.currentTimeMillis
-import java.lang.System.load
 import kotlin.random.Random
 
 
@@ -57,36 +50,23 @@ fun billboard() {
 fun thinmatrix() {
     val scale = Vector3f(1f, 1f, 1f)
     val eulerAngles = Vector3f(0f, 0f, 0f)
-    val position = Vector3f(0f, -7f, -20f)
-
-
-    // Open the window
+    val position = Vector3f(0f, 0f, 0f)
     DisplayManager.createDisplay()
 
+//    val model = MeshManager.get("stamford-dragon")
+    val model = MeshManager.get("cube")
 
-    // Make an object
-    val loader = Loader()
-    val objLoader = ObjLoader()
-    val model = objLoader.loadObjModel("src/main/resources/model/stamford-dragon/dragon.obj", loader)
     val texture = Texture(
-        loader.loadTexture("src/main/resources/model/stamford-dragon/white.png"),
-        10f, 5f
+        Loader.loadTexture("src/main/resources/model/default-texture.png"),
+        1.0f, 1.0f
     )
+
     val texturedModel = TexturedModel(model, texture)
-    val entity = Entity(texturedModel, position, eulerAngles, scale)
     val entities = mutableListOf<Entity>()
-    for (i in 0..60) {
-        val scale = Random.nextFloat()
-        entities.add(
-            Entity(
-                texturedModel,
-                randomVector3f(),
-                randomVector3f(),
-                Vector3f(scale, scale, scale)
-            )
-        )
-    }
-    val light = Light(Vector3f(0f, 0f, -15f), Vector3f(0.8f, 0.8f, 0.9f), 0.2f)
+    val light = Light(Vector3f(0f, 10f, 0f), Vector3f(0.8f, 0.8f, 0.9f), 0.0f)
+    entities.add(Entity(texturedModel, position, eulerAngles, scale))
+    entities.add(Entity(texturedModel, light.position, eulerAngles, scale))
+
 
     val camera = Camera(window = DisplayManager.window ?: error("Need to have a window!"))
     val shader = TextureShader()
@@ -108,6 +88,6 @@ fun thinmatrix() {
             masterRenderer.render()
         }
     }
-    loader.cleanUp()
+    Loader.cleanUp()
     DisplayManager.closeDisplay()
 }

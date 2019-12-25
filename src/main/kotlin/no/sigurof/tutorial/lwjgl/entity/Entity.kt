@@ -4,7 +4,7 @@ import no.sigurof.tutorial.lwjgl.model.TexturedModel
 import org.joml.Vector3f
 
 class Entity constructor(
-    public val texturedModel: TexturedModel,
+    val texturedModel: TexturedModel,
     var position: Vector3f,
     val eulerAngles: Vector3f,
     val scale: Vector3f

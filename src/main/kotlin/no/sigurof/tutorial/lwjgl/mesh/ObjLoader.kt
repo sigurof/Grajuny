@@ -1,4 +1,4 @@
-package no.sigurof.tutorial.lwjgl.utils
+package no.sigurof.tutorial.lwjgl.mesh
 
 import no.sigurof.tutorial.lwjgl.engine.Loader
 import no.sigurof.tutorial.lwjgl.model.RawModel
@@ -17,7 +17,7 @@ class ObjLoader {
         val normalIndex: Int
     )
 
-    fun loadObjModel(source: String, loader: Loader): RawModel {
+    fun loadObjModel(source: String): RawModel {
         // Map containing number of lines which start with each keyword
         val lineIndsByKeyword: Map<String, MutableList<Int>> = keywords
             .map { it to mutableListOf<Int>() }
@@ -69,7 +69,10 @@ class ObjLoader {
                 if (uvAndNormIndsByVtxInds.size != numVtxCoords) {
                     uvAndNormIndsByVtxInds.put(
                         vtsUvsNormsForFace[3 * j],
-                        UvAndNormalIndices(vtsUvsNormsForFace[3 * j + 1], vtsUvsNormsForFace[3 * j + 2])
+                        UvAndNormalIndices(
+                            vtsUvsNormsForFace[3 * j + 1],
+                            vtsUvsNormsForFace[3 * j + 2]
+                        )
                     )
                 }
                 indices.add(vtsUvsNormsForFace[3 * j])
@@ -87,7 +90,7 @@ class ObjLoader {
             newNormCoords[3 * entry.key + 1] = normCoords[3 * entry.value.normalIndex + 1]
             newNormCoords[3 * entry.key + 2] = normCoords[3 * entry.value.normalIndex + 2]
         }
-        return loader.loadToVao(vtxCoords, newUvCoords, newIndices, newNormCoords)
+        return Loader.loadToVao(vtxCoords, newUvCoords, newIndices, newNormCoords)
 
     }
 
