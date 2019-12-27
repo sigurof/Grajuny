@@ -6,7 +6,8 @@ class MeshManager {
     companion object {
         private val loader: ObjLoader = ObjLoader()
         private val meshes = mutableMapOf(
-            "cube" to "src/main/resources/model/primitives/cube2.obj",
+            "cube" to "src/main/resources/model/primitives/cube.obj",
+            "sphere" to "src/main/resources/model/primitives/sphere.obj",
             "stamford-dragon" to "src/main/resources/model/stamford-dragon/dragon.obj",
             "stall" to "src/main/resources/model/stall/stall.obj"
         )

@@ -4,6 +4,8 @@ import no.sigurof.tutorial.lwjgl.engine.Loader
 import no.sigurof.tutorial.lwjgl.model.RawModel
 import org.joml.Vector2f
 import org.joml.Vector3f
+import org.joml.Vector3i
+import org.joml.Vector4i
 import java.io.File
 
 class ObjLoader {
@@ -58,40 +60,41 @@ class ObjLoader {
             }
         }
 
-
         // Constructing the ebo list over indices and
         // constructing a map of each vertex to the corresponding uv-index and normal-index
-        val indices = mutableListOf<Int>()
-        val uvAndNormIndsByVtxInds = HashMap<Int, UvAndNormalIndices>()
-        vtxUvNorm@ for (index in lineIndsByKeyword["f"]!!) {
-            val vtsUvsNormsForFace = parseFace(lines[index])
-            for (j in 0..2) {
-                if (uvAndNormIndsByVtxInds.size != numVtxCoords) {
-                    uvAndNormIndsByVtxInds.put(
-                        vtsUvsNormsForFace[3 * j],
-                        UvAndNormalIndices(
-                            vtsUvsNormsForFace[3 * j + 1],
-                            vtsUvsNormsForFace[3 * j + 2]
-                        )
-                    )
-                }
-                indices.add(vtsUvsNormsForFace[3 * j])
-            }
-        }
-        // Populating the new arrays of normals and uvs, where each element
-        // corresponds to the element at the same index in the other two arrays,
-        val newIndices = indices.toIntArray()
-        val newUvCoords = FloatArray(2 * numVtxCoords) { 0f }
-        val newNormCoords = FloatArray(3 * numVtxCoords) { 0f }
-        for (entry in uvAndNormIndsByVtxInds) {
-            newUvCoords[2 * entry.key + 0] = uvCoords[2 * entry.value.uvIndex + 0]
-            newUvCoords[2 * entry.key + 1] = uvCoords[2 * entry.value.uvIndex + 1] * (-1f) + 1f // invert y
-            newNormCoords[3 * entry.key + 0] = normCoords[3 * entry.value.normalIndex + 0]
-            newNormCoords[3 * entry.key + 1] = normCoords[3 * entry.value.normalIndex + 1]
-            newNormCoords[3 * entry.key + 2] = normCoords[3 * entry.value.normalIndex + 2]
-        }
-        return Loader.loadToVao(vtxCoords, newUvCoords, newIndices, newNormCoords)
+        val vertices: List<Vector3i> = lineIndsByKeyword["f"]!!
+            .map { lines[it] }
+            .flatMap { parseFaceVertices(it) }
 
+        val indices = vertices.indices.toList().toIntArray();
+        val newVtxCoords = vertices
+            .flatMap {
+                listOf(
+                    vtxCoords[3 * it.x + 0],
+                    vtxCoords[3 * it.x + 1],
+                    vtxCoords[3 * it.x + 2]
+                )
+            }
+            .toFloatArray()
+        val newUvCoords = vertices
+            .flatMap {
+                listOf(
+                    uvCoords[2 * it.y + 0],
+                    uvCoords[2 * it.y + 1]
+                    )
+            }
+            .toFloatArray()
+        val newNormCoords = vertices
+            .flatMap {
+                listOf(
+                    normCoords[3 * it.z + 0],
+                    normCoords[3 * it.z + 1],
+                    normCoords[3 * it.z + 2]
+                )
+            }
+            .toFloatArray()
+
+        return Loader.loadToVao(newVtxCoords, newUvCoords, indices, newNormCoords)
     }
 
 
@@ -118,6 +121,23 @@ class ObjLoader {
         return Vector2f(parts[0], parts[1])
     }
 
+
+    private fun parseFaceVertices(line: String): List<Vector3i> {
+        return line.split(' ')
+            .map { parseVertexOrNull(it) }
+            .filterNotNull()
+    }
+
+    private fun parseVertexOrNull(line: String): Vector3i? {
+        val ints = line
+            .split("/")
+            .map { it.toIntOrNull() }
+            .filterNotNull()
+        if (ints.size == 3) {
+            return Vector3i(ints[0]-1, ints[1]-1, ints[2]-1)
+        }
+        return null
+    }
 
     private fun parseFace(line: String): IntArray {
         return line.split(' ', '/')
