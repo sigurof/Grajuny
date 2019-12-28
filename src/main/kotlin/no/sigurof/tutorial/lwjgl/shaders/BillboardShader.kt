@@ -8,13 +8,13 @@ import org.joml.Vector3f
 class BillboardShader : ShaderProgram(vtxSource, frgSource) {
 
     private val locationPos: Int = getUniformLocation("pos")
-    private val locationTrMatrix: Int = getUniformLocation("trMatrix")
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
     private val locationViewMatrix: Int = getUniformLocation("viewMatrix")
+    private val locationSphereRadius: Int = getUniformLocation("sphereRadius")
 
     companion object {
-        private val vtxSource = "src/main/resources/shader/billboard/vertex.shader"
-        private val frgSource = "src/main/resources/shader/billboard/fragment.shader"
+        private const val vtxSource = "src/main/resources/shader/billboard/vertex.shader"
+        private const val frgSource = "src/main/resources/shader/billboard/fragment.shader"
     }
 
     override fun bindAttributes() {
@@ -25,11 +25,6 @@ class BillboardShader : ShaderProgram(vtxSource, frgSource) {
         loadVector3(locationPos, pos)
     }
 
-    fun loadTransformationMatrix(matrix4f: Matrix4f) {
-        loadMatrix(locationTrMatrix, matrix4f)
-    }
-
-
     fun loadProjectionMatrix(matrix4f: Matrix4f) {
         loadMatrix(locationPrjMatrix, matrix4f)
     }
@@ -37,6 +32,10 @@ class BillboardShader : ShaderProgram(vtxSource, frgSource) {
     fun loadViewMatrix(camera: Camera) {
         val matrix4f = Maths.createViewMatrix(camera)
         loadMatrix(locationViewMatrix, matrix4f)
+    }
+
+    fun loadSphereRadius(radius: Float) {
+        loadFloat(locationSphereRadius, radius)
     }
 
 }

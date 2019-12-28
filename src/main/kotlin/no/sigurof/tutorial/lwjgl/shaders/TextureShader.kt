@@ -18,8 +18,8 @@ class TextureShader : ShaderProgram(vtxSource, frgSource) {
 
 
     companion object {
-        private val vtxSource = "src/main/resources/shader/texture/vertex.shader"
-        private val frgSource = "src/main/resources/shader/texture/fragment.shader"
+        private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
+        private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
     }
 
     public override fun bindAttributes() {

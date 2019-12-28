@@ -5,13 +5,13 @@ import org.joml.Vector3f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.*
 import java.io.File
-import java.lang.RuntimeException
+import java.nio.FloatBuffer
 
 abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
 
     val boundAttribs = mutableListOf<Int>()
 
-    val matrixBuffer = BufferUtils.createFloatBuffer(16)
+    private val matrixBuffer: FloatBuffer = BufferUtils.createFloatBuffer(16)
 
     private val vtxShader: Int =
         compileShaderFromSource(
@@ -95,13 +95,13 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
     companion object {
 
         private fun compileShaderFromSource(source: String, typeGl: Int): Int {
-            val source: String = File(source).readText()
+            val text: String = File(source).readText()
             val shader = glCreateShader(typeGl)
-            glShaderSource(shader, source)
+            glShaderSource(shader, text)
             glCompileShader(shader)
             if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
                 val info = glGetShaderInfoLog(shader, 512)
-                throw RuntimeException("Feil ved kompilering av vertex shader:\n $info")
+                throw RuntimeException("Feil ved kompilering av shader:\n $info")
             }
             return shader
         }
