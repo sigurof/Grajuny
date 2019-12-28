@@ -7,7 +7,7 @@ import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.model.TexturedModel
 import no.sigurof.tutorial.lwjgl.shaders.TextureShader
 import no.sigurof.tutorial.lwjgl.utils.Maths
-import no.sigurof.tutorial.lwjgl.utils.randomEntity
+import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.opengl.GL30
@@ -38,12 +38,14 @@ class SandboxScenario private constructor(
                 .ambient(0.1f)
                 .build()
             val shader = TextureShader()
-            val camera = Camera(window = window, position = Vector3f(0f, 0f, 0f))
+            val camera = Camera.Builder()
+                .at(Vector3f(0f, 0f, -3f))
+                .lookingAt(ORIGIN)
+                .inWindow(window)
+                .withSpeed(1f)
+                .build()
             val entities = mutableListOf<Entity>()
-            entities.add(Entity(texturedModel, Vector3f(0f, 0f, 10f), Vector3f(0f, 0f, 0f), Vector3f(1f, 1f, 1f)))
-            for (i in 0..2) {
-                entities.add(randomEntity(texturedModel, 1f))
-            }
+            entities.add(Entity(texturedModel, Vector3f(0f, 0f, 0f), Vector3f(0f, 0f, 0f), Vector3f(1f, 1f, 1f)))
             return SandboxScenario(shader, camera, light, orderEntitiesByModel(entities))
         }
 

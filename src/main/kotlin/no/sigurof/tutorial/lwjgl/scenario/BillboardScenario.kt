@@ -4,7 +4,9 @@ import no.sigurof.tutorial.lwjgl.engine.DisplayManager
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.SphereBillboard
 import no.sigurof.tutorial.lwjgl.shaders.BillboardShader
+import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Matrix4f
+import org.joml.Vector3f
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30.glBindVertexArray
 import org.lwjgl.opengl.GL30.glGenVertexArrays
@@ -24,7 +26,12 @@ class BillboardScenario private constructor(
             glBindVertexArray(vao)
             val shader = BillboardShader()
             val billboard = SphereBillboard()
-            val camera = Camera(window = window)
+            val camera = Camera.Builder()
+                .at(Vector3f(0f, 0f, -3f))
+                .lookingAt(ORIGIN)
+                .inWindow(window)
+                .withSpeed(1f)
+                .build()
             return BillboardScenario(camera, shader, billboard)
         }
 

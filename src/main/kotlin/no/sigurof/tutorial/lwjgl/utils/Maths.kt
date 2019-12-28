@@ -8,11 +8,11 @@ import org.joml.Vector3f
 class Maths {
 
     companion object {
-        public val x = Vector3f(1f, 0f, 0f)
-        public val y = Vector3f(0f, 1f, 0f)
-        public val z = Vector3f(0f, 0f, 1f)
+        private val x = Vector3f(1f, 0f, 0f)
+        private val y = Vector3f(0f, 1f, 0f)
+        private val z = Vector3f(0f, 0f, 1f)
 
-        public fun createTransformationMatrix(entity: Entity): Matrix4f {
+        fun createTransformationMatrix(entity: Entity): Matrix4f {
             val matrix4f = Matrix4f()
             matrix4f.identity()
             matrix4f.translate(entity.position)
@@ -35,14 +35,11 @@ class Maths {
         }
 
         fun createViewMatrix(camera: Camera): Matrix4f {
-            val viewMatrix = Matrix4f()
-            viewMatrix.identity()
-            viewMatrix.rotate(camera.pitch, x)
-            viewMatrix.rotate(camera.yaw, y)
-            val negCameraPos = camera.position.negate(Vector3f())
-            viewMatrix.translate(negCameraPos)
-            return viewMatrix
+            return Matrix4f().lookAt(
+                camera.pos,
+                camera.pos.add(camera.fwAxis, Vector3f()),
+                camera.upAxis
+            )
         }
-
     }
 }
