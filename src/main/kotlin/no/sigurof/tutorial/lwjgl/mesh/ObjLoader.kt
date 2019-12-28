@@ -5,7 +5,6 @@ import no.sigurof.tutorial.lwjgl.model.RawModel
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector3i
-import org.joml.Vector4i
 import java.io.File
 
 class ObjLoader {
@@ -13,11 +12,6 @@ class ObjLoader {
     companion object {
         val keywords = listOf("v", "vt", "vn", "f")
     }
-
-    data class UvAndNormalIndices(
-        val uvIndex: Int,
-        val normalIndex: Int
-    )
 
     fun loadObjModel(source: String): RawModel {
         // Map containing number of lines which start with each keyword
@@ -60,41 +54,41 @@ class ObjLoader {
             }
         }
 
-        // Constructing the ebo list over indices and
-        // constructing a map of each vertex to the corresponding uv-index and normal-index
+        // Constructing fullsize vertex, normal and uv coordinate arrays
         val vertices: List<Vector3i> = lineIndsByKeyword["f"]!!
             .map { lines[it] }
             .flatMap { parseFaceVertices(it) }
 
-        val indices = vertices.indices.toList().toIntArray();
-        val newVtxCoords = vertices
-            .flatMap {
-                listOf(
-                    vtxCoords[3 * it.x + 0],
-                    vtxCoords[3 * it.x + 1],
-                    vtxCoords[3 * it.x + 2]
-                )
-            }
-            .toFloatArray()
-        val newUvCoords = vertices
-            .flatMap {
-                listOf(
-                    uvCoords[2 * it.y + 0],
-                    uvCoords[2 * it.y + 1]
-                    )
-            }
-            .toFloatArray()
-        val newNormCoords = vertices
-            .flatMap {
-                listOf(
-                    normCoords[3 * it.z + 0],
-                    normCoords[3 * it.z + 1],
-                    normCoords[3 * it.z + 2]
-                )
-            }
-            .toFloatArray()
 
-        return Loader.loadToVao(newVtxCoords, newUvCoords, indices, newNormCoords)
+        val indices = mutableListOf<Int>()
+        val newVtxCoords = mutableListOf<Float>()
+        val newUvCoords = mutableListOf<Float>()
+        val newNormCoords = mutableListOf<Float>()
+        val indexWhereVertexOccuredBefore = mutableMapOf<Vector3i, Int>()
+        var i = 0
+        for (vertex in vertices) {
+            indexWhereVertexOccuredBefore[vertex]?.let {
+                indices.add(it)
+            } ?: run {
+                indexWhereVertexOccuredBefore.put(vertex, i)
+                newVtxCoords.add(vtxCoords[3 * vertex.x + 0])
+                newVtxCoords.add(vtxCoords[3 * vertex.x + 1])
+                newVtxCoords.add(vtxCoords[3 * vertex.x + 2])
+                newUvCoords.add(uvCoords[2 * vertex.y + 0])
+                newUvCoords.add(uvCoords[2 * vertex.y + 1])
+                newNormCoords.add(normCoords[3 * vertex.z + 0])
+                newNormCoords.add(normCoords[3 * vertex.z + 1])
+                newNormCoords.add(normCoords[3 * vertex.z + 2])
+                indices.add(i)
+                i += 1
+            }
+        }
+        return Loader.loadToVao(
+            newVtxCoords.toFloatArray(),
+            newUvCoords.toFloatArray(),
+            indices.toIntArray(),
+            newNormCoords.toFloatArray()
+        )
     }
 
 
@@ -134,7 +128,7 @@ class ObjLoader {
             .map { it.toIntOrNull() }
             .filterNotNull()
         if (ints.size == 3) {
-            return Vector3i(ints[0]-1, ints[1]-1, ints[2]-1)
+            return Vector3i(ints[0] - 1, ints[1] - 1, ints[2] - 1)
         }
         return null
     }

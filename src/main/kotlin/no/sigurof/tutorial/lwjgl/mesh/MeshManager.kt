@@ -8,7 +8,10 @@ class MeshManager {
         private val meshes = mutableMapOf(
             "cube" to "src/main/resources/model/primitives/cube.obj",
             "sphere" to "src/main/resources/model/primitives/sphere.obj",
-            "stamford-dragon" to "src/main/resources/model/stamford-dragon/dragon.obj",
+            "lowp-sphere" to "src/main/resources/model/primitives/lowp-sphere.obj",
+            "torus" to "src/main/resources/model/primitives/torus.obj",
+            "cylinder" to "src/main/resources/model/primitives/cylinder.obj",
+            "dragon" to "src/main/resources/model/stamford-dragon/dragon.obj",
             "stall" to "src/main/resources/model/stall/stall.obj"
         )
 

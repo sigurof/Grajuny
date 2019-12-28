@@ -5,7 +5,6 @@ import org.lwjgl.glfw.GLFW.glfwSwapBuffers
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL20
-import java.lang.RuntimeException
 import java.lang.System.currentTimeMillis
 
 class DisplayManager {
@@ -17,8 +16,14 @@ class DisplayManager {
         var window: Long? = null
         var lastUpdate: Long = currentTimeMillis()
 
+        fun withWindowOpen(program: (window: Long) -> Unit) {
+            val win = createDisplay()
+            program(win)
+            closeDisplay()
+            Loader.cleanUp()
+        }
 
-        fun createDisplay() {
+        private fun createDisplay(): Long {
             GLFWErrorCallback.createPrint(System.err).set();
             if (!GLFW.glfwInit())
                 throw IllegalStateException("Unable to initialize GLFW");
@@ -31,13 +36,14 @@ class DisplayManager {
                 WIDTH,
                 HEIGHT, "Hello Window", 0, 0
             )
-            window.takeIf { it != 0L }?.let {
-                GLFW.glfwMakeContextCurrent(it)
-                GLFW.glfwShowWindow(it)
-                GL.createCapabilities()
-            } ?: run {
+            if (window == null || window == 0L) {
                 throw RuntimeException("Failed to create window!")
+            } else {
+                GLFW.glfwMakeContextCurrent(window!!)
+                GLFW.glfwShowWindow(window!!)
+                GL.createCapabilities()
             }
+            return window!!
         }
 
         fun eachFrameDo(func: (() -> Unit)) {
