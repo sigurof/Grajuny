@@ -4,6 +4,7 @@ import no.sigurof.tutorial.lwjgl.engine.DisplayManager
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.SphereBillboard
 import no.sigurof.tutorial.lwjgl.shaders.BillboardShader
+import no.sigurof.tutorial.lwjgl.utils.Maths
 import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -47,7 +48,7 @@ class BillboardScenario private constructor(
         camera.move(window)
         prepareFrame()
         shader.start()
-        shader.loadViewMatrix(camera)
+        shader.loadViewMatrix(Maths.createViewMatrix(camera))
         billboard.render(shader)
         shader.stop()
     }
@@ -64,29 +65,16 @@ class BillboardScenario private constructor(
 
 
     private fun uploadProjectionMatrix(shader: BillboardShader) {
-        val projectionMatrix = createProjectionMatrix()
+        val projectionMatrix = Matrix4f()
+            .perspective(
+                FOV,
+                DisplayManager.WIDTH.toFloat() / DisplayManager.HEIGHT.toFloat(),
+                NEAR_PLANE,
+                FAR_PLANE
+            )
         shader.start()
         shader.loadProjectionMatrix(projectionMatrix)
         shader.stop()
     }
-
-
-    private fun createProjectionMatrix(): Matrix4f {
-        val aspectRatio = DisplayManager.WIDTH.toFloat() / DisplayManager.HEIGHT.toFloat()
-        val yScale = ((1f / Math.tan(Math.toRadians(FOV / 2.0))) * aspectRatio).toFloat()
-        val xScale = yScale / aspectRatio
-        val frustumLength = FAR_PLANE - NEAR_PLANE
-
-        val projectionMatrix = Matrix4f()
-        projectionMatrix.m00(xScale)// = xScale
-        projectionMatrix.m00(xScale)
-        projectionMatrix.m11(yScale)
-        projectionMatrix.m22(-(FAR_PLANE + NEAR_PLANE) / frustumLength)
-        projectionMatrix.m23(-1f)
-        projectionMatrix.m32(-(2 * NEAR_PLANE * FAR_PLANE) / frustumLength)
-        projectionMatrix.m33(0f)
-        return projectionMatrix
-    }
-
 
 }

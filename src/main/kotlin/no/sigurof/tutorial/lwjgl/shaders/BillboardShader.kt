@@ -1,7 +1,5 @@
 package no.sigurof.tutorial.lwjgl.shaders
 
-import no.sigurof.tutorial.lwjgl.entity.Camera
-import no.sigurof.tutorial.lwjgl.utils.Maths
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -29,8 +27,7 @@ class BillboardShader : ShaderProgram(vtxSource, frgSource) {
         loadMatrix(locationPrjMatrix, matrix4f)
     }
 
-    fun loadViewMatrix(camera: Camera) {
-        val matrix4f = Maths.createViewMatrix(camera)
+    fun loadViewMatrix(matrix4f: Matrix4f) {
         loadMatrix(locationViewMatrix, matrix4f)
     }
 

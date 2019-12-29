@@ -32,19 +32,19 @@ class SandboxScenario private constructor(
             val texturedModel = TexturedModel.Builder()
                 .withModel("sphere")
                 .withTexture("default")
-                .withReflectivity(1f)
-                .withShineDamper(1f)
+                .withReflectivity(10f)
+                .withShineDamper(10f)
                 .build()
             val light = Light.With()
                 .position(Vector3f(0f, 10f, 5f))
-                .color(Vector3f(1f, 1f, 1f))
-                .ambient(0.1f)
+                .color(Vector3f(1f, 0.2f, 0.9f))
+                .ambient(0.15f)
                 .build()
             val shader = TextureShader()
             val camera = Camera.Builder()
                 .at(Vector3f(0f, 0f, -3f))
                 .lookingAt(ORIGIN)
-                .withSpeed(1f)
+                .withSpeed(2f)
                 .build()
             val entities = mutableListOf<Entity>()
             entities.add(Entity(texturedModel, Vector3f(0f, 0f, 0f), Vector3f(0f, 0f, 0f), Vector3f(1f, 1f, 1f)))
@@ -56,7 +56,6 @@ class SandboxScenario private constructor(
                 window
             )
         }
-
 
         private fun orderEntitiesByModel(entities: List<Entity>): Map<TexturedModel, List<Entity>> {
             val entitiesByModel = mutableMapOf<TexturedModel, MutableList<Entity>>()
@@ -78,7 +77,6 @@ class SandboxScenario private constructor(
         camera.setCursorPosCallback(window)
     }
 
-
     override fun run() {
         camera.move(window)
         prepareFrame()
@@ -94,14 +92,12 @@ class SandboxScenario private constructor(
     }
 
 
-
     private fun uploadProjectionMatrix(shader: TextureShader) {
         val projectionMatrix = createProjectionMatrix()
         shader.start()
         shader.loadProjectionMatrix(projectionMatrix)
         shader.stop()
     }
-
 
     private fun createProjectionMatrix(): Matrix4f {
         val aspectRatio = DisplayManager.WIDTH.toFloat() / DisplayManager.HEIGHT.toFloat()
@@ -119,7 +115,6 @@ class SandboxScenario private constructor(
         projectionMatrix.m33(0f)
         return projectionMatrix
     }
-
 
     private fun render(entitiesByModel: Map<TexturedModel, List<Entity>>, shader: TextureShader) {
         for (model in entitiesByModel.keys) {
