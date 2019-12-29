@@ -33,18 +33,23 @@ void main(void){
         coord2d = vec2(1.0, 1.0);
         break;
     }
-    // billboardCornerPosition = World position of a vertex on a quad with normal vector pointing in the z-direction
-    vec4 billboardCornerPosition = vec4(pos, 1.0) + vec4(coord2d * sphereRadius, 0.0, 0.0);
 
-    // billboardVertexPosition = World position of that vertex when that quad is tilted toward the camera with the center position fixed at 'pos'
+
+    // Find camera position
+    cameraPos = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+
+    // billboardVertexPosition = World position of the vertex when the quad is tilted toward the camera with the center position fixed at 'pos'
+    vec3 cb = pos - cameraPos;
     vec3 cameraRightDirection = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
-    vec3 cameraUpDirection =    vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
-    billboardVertexPosition = pos + cameraRightDirection * billboardCornerPosition.x + cameraUpDirection * billboardCornerPosition.y;
+    vec3 billboardUpDirection = normalize(cross(cameraRightDirection, cb));
+    vec3 billboardRightDirection = normalize(cross(cb, billboardUpDirection));
+    vec3 x = billboardRightDirection * coord2d.x * sphereRadius;
+    vec3 y = billboardUpDirection * coord2d.y * sphereRadius;
+    billboardVertexPosition = pos +  x + y;
 
     // gl_Position = Screen space position of that vertex
     gl_Position = prjMatrix * viewMatrix * vec4(billboardVertexPosition, 1.0);
 
     // Other output
-    cameraPos = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
     billboardCenterPos = pos;
 }

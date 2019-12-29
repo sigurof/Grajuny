@@ -29,7 +29,10 @@ void main(void){
     vec3 x = vec3(1, 0, 0);
     vec3 y = vec3(0, 1, 0);
     vec3 z = vec3(0, 0, 1);
+    float r = pow(dot(point, x), 10);
+    float g = pow(dot(point, y), 10);
+    float b = pow(dot(point, z), 10);
 
 
-    out_Color = vec4(dot(point, x), dot(point, y), dot(point, z), 1);
+    out_Color = vec4(r, g, b, 1);
 }

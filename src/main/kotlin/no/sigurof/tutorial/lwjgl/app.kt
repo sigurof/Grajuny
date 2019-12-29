@@ -8,8 +8,8 @@ import no.sigurof.tutorial.lwjgl.scenario.SandboxScenario
 
 fun main() {
     DisplayManager.withWindowOpen { window ->
-        billboard(window)
-//        sandbox(window)
+//        billboard(window)
+        sandbox(window)
     }
 }
 
