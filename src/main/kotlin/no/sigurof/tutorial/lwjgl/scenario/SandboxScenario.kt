@@ -10,6 +10,7 @@ import no.sigurof.tutorial.lwjgl.utils.Maths
 import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL30
 import kotlin.math.tan
 
@@ -18,12 +19,14 @@ class SandboxScenario private constructor(
     private val camera: Camera,
     private val light: Light,
     private val entities: Map<TexturedModel, List<Entity>>,
+    private val window: Long,
     private val FOV: Float = 70f,
     private val NEAR_PLANE: Float = 0.1f,
     private val FAR_PLANE: Float = 1000f
 ) : Scenario {
 
     companion object {
+
 
         fun default(window: Long): SandboxScenario {
             val texturedModel = TexturedModel.Builder()
@@ -41,12 +44,17 @@ class SandboxScenario private constructor(
             val camera = Camera.Builder()
                 .at(Vector3f(0f, 0f, -3f))
                 .lookingAt(ORIGIN)
-                .inWindow(window)
                 .withSpeed(1f)
                 .build()
             val entities = mutableListOf<Entity>()
             entities.add(Entity(texturedModel, Vector3f(0f, 0f, 0f), Vector3f(0f, 0f, 0f), Vector3f(1f, 1f, 1f)))
-            return SandboxScenario(shader, camera, light, orderEntitiesByModel(entities))
+            return SandboxScenario(
+                shader,
+                camera,
+                light,
+                orderEntitiesByModel(entities),
+                window
+            )
         }
 
 
@@ -66,11 +74,13 @@ class SandboxScenario private constructor(
 
     override fun prepare() {
         uploadProjectionMatrix(shader)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
+        camera.setCursorPosCallback(window)
     }
 
 
     override fun run() {
-        camera.move()
+        camera.move(window)
         prepareFrame()
         shader.start()
         shader.loadLight(light)
@@ -82,6 +92,7 @@ class SandboxScenario private constructor(
     override fun cleanUp() {
         shader.cleanUp()
     }
+
 
 
     private fun uploadProjectionMatrix(shader: TextureShader) {

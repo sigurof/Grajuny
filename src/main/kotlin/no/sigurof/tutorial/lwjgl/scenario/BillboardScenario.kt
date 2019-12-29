@@ -7,6 +7,7 @@ import no.sigurof.tutorial.lwjgl.shaders.BillboardShader
 import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30.glBindVertexArray
 import org.lwjgl.opengl.GL30.glGenVertexArrays
@@ -15,6 +16,7 @@ class BillboardScenario private constructor(
     private val camera: Camera,
     private val shader: BillboardShader,
     private val billboard: SphereBillboard,
+    private val window: Long,
     private val FOV: Float = 70f,
     private val NEAR_PLANE: Float = 0.1f,
     private val FAR_PLANE: Float = 1000f
@@ -29,20 +31,20 @@ class BillboardScenario private constructor(
             val camera = Camera.Builder()
                 .at(Vector3f(0f, 0f, -3f))
                 .lookingAt(ORIGIN)
-                .inWindow(window)
-                .withSpeed(1f)
+                .withSpeed(4f)
                 .build()
-            return BillboardScenario(camera, shader, billboard)
+            return BillboardScenario(camera, shader, billboard, window)
         }
-
     }
 
     override fun prepare() {
         uploadProjectionMatrix(shader)
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
+        camera.setCursorPosCallback(window)
     }
 
     override fun run() {
-        camera.move()
+        camera.move(window)
         prepareFrame()
         shader.start()
         shader.loadViewMatrix(camera)
