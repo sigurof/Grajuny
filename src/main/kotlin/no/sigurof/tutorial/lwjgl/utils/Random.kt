@@ -11,7 +11,7 @@ fun randomEntity(texturedModel: TexturedModel, dist: Float = 100f): Entity {
     val angles = randomEulerAngles()
     val r = randomFloatBetween(0.5f, 3f)
     val scale = Vector3f(r, r, r)
-    return Entity(texturedModel, pos, angles, scale)
+    return Entity(pos, angles, scale)
 }
 
 

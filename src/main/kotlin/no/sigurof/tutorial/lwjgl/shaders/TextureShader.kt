@@ -1,11 +1,12 @@
 package no.sigurof.tutorial.lwjgl.shaders
 
-import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Light
-import no.sigurof.tutorial.lwjgl.utils.Maths
 import org.joml.Matrix4f
 
-class TextureShader : ShaderProgram(vtxSource, frgSource) {
+private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
+private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
+
+object TextureShader : ShaderProgram(vtxSource, frgSource) {
 
     private val locationTrMatrix: Int = getUniformLocation("trMatrix")
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
@@ -15,12 +16,6 @@ class TextureShader : ShaderProgram(vtxSource, frgSource) {
     private val locationShineDamper: Int = getUniformLocation("shineDamper")
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
     private val locationAmbient: Int = getUniformLocation("ambient")
-
-
-    companion object {
-        private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
-        private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
-    }
 
     public override fun bindAttributes() {
         bindAttribute(0, "position")
@@ -36,9 +31,8 @@ class TextureShader : ShaderProgram(vtxSource, frgSource) {
         loadMatrix(locationPrjMatrix, projectionMatrix)
     }
 
-    fun loadViewMatrix(camera: Camera) {
-        val matrix4f = Maths.createViewMatrix(camera)
-        loadMatrix(locationViewMatrix, matrix4f)
+    fun loadViewMatrix(viewMatrix: Matrix4f) {
+        loadMatrix(locationViewMatrix, viewMatrix)
     }
 
     fun loadLight(light: Light) {

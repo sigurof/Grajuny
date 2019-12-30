@@ -7,7 +7,7 @@ class Light private constructor(
     var color: Vector3f,
     var ambient: Float
 ) {
-    data class With(
+    data class Builder(
         var position: Vector3f = Vector3f(0f, 0f, 0f),
         var color: Vector3f = Vector3f(1f, 1f, 1f),
         var ambient: Float = 0f

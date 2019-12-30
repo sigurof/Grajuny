@@ -1,5 +1,6 @@
 package no.sigurof.tutorial.lwjgl.utils
 
+import no.sigurof.tutorial.lwjgl.engine.DisplayManager
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Entity
 import org.joml.Matrix4f
@@ -11,7 +12,6 @@ class Maths {
         private val x = Vector3f(1f, 0f, 0f)
         private val y = Vector3f(0f, 1f, 0f)
         private val z = Vector3f(0f, 0f, 1f)
-
         fun createTransformationMatrix(entity: Entity): Matrix4f {
             val matrix4f = Matrix4f()
             matrix4f.identity()
@@ -29,6 +29,16 @@ class Maths {
                 camera.pos.add(camera.fwAxis, Vector3f()),
                 camera.upAxis
             )
+        }
+
+        fun createProjectionMatrix(fov: Float, nearPlane: Float, farPlane: Float): Matrix4f {
+            return Matrix4f()
+                .perspective(
+                    fov,
+                    DisplayManager.WIDTH.toFloat() / DisplayManager.HEIGHT.toFloat(),
+                    nearPlane,
+                    farPlane
+                )
         }
     }
 }

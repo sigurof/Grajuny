@@ -21,16 +21,16 @@ void main(void){
     // Which of the 4 elements is being rendered?
     switch (gl_VertexID){
         case 0:
-        coord2d = vec2(-1.0, -1.0);
-        break;
-        case 1:
         coord2d = vec2(-1.0, 1.0);
         break;
+        case 1:
+        coord2d = vec2(-1.0, -1.0);
+        break;
         case 2:
-        coord2d = vec2(1.0, -1.0);
+        coord2d = vec2(1.0, 1.0);
         break;
         case 3:
-        coord2d = vec2(1.0, 1.0);
+        coord2d = vec2(1.0, -1.0);
         break;
     }
 
