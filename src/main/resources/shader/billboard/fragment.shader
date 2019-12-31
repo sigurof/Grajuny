@@ -4,10 +4,16 @@
 in vec2 coord2d;
 // The actual world space position of that point
 in vec3 billboardVertexPosition;
-// The world space position of the billboard center (around which it is rotated to face the camera)
+// The world space position of the billboard center
+// Note that the billboard center IS NOT EQUAL TO the sphere center in general. They are only come close to equal
+// when the camera 'approaches infinitely far away'.
 in vec3 billboardCenterPos;
 // The world space position of the camera
 in vec3 cameraPos;
+// The sphere radius
+in float passSphereRadius;
+// The displacement of the billboard
+in float displacement;
 
 out vec4 out_Color;
 
@@ -17,9 +23,9 @@ void main(void){
     if (dot(coord2d, coord2d) > 1){
         discard;
     }
-
+    float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
     // domeHeight = the height above the billboard plane. From the formula for a sphere: r² = x² + y² + z² where r = 1 and z = h
-    float domeHeight = sqrt(1 - dot(coord2d, coord2d));
+    float domeHeight = sqrt(passSphereRadius*passSphereRadius - billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - displacement;
     // Calculate the height vector (vector of unit length pointing from billboard to camera)
     vec3 billboardToCamera = normalize(cameraPos - billboardCenterPos);
     // Then get the actual point on the spherical surface:

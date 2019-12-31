@@ -74,18 +74,18 @@ class BillboardScenario private constructor(
                 .withSpeed(4f)
                 .build()
             val entities = mutableMapOf<ModelContainer, List<Entity>>()
-            entities[ModelContainer(texturedModel)] =
-                mutableListOf(
-                    Entity(
-                        Vector3f(0f, 0f, 0f),
-                        Vector3f(0f, 0f, 0f),
-                        Vector3f(1f, 1f, 1f)
-                    )
-                )
+//            entities[ModelContainer(texturedModel)] =
+//                mutableListOf(
+//                    Entity(
+//                        Vector3f(0f, 0f, 0f),
+//                        Vector3f(0f, 0f, 0f),
+//                        Vector3f(1f, 1f, 1f)
+//                    )
+//                )
             entities[ModelContainer(billboardModel)] =
                 mutableListOf(
                     Entity(
-                        Vector3f(2f, 0f, 0f),
+                        Vector3f(0f, 0f, 0f),
                         Vector3f(0f, 0f, 0f),
                         Vector3f(1f, 1f, 1f)
                     )
