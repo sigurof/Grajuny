@@ -41,24 +41,26 @@ void main(void){
 
     // Find camera position
     cameraPos = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-    // The vector from the billboard to the camera
-    vec3 cb = pos - cameraPos;
+    // The vector from camera to the billboard
+    vec3 cameraToBillboard = pos - cameraPos;
     // The unit vector in the pos x-direction of the the right-handed coord system where the camera is at the origin and it's looking towards the pos y direction
     vec3 cameraRightDirection = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
     // Arbitrarily (but intuitively) choosing an "up" direction on the billboard surface
-    vec3 billboardUpDirection = normalize(cross(cameraRightDirection, cb));
+    vec3 billboardUpDirection = normalize(cross(cameraRightDirection, cameraToBillboard));
     // Thus leads to a well-defined "right" direction on the billboard surface
-    vec3 billboardRightDirection = normalize(cross(cb, billboardUpDirection));
+    vec3 billboardRightDirection = normalize(cross(cameraToBillboard, billboardUpDirection));
+    // The third orthonormal vector (pointing towards the camera), is:
+    vec3 billboardOutwardsDirection = normalize(-cameraToBillboard);
 
     // 2. The billboard must be displaced outwards from the center position of the sphere it represents.
     // This displacement is always between 0 and the radius of the sphere
-    float d = length(cb);// distance d from camera to center of sphere
-    displacement = d - sqrt(d*d - sphereRadius*sphereRadius);
+    float d = length(cameraToBillboard);// distance d from camera to center of sphere
+    displacement = sphereRadius*sphereRadius / d;
     // At this distance from the sphere center in the direction of the camera, the radius of the circular intersection
     // between the sphere and the normal plane to said direction, is given by:
     float billboardRadius = sqrt(sphereRadius*sphereRadius - displacement*displacement);
 
-    vec3 displacementVector = displacement * cb;
+    vec3 displacementVector = displacement * billboardOutwardsDirection;
 
     // The billboard space x component of the point on the billboard in world coordinates
     vec3 x = billboardRightDirection * coord2d.x * billboardRadius;

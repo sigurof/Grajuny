@@ -20,9 +20,9 @@ out vec4 out_Color;
 
 void main(void){
 
-    if (dot(coord2d, coord2d) > 1){
-        discard;
-    }
+//    if (dot(coord2d, coord2d) > 1){
+//        discard;
+//    }
     float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
     // domeHeight = the height above the billboard plane. From the formula for a sphere: r² = x² + y² + z² where r = 1 and z = h
     float domeHeight = sqrt(passSphereRadius*passSphereRadius - billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - displacement;
@@ -40,5 +40,5 @@ void main(void){
     float b = pow(dot(point, z), 10);
 
 
-    out_Color = vec4(r, g, b, 1);
+    out_Color = vec4(displacement, 0, 0, 1);
 }
