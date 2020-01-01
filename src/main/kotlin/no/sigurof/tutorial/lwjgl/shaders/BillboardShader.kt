@@ -9,10 +9,19 @@ private const val frgSource = "src/main/resources/shader/billboard/fragment.shad
 
 object BillboardShader : ShaderProgram(vtxSource, frgSource) {
 
-    private val locationPos: Int = getUniformLocation("pos")
+    private val locationPos: Int = getUniformLocation("sphereCenter")
+    private val locationPosFr: Int = getUniformLocation("frSphereCenter")
+
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
     private val locationViewMatrix: Int = getUniformLocation("viewMatrix")
     private val locationSphereRadius: Int = getUniformLocation("sphereRadius")
+
+    private val locationPrjMatrixFr: Int = getUniformLocation("frPrjMatrix")
+    private val locationViewMatrixFr: Int = getUniformLocation("frViewMatrix")
+    private val locationSphereRadiusFr: Int = getUniformLocation("frSphereRadius")
+
+    private val locationCameraPos: Int = getUniformLocation("cameraPos")
+    private val locationCameraPosFr: Int = getUniformLocation("frCameraPos")
 
     private val locationLightPos: Int = getUniformLocation("lightPos")
     private val locationLightCol: Int = getUniformLocation("lightCol")
@@ -24,20 +33,29 @@ object BillboardShader : ShaderProgram(vtxSource, frgSource) {
         return
     }
 
-    fun loadPos(pos: Vector3f) {
-        loadVector3(locationPos, pos)
+    fun loadSphereCenter(sphereCenter: Vector3f) {
+        loadVector3(locationPos, sphereCenter)
+        loadVector3(locationPosFr, sphereCenter)
     }
 
     fun loadProjectionMatrix(matrix4f: Matrix4f) {
         loadMatrix(locationPrjMatrix, matrix4f)
+        loadMatrix(locationPrjMatrixFr, matrix4f)
     }
 
     fun loadViewMatrix(matrix4f: Matrix4f) {
         loadMatrix(locationViewMatrix, matrix4f)
+        loadMatrix(locationViewMatrixFr, matrix4f)
     }
 
     fun loadSphereRadius(radius: Float) {
         loadFloat(locationSphereRadius, radius)
+        loadFloat(locationSphereRadiusFr, radius)
+    }
+
+    fun loadCameraPos(cameraPos: Vector3f) {
+        loadVector3(locationCameraPos, cameraPos)
+        loadVector3(locationCameraPosFr, cameraPos)
     }
 
     fun loadLight(light: Light) {

@@ -6,6 +6,11 @@ uniform float ambient;
 uniform vec3 color;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform mat4 frPrjMatrix; // TODO Use uniform blocks to share with vertex shader
+uniform mat4 frViewMatrix;
+uniform float frSphereRadius;
+uniform vec3 frCameraPos;
+uniform vec3 frSphereCenter;
 
 // Which point on the billboard disk we're at "spherical space"
 in vec2 coord2d;
@@ -15,68 +20,73 @@ in vec3 billboardVertexPosition;
 // Note that the billboard center IS NOT EQUAL TO the sphere center in general. They are only come close to equal
 // when the camera 'approaches infinitely far away'.
 in vec3 billboardCenterPos;
-// Sphere center world position
-in vec3 sphereCenter;
-// The world space position of the camera
-in vec3 cameraPos;
-// The sphere radius
-in float passSphereRadius;
 // The displacement of the billboard
-in float displacement;
-// matrix
-in mat4 prjMatrixPass;
-in mat4 viewMatrixPass;
+in float sphereCenterToBillboardCenterDistance;
 
 out vec4 out_Color;
 
-
-void main(void){
-
-
-    if (dot(coord2d, coord2d) > 1){
-        discard;
-    }
+vec3 findThePointOnSphereSurface(){
+    // Finding
     float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
-    // domeHeight = the height above the billboard plane. From the formula for a sphere: r² = x² + y² + z² where r = 1 and z = h
-    float domeHeight = sqrt(passSphereRadius*passSphereRadius - billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - displacement;
+    // domeHeight = the height above the billboard plane.
+    float domeHeight = sqrt(frSphereRadius*frSphereRadius- billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - sphereCenterToBillboardCenterDistance;
     // Calculate the height vector (vector of unit length pointing from billboard to camera)
-    vec3 billboardToCamera = normalize(cameraPos - billboardCenterPos);
+    vec3 billboardToCamera = normalize(frCameraPos - billboardCenterPos);
     // Then get the actual point on the spherical surface:
-    vec3 point = billboardVertexPosition + domeHeight * billboardToCamera;
-    vec3 radVector = point - sphereCenter;
+    return billboardVertexPosition + domeHeight * billboardToCamera;
+}
 
-    // For coloring
-    vec3 x = vec3(1, 0, 0);
-    vec3 y = vec3(0, 1, 0);
-    vec3 z = vec3(0, 0, 1);
-    float r = pow(dot(point, x), 10);
-    float g = pow(dot(point, y), 10);
-    float b = pow(dot(point, z), 10);
+float calculateFragmentDepth(vec3 point){
+    // Transforming the point to clip space coordinates
+    vec4 pointInClipSpace = frPrjMatrix * frViewMatrix  * vec4(point, 1.0);
+    // Finding the normalized device coordinates depth (z)
+    float ndcDepth = pointInClipSpace.z / pointInClipSpace.w;
+    // Calculating the depth based on ndc
+    return ((gl_DepthRange.diff * ndcDepth) + gl_DepthRange.near + gl_DepthRange.far) / 2.0;
+}
 
-    float originalFragDepth = gl_FragCoord.z;
-    vec4 clipPos = prjMatrixPass * viewMatrixPass  * vec4(point, 1.0);
-    float ndcDepth = clipPos.z / clipPos.w;
-    float a = ((gl_DepthRange.diff * ndcDepth) + gl_DepthRange.near + gl_DepthRange.far) / 2.0;
-    gl_FragDepth = a;
+vec3 calculateDiffuseLight(vec3 point, vec3 surfUnitNormal, vec3 unitToLight){
+    float normalDotLight = dot(surfUnitNormal, unitToLight);
+    float brightness = max(normalDotLight, ambient);
+    return brightness * lightCol;
+}
 
-
-    vec3 surfaceNormal = normalize(point - sphereCenter);
-    vec3 toLightVec = normalize(lightPos - point);
-    vec3 unitNormal = normalize(surfaceNormal);
-    vec3 unitToLight = normalize(toLightVec);
-    float nDotL = dot(unitNormal, unitToLight);
-    float brightness = max(nDotL, ambient);
-    vec3 diffuse = brightness * lightCol;
-
-
-    vec3 unitVectorToCamera = normalize(cameraPos - point);
+vec3 calculateSpecularLight(vec3 point, vec3 surfUnitNormal, vec3 unitToLight){
+    vec3 unitVectorToCamera = normalize(frCameraPos - point);
     vec3 lightDirection = -unitToLight;
-    vec3 reflectedLightDir = reflect(lightDirection, unitNormal);
+    vec3 reflectedLightDir = reflect(lightDirection, surfUnitNormal);
     float specularFactor = dot(reflectedLightDir, unitVectorToCamera);
     specularFactor = max(specularFactor, 0.0);
     float dampedFactor = pow(specularFactor, shineDamper);
-    vec3 finalSpecular = dampedFactor* reflectivity * lightCol;
-
-//    out_Color = vec4(r, g, b, 1);
-    out_Color = vec4(diffuse, 1.0)*vec4(color, 1) + vec4(finalSpecular, 1.0);
+    return dampedFactor* reflectivity * lightCol;
 }
+
+void diffuseAndSpecularLighting(out vec3 diffuse, out vec3 specular, vec3 point, vec3 surfUnitNormal){
+    vec3 toLightVec = normalize(lightPos - point);
+    vec3 unitToLight = normalize(toLightVec);
+
+    // Diffuse lighting
+    diffuse = calculateDiffuseLight(point, surfUnitNormal, unitToLight);
+    // Specular lighting
+    specular = calculateSpecularLight(point, surfUnitNormal, unitToLight);
+}
+
+void main(void){
+    // Discaring everything outside the sphere surface
+    if (dot(coord2d, coord2d) > 1){
+        discard;
+    }
+    vec3 point = findThePointOnSphereSurface();
+
+    // Writing the appropriate fragment depth value to the depth buffer
+    gl_FragDepth = calculateFragmentDepth(point);
+
+    // Surface
+    vec3 surfUnitNormal = normalize(point - frSphereCenter); // Valid because we're dealing with a sphere
+    vec3 diffuse;
+    vec3 specular;
+    diffuseAndSpecularLighting(diffuse, specular, point, surfUnitNormal);
+
+    out_Color = vec4(diffuse, 1.0)*vec4(color, 1) + vec4(specular, 1.0);
+}
+

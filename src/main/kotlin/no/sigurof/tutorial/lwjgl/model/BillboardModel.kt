@@ -25,13 +25,13 @@ class BillboardModel(
         nearPlane: Float,
         farPlane: Float
     ) {
-
         shader.start()
         shader.bindVertAttrArrayAndVao(rawModel.vao)
         shader.loadViewMatrix(Maths.createViewMatrix(camera))
         shader.loadProjectionMatrix(Maths.createProjectionMatrix(fov, nearPlane, farPlane))
+        shader.loadCameraPos(camera.pos)
         for (entity in entities) {
-            shader.loadPos(entity.position) // bør gjøres per modell, ikke per billboard
+            shader.loadSphereCenter(entity.position) // bør gjøres per modell, ikke per billboard
             shader.loadSphereRadius(entity.scale.x)
             shader.loadLight(light)
             shader.loadSurface(damper, reflectivity, color)
