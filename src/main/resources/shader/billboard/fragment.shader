@@ -21,7 +21,7 @@ in vec3 billboardVertexPosition;
 // when the camera 'approaches infinitely far away'.
 in vec3 billboardCenterPos;
 // The displacement of the billboard
-in float sphereCenterToBillboardCenterDistance;
+in float sphereToBbdDist;
 
 out vec4 out_Color;
 
@@ -29,7 +29,7 @@ vec3 findThePointOnSphereSurface(){
     // Finding
     float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
     // domeHeight = the height above the billboard plane.
-    float domeHeight = sqrt(frSphereRadius*frSphereRadius- billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - sphereCenterToBillboardCenterDistance;
+    float domeHeight = sqrt(frSphereRadius*frSphereRadius- billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - sphereToBbdDist;
     // Calculate the height vector (vector of unit length pointing from billboard to camera)
     vec3 billboardToCamera = normalize(frCameraPos - billboardCenterPos);
     // Then get the actual point on the spherical surface:
