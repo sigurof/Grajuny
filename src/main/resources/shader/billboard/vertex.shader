@@ -16,7 +16,9 @@ out vec3 billboardCenterPos;
 out vec3 cameraPos;
 out float passSphereRadius;
 out float displacement;
-
+out mat4 prjMatrixPass;
+out mat4 viewMatrixPass;
+out vec3 sphereCenter;
 
 void main(void){
 
@@ -72,8 +74,11 @@ void main(void){
     billboardVertexPosition = billboardCenterPos + x + y;
 
     // gl_Position = Screen space position of that vertex
+    prjMatrixPass = prjMatrix;
+    viewMatrixPass = viewMatrix;
     gl_Position = prjMatrix * viewMatrix * vec4(billboardVertexPosition, 1.0);
 
     passSphereRadius = sphereRadius;
+    sphereCenter = pos;
 
 }

@@ -85,7 +85,7 @@ class BillboardScenario private constructor(
             entities[ModelContainer(billboardModel)] =
                 mutableListOf(
                     Entity(
-                        Vector3f(0f, 0f, 0f),
+                        Vector3f(1.5f, 0f, 0f),
                         Vector3f(0f, 0f, 0f),
                         Vector3f(1f, 1f, 1f)
                     )
