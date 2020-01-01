@@ -56,16 +56,23 @@ class BillboardScenario private constructor(
     companion object {
 
         fun default(window: Long): BillboardScenario {
+            val blue = Vector3f(0.1f, 0.4f, 0.9f)
+            val reflectivity = 1f
+            val damper = 100f
             val texturedModel = TexturedModel.Builder()
+                .withColor(blue)
                 .withModel("sphere")
                 .withTexture("default")
-                .withReflectivity(10f)
-                .withShineDamper(10f)
+                .withReflectivity(reflectivity)
+                .withShineDamper(damper)
                 .build()
-            val billboardModel = BillboardModel()
+            val billboardModel = BillboardModel(
+                reflectivity = reflectivity,
+                damper = damper,
+                color = blue
+            )
             val light = Light.Builder()
-                .position(Vector3f(0f, 10f, 5f))
-                .color(Vector3f(1f, 0.2f, 0.9f))
+                .position(Vector3f(0f, 11f, 0f))
                 .ambient(0.15f)
                 .build()
             val camera = Camera.Builder()
@@ -77,7 +84,7 @@ class BillboardScenario private constructor(
             entities[ModelContainer(texturedModel)] =
                 mutableListOf(
                     Entity(
-                        Vector3f(0f, 0f, 0f),
+                        Vector3f(-1f, 0f, 0f),
                         Vector3f(0f, 0f, 0f),
                         Vector3f(1f, 1f, 1f)
                     )
@@ -85,7 +92,7 @@ class BillboardScenario private constructor(
             entities[ModelContainer(billboardModel)] =
                 mutableListOf(
                     Entity(
-                        Vector3f(1.5f, 0f, 0f),
+                        Vector3f(1f, 0f, 0f),
                         Vector3f(0f, 0f, 0f),
                         Vector3f(1f, 1f, 1f)
                     )

@@ -6,9 +6,14 @@ import no.sigurof.tutorial.lwjgl.entity.Entity
 import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.shaders.BillboardShader
 import no.sigurof.tutorial.lwjgl.utils.Maths
+import org.joml.Vector3f
 import org.lwjgl.opengl.GL11
 
-class BillboardModel : Model {
+class BillboardModel(
+    private val damper: Float = 10f,
+    private val reflectivity: Float = 10f,
+    private val color: Vector3f = Vector3f(1f, 1f, 1f)
+) : Model {
 
     private val rawModel: RawModel = RawModel(Loader.createVao(), 4)
     private val shader: BillboardShader = BillboardShader
@@ -28,11 +33,14 @@ class BillboardModel : Model {
         for (entity in entities) {
             shader.loadPos(entity.position) // bør gjøres per modell, ikke per billboard
             shader.loadSphereRadius(entity.scale.x)
+            shader.loadLight(light)
+            shader.loadSurface(damper, reflectivity, color)
             GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, rawModel.vertexCount)
         }
         shader.unbindVertAttrArrayAndVao()
         shader.stop()
     }
+
     override fun cleanShader() {
         shader.cleanUp()
     }

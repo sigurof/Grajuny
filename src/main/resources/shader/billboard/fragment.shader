@@ -1,5 +1,12 @@
 #version 420 core
 
+uniform vec3 lightPos;
+uniform vec3 lightCol;
+uniform float ambient;
+uniform vec3 color;
+uniform float shineDamper;
+uniform float reflectivity;
+
 // Which point on the billboard disk we're at "spherical space"
 in vec2 coord2d;
 // The actual world space position of that point
@@ -46,34 +53,30 @@ void main(void){
     float g = pow(dot(point, y), 10);
     float b = pow(dot(point, z), 10);
 
-//    https://www.opengl.org/archives/resources/faq/technical/depthbuffer.htm
-//    vec4 eyePos = viewMatrixPass  * vec4(point, 1.0);
-//    float f = 1000;
-//    float n = 0.1;
-//    float we = eyePos.w;
-//    float ze = eyePos.z;
-//    float zc = -ze * (f + n)/(f - n) - we * 2* f*n/(f - n);
-//    float wc = -ze;
-//    float zndc = zc / wc;
-//    float zw = s * ((we / ze) * f*n/(f-n) + 0.5*(f+n)/(f-n) + 0.5);
-
-        float originalFragDepth = gl_FragCoord.z;
-        vec4 clipPos = prjMatrixPass * viewMatrixPass  * vec4(point, 1.0);
-        float ndcDepth = clipPos.z / clipPos.w;
-//        float a = ((gl_DepthRange.diff * ndcDepth) + gl_DepthRange.near + gl_DepthRange.far) / 2.0;
-//        float a = ndcDepth * (gl_DepthRange.far - gl_DepthRange.near)/2 + (gl_DepthRange.far + gl_DepthRange.near)/2;
-        float a = ((gl_DepthRange.diff * ndcDepth) + gl_DepthRange.near + gl_DepthRange.far) / 2.0;
-        gl_FragDepth = a;//-length(clipPos.xyz);
+    float originalFragDepth = gl_FragCoord.z;
+    vec4 clipPos = prjMatrixPass * viewMatrixPass  * vec4(point, 1.0);
+    float ndcDepth = clipPos.z / clipPos.w;
+    float a = ((gl_DepthRange.diff * ndcDepth) + gl_DepthRange.near + gl_DepthRange.far) / 2.0;
+    gl_FragDepth = a;
 
 
-        vec3 col;
-        float val = a;
-        if (val < 1){
-            col = vec3(1, 1, 1);
-        }
-        else{
-            col = vec3(0, 0, 0);
-        }
-//
-    out_Color = vec4(a/2, 0, 0, 1);
+    vec3 surfaceNormal = normalize(point - sphereCenter);
+    vec3 toLightVec = normalize(lightPos - point);
+    vec3 unitNormal = normalize(surfaceNormal);
+    vec3 unitToLight = normalize(toLightVec);
+    float nDotL = dot(unitNormal, unitToLight);
+    float brightness = max(nDotL, ambient);
+    vec3 diffuse = brightness * lightCol;
+
+
+    vec3 unitVectorToCamera = normalize(cameraPos - point);
+    vec3 lightDirection = -unitToLight;
+    vec3 reflectedLightDir = reflect(lightDirection, unitNormal);
+    float specularFactor = dot(reflectedLightDir, unitVectorToCamera);
+    specularFactor = max(specularFactor, 0.0);
+    float dampedFactor = pow(specularFactor, shineDamper);
+    vec3 finalSpecular = dampedFactor* reflectivity * lightCol;
+
+//    out_Color = vec4(r, g, b, 1);
+    out_Color = vec4(diffuse, 1.0)*vec4(color, 1) + vec4(finalSpecular, 1.0);
 }

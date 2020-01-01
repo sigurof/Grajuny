@@ -1,5 +1,6 @@
 package no.sigurof.tutorial.lwjgl.shaders
 
+import no.sigurof.tutorial.lwjgl.entity.Light
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -13,7 +14,12 @@ object BillboardShader : ShaderProgram(vtxSource, frgSource) {
     private val locationViewMatrix: Int = getUniformLocation("viewMatrix")
     private val locationSphereRadius: Int = getUniformLocation("sphereRadius")
 
-
+    private val locationLightPos: Int = getUniformLocation("lightPos")
+    private val locationLightCol: Int = getUniformLocation("lightCol")
+    private val locationAmbient: Int = getUniformLocation("ambient")
+    private val locationColor: Int = getUniformLocation("color")
+    private val locationShineDamper: Int = getUniformLocation("shineDamper")
+    private val locationReflectivity: Int = getUniformLocation("reflectivity")
     override fun bindAttributes() {
         return
     }
@@ -34,4 +40,15 @@ object BillboardShader : ShaderProgram(vtxSource, frgSource) {
         loadFloat(locationSphereRadius, radius)
     }
 
+    fun loadLight(light: Light) {
+        loadVector3(locationLightPos, light.position)
+        loadVector3(locationLightCol, light.color)
+        loadFloat(locationAmbient, light.ambient)
+    }
+
+    fun loadSurface(damper: Float, reflectivity: Float, color: Vector3f) {
+        loadFloat(locationShineDamper, damper)
+        loadFloat(locationReflectivity, reflectivity)
+        loadVector3(locationColor, color);
+    }
 }

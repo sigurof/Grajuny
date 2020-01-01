@@ -8,12 +8,14 @@ import no.sigurof.tutorial.lwjgl.resource.TextureCreator
 import no.sigurof.tutorial.lwjgl.shaders.TextureShader
 import no.sigurof.tutorial.lwjgl.textures.Texture
 import no.sigurof.tutorial.lwjgl.utils.Maths
+import org.joml.Vector3f
 import org.lwjgl.opengl.GL30
 
 class TexturedModel private constructor(
     private val rawModel: RawModel,
     private val texture: Texture,
-    private val shader: TextureShader
+    private val shader: TextureShader,
+    private var color: Vector3f
 ) : Model {
 
     override fun render(
@@ -48,22 +50,30 @@ class TexturedModel private constructor(
         shader.loadProjectionMatrix(Maths.createProjectionMatrix(fov, nearPlane, farPlane))
         shader.loadViewMatrix(Maths.createViewMatrix(camera))
         shader.loadSpecularValues(texture.shineDamper, texture.reflectivity)
+        shader.loadColor(color)
     }
 
     data class Builder(
         private var rawModel: RawModel? = null,
         private var texName: String = "default",
         private var texShineDamper: Float = 1f,
-        private var texReflectivity: Float = 1f
+        private var texReflectivity: Float = 1f,
+        private var color: Vector3f = Vector3f(1f, 1f, 1f)
     ) {
 
         fun withTexture(name: String) = apply { this.texName = name }
         fun withModel(name: String) = apply { this.rawModel = MeshManager.get(name) }
         fun withReflectivity(reflectivity: Float) = apply { this.texReflectivity = reflectivity }
         fun withShineDamper(shineDamper: Float) = apply { this.texShineDamper = shineDamper }
+        fun withColor(color: Vector3f) = apply { this.color = color }
         fun build(): TexturedModel {
             val texture = TextureCreator.get(texName, texShineDamper, texReflectivity)
-            return TexturedModel(rawModel ?: error("Must have model to build textured model"), texture, TextureShader)
+            return TexturedModel(
+                rawModel ?: error("Must have model to build textured model"),
+                texture,
+                TextureShader,
+                color
+            )
         }
     }
 }

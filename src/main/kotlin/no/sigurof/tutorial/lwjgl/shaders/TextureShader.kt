@@ -2,6 +2,7 @@ package no.sigurof.tutorial.lwjgl.shaders
 
 import no.sigurof.tutorial.lwjgl.entity.Light
 import org.joml.Matrix4f
+import org.joml.Vector3f
 
 private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
 private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
@@ -16,6 +17,8 @@ object TextureShader : ShaderProgram(vtxSource, frgSource) {
     private val locationShineDamper: Int = getUniformLocation("shineDamper")
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
     private val locationAmbient: Int = getUniformLocation("ambient")
+    private val locationColor: Int = getUniformLocation("color")
+
 
     public override fun bindAttributes() {
         bindAttribute(0, "position")
@@ -44,6 +47,9 @@ object TextureShader : ShaderProgram(vtxSource, frgSource) {
     fun loadSpecularValues(damper: Float, reflectivity: Float) {
         loadFloat(locationShineDamper, damper)
         loadFloat(locationReflectivity, reflectivity)
+    }
+    fun loadColor(color: Vector3f) {
+            loadVector3(locationColor, color);
     }
 }
 
