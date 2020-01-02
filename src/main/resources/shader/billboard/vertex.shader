@@ -62,6 +62,10 @@ vec3 calcBillboardVertexCoord(){
     vec3 billboardSurfaceNormal;
     getOrthonormalBasisOnBillboardSurface(billboardUpDirection, billboardRightDirection, billboardSurfaceNormal, cameraToBillboard);
 
+    // 2. The billboard must be displaced outwards from the center position of the sphere it represents.
+    // This displacement is always between 0 and the radius of the sphere
+    sphereToBbdDist = sphereRadius*sphereRadius / length(cameraToBillboard);
+    vec3 displacementVector = sphereToBbdDist * billboardSurfaceNormal;
     // At this distance from the sphere center in the direction of the camera, the radius of the circular intersection
     // between the sphere and the normal plane to said direction, is given by:
     float billboardRadius = sqrt(sphereRadius*sphereRadius - sphereToBbdDist*sphereToBbdDist);
@@ -71,10 +75,6 @@ vec3 calcBillboardVertexCoord(){
     // The billboard space y component of the point on the billboard in world coordinates
     vec3 y = billboardUpDirection * coord2d.y * billboardRadius;
 
-    // 2. The billboard must be displaced outwards from the center position of the sphere it represents.
-    // This displacement is always between 0 and the radius of the sphere
-    sphereToBbdDist = sphereRadius*sphereRadius / length(cameraToBillboard);
-    vec3 displacementVector = sphereToBbdDist * billboardSurfaceNormal;
 
     // Center position of the billboard
     billboardCenterPos = sphereCenter + displacementVector;
