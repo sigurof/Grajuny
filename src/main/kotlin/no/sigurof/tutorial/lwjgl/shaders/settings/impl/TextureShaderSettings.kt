@@ -1,13 +1,18 @@
-package no.sigurof.tutorial.lwjgl.shaders
+package no.sigurof.tutorial.lwjgl.shaders.settings.impl
 
 import no.sigurof.tutorial.lwjgl.entity.Light
+import no.sigurof.tutorial.lwjgl.shaders.ShaderCommon
+import no.sigurof.tutorial.lwjgl.shaders.settings.DefaultShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
 private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
 private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
 
-object TextureShader : ShaderProgram(vtxSource, frgSource) {
+object TextureShaderSettings : DefaultShaderSettings, ShaderCommon(
+    vtxSource,
+    frgSource
+) {
 
     private val locationTrMatrix: Int = getUniformLocation("trMatrix")
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
@@ -18,38 +23,37 @@ object TextureShader : ShaderProgram(vtxSource, frgSource) {
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
     private val locationAmbient: Int = getUniformLocation("ambient")
     private val locationColor: Int = getUniformLocation("color")
-
-
     public override fun bindAttributes() {
         bindAttribute(0, "position")
         bindAttribute(1, "textureCoords")
         bindAttribute(2, "normal")
     }
 
-    fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
+    override fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
         loadMatrix(locationTrMatrix, transformationMatrix)
     }
 
-    fun loadProjectionMatrix(projectionMatrix: Matrix4f) {
+    override fun loadProjectionMatrix(projectionMatrix: Matrix4f) {
         loadMatrix(locationPrjMatrix, projectionMatrix)
     }
 
-    fun loadViewMatrix(viewMatrix: Matrix4f) {
+    override fun loadViewMatrix(viewMatrix: Matrix4f) {
         loadMatrix(locationViewMatrix, viewMatrix)
     }
 
-    fun loadLight(light: Light) {
+    override fun loadLight(light: Light) {
         loadVector3(locationLightPos, light.position)
         loadVector3(locationLightCol, light.color)
         loadFloat(locationAmbient, light.ambient)
     }
 
-    fun loadSpecularValues(damper: Float, reflectivity: Float) {
+    override fun loadSpecularValues(damper: Float, reflectivity: Float) {
         loadFloat(locationShineDamper, damper)
         loadFloat(locationReflectivity, reflectivity)
     }
-    fun loadColor(color: Vector3f) {
-            loadVector3(locationColor, color);
+
+    override fun loadColor(color: Vector3f) {
+        loadVector3(locationColor, color);
     }
 }
 

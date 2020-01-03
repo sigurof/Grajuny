@@ -2,7 +2,6 @@ package no.sigurof.tutorial.lwjgl.utils
 
 import no.sigurof.tutorial.lwjgl.engine.DisplayManager
 import no.sigurof.tutorial.lwjgl.entity.Camera
-import no.sigurof.tutorial.lwjgl.entity.Entity
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -12,14 +11,15 @@ class Maths {
         private val x = Vector3f(1f, 0f, 0f)
         private val y = Vector3f(0f, 1f, 0f)
         private val z = Vector3f(0f, 0f, 1f)
-        fun createTransformationMatrix(entity: Entity): Matrix4f {
+
+        fun createTransformationMatrix(position: Vector3f, eulerAngles: Vector3f, scale: Vector3f): Matrix4f {
             val matrix4f = Matrix4f()
             matrix4f.identity()
-            matrix4f.translate(entity.position)
-            matrix4f.rotate(entity.eulerAngles.x, x)
-            matrix4f.rotate(entity.eulerAngles.y, y)
-            matrix4f.rotate(entity.eulerAngles.z, z)
-            matrix4f.scale(entity.scale)
+            matrix4f.translate(position)
+            matrix4f.rotate(eulerAngles.x, x)
+            matrix4f.rotate(eulerAngles.y, y)
+            matrix4f.rotate(eulerAngles.z, z)
+            matrix4f.scale(scale)
             return matrix4f
         }
 

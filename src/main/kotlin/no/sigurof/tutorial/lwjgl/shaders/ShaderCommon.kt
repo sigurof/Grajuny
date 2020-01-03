@@ -1,5 +1,6 @@
 package no.sigurof.tutorial.lwjgl.shaders
 
+import no.sigurof.tutorial.lwjgl.mesh.Vao
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.BufferUtils
@@ -31,7 +32,15 @@ import org.lwjgl.opengl.GL30
 import java.io.File
 import java.nio.FloatBuffer
 
-abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
+abstract class ShaderCommon constructor(vtxSource: String, frgSource: String) {
+
+    fun usingVaoDo(vao: Vao, function: () -> Unit) {
+        this.start()
+        this.bindVertAttrArrayAndVao(vao.vao)
+        function()
+        this.unbindVertAttrArrayAndVao()
+        this.stop()
+    }
 
     private val boundAttribs = mutableListOf<Int>()
 
@@ -63,12 +72,11 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
         return glGetUniformLocation(program, uniformName)
     }
 
-    fun start() {
+    private fun start() {
         glUseProgram(program)
     }
 
-
-    fun stop() {
+    private fun stop() {
         glUseProgram(0)
     }
 
@@ -79,7 +87,6 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
         glDeleteShader(vtxShader)
         glDeleteShader(frgShader)
         glDeleteProgram(program)
-
     }
 
     protected fun bindAttribute(attributeIdx: Int, variableName: String) {
@@ -110,8 +117,7 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
     }
 
     protected abstract fun bindAttributes()
-
-    fun bindVertAttrArrayAndVao(vao: Int) {
+    private fun bindVertAttrArrayAndVao(vao: Int) {
         // TODO If the same vao is used by several models, this call should be moved
         GL30.glBindVertexArray(vao) // TODO Should maybe move this to shader
         for (attr in boundAttribs) {
@@ -119,7 +125,7 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
         }
     }
 
-    fun unbindVertAttrArrayAndVao() {
+    private fun unbindVertAttrArrayAndVao() {
         for (attr in boundAttribs) {
             GL30.glDisableVertexAttribArray(attr)
         }
@@ -146,7 +152,5 @@ abstract class ShaderProgram constructor(vtxSource: String, frgSource: String) {
             return shader
         }
     }
-
-
 }
 

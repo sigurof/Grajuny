@@ -10,9 +10,9 @@ import java.lang.System.currentTimeMillis
 class DisplayManager {
 
     companion object {
-        val WIDTH: Int = 1280
-        val HEIGHT: Int = 720
-        var FPS = 120
+        internal var WIDTH: Int = 1280
+        internal var HEIGHT: Int = 720
+        internal var FPS = 120
         var window: Long? = null
         var lastUpdate: Long = currentTimeMillis()
 
@@ -59,7 +59,7 @@ class DisplayManager {
                 }
         }
 
-        fun closeDisplay() {
+        private fun closeDisplay() {
             window?.let {
                 GLFW.glfwDestroyWindow(it)
             }
