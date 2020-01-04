@@ -1,8 +1,8 @@
-package no.sigurof.tutorial.lwjgl.model
+package no.sigurof.tutorial.lwjgl.renderer
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
 
-interface Model {
+interface Renderer {
     fun render(globalContext: DefaultSceneContext)
     fun cleanShader()
 }

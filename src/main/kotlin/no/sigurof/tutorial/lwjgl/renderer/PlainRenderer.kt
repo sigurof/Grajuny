@@ -1,23 +1,23 @@
-package no.sigurof.tutorial.lwjgl.model
+package no.sigurof.tutorial.lwjgl.renderer
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
 import no.sigurof.tutorial.lwjgl.entity.obj.PlainObject
-import no.sigurof.tutorial.lwjgl.mesh.Vao
+import no.sigurof.tutorial.lwjgl.resource.MeshResource
 import no.sigurof.tutorial.lwjgl.resource.mesh.MeshManager
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.PlainShaderSettings
 
-class PlainModel private constructor(
-    private val vao: Vao,
+class PlainRenderer private constructor(
+    private val meshResource: MeshResource,
     private val shader: PlainShaderSettings,
     private var objects: List<PlainObject> = mutableListOf()
-) : Model {
+) : Renderer {
 
     override fun render(globalContext: DefaultSceneContext) {
-        shader.usingVaoDo(vao) {
+        shader.usingVaoDo(meshResource) {
             globalContext.loadUniforms(shader)
             for (obj in objects) {
                 obj.loadUniforms(shader)
-                obj.render(vao)
+                meshResource.render()
             }
         }
     }
@@ -28,15 +28,15 @@ class PlainModel private constructor(
     }
 
     data class Builder(
-        private var vao: Vao? = null,
+        private var vao: MeshResource? = null,
         private var objects: List<PlainObject> = mutableListOf()
     ) {
 
-        fun withModel(name: String) = apply { this.vao = MeshManager.getMesh(name) }
+        fun withModel(name: String) = apply { this.vao = MeshManager.getMeshResource(name) }
         fun withObjects(objects: List<PlainObject>) = apply { this.objects = ArrayList(objects) }
-        fun build(): PlainModel {
-            return PlainModel(
-                vao ?: error("Must have model to build textured model"),
+        fun build(): PlainRenderer {
+            return PlainRenderer(
+                vao ?: error("Must have renderer to build textured renderer"),
                 PlainShaderSettings,
                 objects
             )

@@ -1,10 +1,8 @@
 package no.sigurof.tutorial.lwjgl.entity.obj
 
 import no.sigurof.tutorial.lwjgl.entity.surface.DiffuseSpecularSurface
-import no.sigurof.tutorial.lwjgl.mesh.Vao
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.BillboardShaderSettings
 import org.joml.Vector3f
-import org.lwjgl.opengl.GL11
 
 class SphereBillboardObject constructor(
     private val surface: DiffuseSpecularSurface,
@@ -18,7 +16,4 @@ class SphereBillboardObject constructor(
         surface.loadUniforms(shader)
     }
 
-    override fun render(vao: Vao) {
-        GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, vao.vertexCount)
-    }
 }

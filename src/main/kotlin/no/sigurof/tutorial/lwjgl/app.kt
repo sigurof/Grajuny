@@ -8,9 +8,11 @@ import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.entity.obj.PlainObject
 import no.sigurof.tutorial.lwjgl.entity.obj.SphereBillboardObject
 import no.sigurof.tutorial.lwjgl.entity.surface.DiffuseSpecularSurface
-import no.sigurof.tutorial.lwjgl.model.BillboardModel
-import no.sigurof.tutorial.lwjgl.model.PlainModel
-import no.sigurof.tutorial.lwjgl.model.TexturedModel
+import no.sigurof.tutorial.lwjgl.renderer.BillboardRenderer
+import no.sigurof.tutorial.lwjgl.renderer.PlainRenderer
+import no.sigurof.tutorial.lwjgl.renderer.TexturedBillboardRenderer
+import no.sigurof.tutorial.lwjgl.renderer.TexturedRenderer
+import no.sigurof.tutorial.lwjgl.resource.TextureManager
 import no.sigurof.tutorial.lwjgl.scenario.Scenario
 import no.sigurof.tutorial.lwjgl.scenario.piHalf
 import no.sigurof.tutorial.lwjgl.utils.ORIGIN
@@ -39,17 +41,14 @@ fun billboard(window: Long) {
     val reflectivity = 1f
     val damper = 100f
 
-    val texHardBall = TexturedModel.Builder()
+    val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blue)
+    val texDragon = TexturedRenderer.Builder()
         .withModel("dragon")
         .withTexture("stall")
         .withObjects(
             mutableListOf(
                 PlainObject(
-                    DiffuseSpecularSurface(
-                        damper,
-                        reflectivity,
-                        blue
-                    ),
+                    blueSurface,
                     Vector3f(-6f, 0f, 0f),
                     Vector3f(0f, -piHalf, 0f),
                     Vector3f(1f, 1f, 1f)
@@ -58,7 +57,7 @@ fun billboard(window: Long) {
         )
         .build()
 
-    val colHardBall = PlainModel.Builder()
+    val colDragon = PlainRenderer.Builder()
         .withModel("dragon")
         .withObjects(
             mutableListOf(
@@ -72,7 +71,29 @@ fun billboard(window: Long) {
         )
         .build()
 
-    val colSoftBall = BillboardModel().addObjects(
+    val coloredBalls = mutableListOf<SphereBillboardObject>()
+    val f = 5f
+    val lim = 5
+    for (i in -lim..lim) {
+        for (j in -lim..lim) {
+            for (k in -lim..lim) {
+                val pos = Vector3f(i.toFloat(), j.toFloat(), k.toFloat()).mul(f)
+                coloredBalls.add(
+                    SphereBillboardObject(
+                        blueSurface, pos, 0.5f
+                    )
+                )
+            }
+        }
+    }
+
+    val colSoftBall = BillboardRenderer(camera).addObjects(
+        coloredBalls
+    )
+
+    val texSoftBall = TexturedBillboardRenderer(
+        camera,
+        TextureManager.get("default"),
         mutableListOf(
             SphereBillboardObject(
                 DiffuseSpecularSurface(damper, reflectivity, red),
@@ -81,7 +102,7 @@ fun billboard(window: Long) {
             )
         )
     )
-    val models = mutableListOf(texHardBall, colSoftBall, colHardBall)
+    val models = mutableListOf(colSoftBall)
     val context = DefaultSceneContext(
         camera = camera,
         light = light

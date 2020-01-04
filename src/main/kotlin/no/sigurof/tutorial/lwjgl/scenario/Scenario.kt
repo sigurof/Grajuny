@@ -1,7 +1,7 @@
 package no.sigurof.tutorial.lwjgl.scenario
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
-import no.sigurof.tutorial.lwjgl.model.Model
+import no.sigurof.tutorial.lwjgl.renderer.Renderer
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL30
 import kotlin.math.PI
@@ -10,7 +10,7 @@ const val piHalf = PI.toFloat() / 2f
 
 class Scenario internal constructor(
     private val window: Long,
-    private val models: List<Model>,
+    private val renderers: List<Renderer>,
     private val context: DefaultSceneContext
 ) {
 
@@ -26,13 +26,13 @@ class Scenario internal constructor(
     }
 
     fun cleanUp() {
-        for (model in models) {
+        for (model in renderers) {
             model.cleanShader()
         }
     }
 
     private fun render() {
-        for (model in models) {
+        for (model in renderers) {
             model.render(context)
         }
     }

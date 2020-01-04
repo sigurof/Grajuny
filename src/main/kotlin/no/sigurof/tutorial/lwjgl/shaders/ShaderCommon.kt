@@ -1,6 +1,6 @@
 package no.sigurof.tutorial.lwjgl.shaders
 
-import no.sigurof.tutorial.lwjgl.mesh.Vao
+import no.sigurof.tutorial.lwjgl.resource.ResourceGl
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.BufferUtils
@@ -34,9 +34,9 @@ import java.nio.FloatBuffer
 
 abstract class ShaderCommon constructor(vtxSource: String, frgSource: String) {
 
-    fun usingVaoDo(vao: Vao, function: () -> Unit) {
+    fun usingVaoDo(vao: ResourceGl, function: () -> Unit) {
         this.start()
-        this.bindVertAttrArrayAndVao(vao.vao)
+        this.bindVertAttrArrayAndVao(vao.getVao())
         function()
         this.unbindVertAttrArrayAndVao()
         this.stop()

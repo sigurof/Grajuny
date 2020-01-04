@@ -1,27 +1,23 @@
-package no.sigurof.tutorial.lwjgl.model
+package no.sigurof.tutorial.lwjgl.renderer
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
 import no.sigurof.tutorial.lwjgl.entity.obj.PlainObject
-import no.sigurof.tutorial.lwjgl.mesh.Vao
-import no.sigurof.tutorial.lwjgl.resource.TextureManager
+import no.sigurof.tutorial.lwjgl.resource.TexturedMeshResource
 import no.sigurof.tutorial.lwjgl.resource.mesh.MeshManager
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.TextureShaderSettings
-import org.lwjgl.opengl.GL30
 
-class TexturedModel private constructor(
-    private val vao: Vao,
-    private val tex: Int,
+class TexturedRenderer private constructor(
+    private val texturedMeshResource: TexturedMeshResource,
     private var objects: List<PlainObject>
-) : Model {
+) : Renderer {
 
     override fun render(globalContext: DefaultSceneContext) {
-        TextureShaderSettings.usingVaoDo(vao) {
+        TextureShaderSettings.usingVaoDo(texturedMeshResource) {
             globalContext.loadUniforms(TextureShaderSettings)
-            GL30.glActiveTexture(GL30.GL_TEXTURE0)
-            GL30.glBindTexture(GL30.GL_TEXTURE_2D, tex)
+            texturedMeshResource.prepare()
             for (obj in objects) {
                 obj.loadUniforms(TextureShaderSettings)
-                obj.render(vao)
+                texturedMeshResource.render()
             }
         }
     }
@@ -31,18 +27,18 @@ class TexturedModel private constructor(
     }
 
     data class Builder(
-        private var vao: Vao? = null,
+        private var texturedMeshResource: TexturedMeshResource? = null,
         private var texName: String = "default",
         private var objects: List<PlainObject> = mutableListOf()
     ) {
         fun withTexture(name: String) = apply { this.texName = name }
-        fun withModel(name: String) = apply { this.vao = MeshManager.getMesh(name) }
+        fun withModel(name: String) =
+            apply { this.texturedMeshResource = MeshManager.getTexturedMeshResource(name, texName) }
+
         fun withObjects(objects: List<PlainObject>) = apply { this.objects = ArrayList(objects) }
-        fun build(): TexturedModel {
-            val texture = TextureManager.get(texName)
-            return TexturedModel(
-                vao ?: error("Must have model to build textured model"),
-                texture,
+        fun build(): TexturedRenderer {
+            return TexturedRenderer(
+                texturedMeshResource ?: error("Must have renderer to build textured renderer"),
                 objects
             )
         }
