@@ -9,7 +9,7 @@ import org.joml.Vector3f
 private const val vtxSource = "src/main/resources/shader/billboard/vertex.shader"
 private const val frgSource = "src/main/resources/shader/billboard/fragment.shader"
 
-object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon(
+object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardShaderSettings>(
     vtxSource,
     frgSource
 ) {

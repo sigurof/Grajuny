@@ -1,6 +1,7 @@
 package no.sigurof.tutorial.lwjgl.shaders
 
 import no.sigurof.tutorial.lwjgl.resource.ResourceGl
+import no.sigurof.tutorial.lwjgl.shaders.settings.ShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.BufferUtils
@@ -32,9 +33,9 @@ import org.lwjgl.opengl.GL30
 import java.io.File
 import java.nio.FloatBuffer
 
-abstract class ShaderCommon constructor(vtxSource: String, frgSource: String) {
+abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, frgSource: String) {
 
-    fun usingVaoDo(vao: ResourceGl, function: () -> Unit) {
+    fun usingVaoDo(vao: ResourceGl<*>, function: () -> Unit) {
         this.start()
         this.bindVertAttrArrayAndVao(vao.getVao())
         function()

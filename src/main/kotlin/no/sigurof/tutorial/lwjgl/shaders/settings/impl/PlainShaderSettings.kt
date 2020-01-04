@@ -9,7 +9,7 @@ import org.joml.Vector3f
 private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
 private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
 
-object PlainShaderSettings : DefaultShaderSettings, ShaderCommon(
+object PlainShaderSettings : DefaultShaderSettings, ShaderCommon<PlainShaderSettings>(
     vtxSource,
     frgSource
 ) {
