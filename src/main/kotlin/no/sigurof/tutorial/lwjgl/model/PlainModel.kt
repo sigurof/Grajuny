@@ -2,8 +2,8 @@ package no.sigurof.tutorial.lwjgl.model
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
 import no.sigurof.tutorial.lwjgl.entity.obj.PlainObject
-import no.sigurof.tutorial.lwjgl.mesh.MeshManager
 import no.sigurof.tutorial.lwjgl.mesh.Vao
+import no.sigurof.tutorial.lwjgl.resource.mesh.MeshManager
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.PlainShaderSettings
 
 class PlainModel private constructor(

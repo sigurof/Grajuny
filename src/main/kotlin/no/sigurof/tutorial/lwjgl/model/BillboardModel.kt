@@ -1,9 +1,9 @@
 package no.sigurof.tutorial.lwjgl.model
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
-import no.sigurof.tutorial.lwjgl.engine.Loader
 import no.sigurof.tutorial.lwjgl.entity.obj.SphereBillboardObject
 import no.sigurof.tutorial.lwjgl.mesh.Vao
+import no.sigurof.tutorial.lwjgl.resource.mesh.Loader
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.BillboardShaderSettings
 
 class BillboardModel : Model {

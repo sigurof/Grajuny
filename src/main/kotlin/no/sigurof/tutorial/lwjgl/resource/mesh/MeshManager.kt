@@ -1,4 +1,6 @@
-package no.sigurof.tutorial.lwjgl.mesh
+package no.sigurof.tutorial.lwjgl.resource.mesh
+
+import no.sigurof.tutorial.lwjgl.mesh.Vao
 
 object MeshManager {
     private val sources = mutableMapOf(
@@ -14,11 +16,17 @@ object MeshManager {
 
     fun getMesh(name: String): Vao {
         meshes[name] ?: let {
-            meshes[name] = loadObjModel(
-                sources[name]
-                    ?: error("Couldn't find mesh associated with identifier \"$name\"")
+            meshes[name] = Loader.loadToVao(
+//     TODO Optimization idea: pass Float ant Int buffers directly here
+                ParsedMesh.from(
+                    sources[name] ?: error("Couldn't find mesh associated with identifier \"$name\"")
+                )
             )
         }
         return meshes[name]!!
+    }
+
+    fun cleanUp() {
+        Loader.cleanUp()
     }
 }

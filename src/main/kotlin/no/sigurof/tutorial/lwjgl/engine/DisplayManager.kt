@@ -1,5 +1,7 @@
 package no.sigurof.tutorial.lwjgl.engine
 
+import no.sigurof.tutorial.lwjgl.resource.TextureManager
+import no.sigurof.tutorial.lwjgl.resource.mesh.MeshManager
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.glfwSwapBuffers
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -20,7 +22,8 @@ class DisplayManager {
             val win = createDisplay()
             program(win)
             closeDisplay()
-            Loader.cleanUp()
+            TextureManager.cleanUp()
+            MeshManager.cleanUp()
         }
 
         private fun createDisplay(): Long {
@@ -64,7 +67,6 @@ class DisplayManager {
                 GLFW.glfwDestroyWindow(it)
             }
         }
-
 
         fun isOpen(): Boolean {
             return window?.let { !GLFW.glfwWindowShouldClose(it) } ?: false

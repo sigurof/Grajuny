@@ -1,14 +1,25 @@
-package no.sigurof.tutorial.lwjgl.mesh
+package no.sigurof.tutorial.lwjgl.resource.mesh
 
-import no.sigurof.tutorial.lwjgl.engine.Loader
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector3i
 import java.io.File
 
-private val keywords = listOf("v", "vt", "vn", "f")
-fun loadObjModel(source: String): Vao {
+data class ParsedMesh(
+    val eboIndices: List<Int> = mutableListOf(),
+    val vertexCoordinates: List<Float> = mutableListOf(),
+    val uvCoordinates: List<Float> = mutableListOf(),
+    val normalVectors: List<Float> = mutableListOf()
+) {
+    companion object {
+        fun from(source: String): ParsedMesh {
+            return parseObjFile(source)
+        }
+    }
+}
 
+private val keywords = listOf("v", "vt", "vn", "f")
+fun parseObjFile(source: String): ParsedMesh {
     // Map containing number of lines which start with each keyword
     val lineIndsByKeyword: Map<String, MutableList<Int>> = keywords
         .map { it to mutableListOf<Int>() }
@@ -79,12 +90,11 @@ fun loadObjModel(source: String): Vao {
             i += 1
         }
     }
-    // TODO Optimization idea: pass Float ant Int buffers directly here
-    return Loader.loadToVao(
-        newVtxCoords.toFloatArray(),
-        newUvCoords.toFloatArray(),
-        indices.toIntArray(),
-        newNormCoords.toFloatArray()
+    return ParsedMesh(
+        indices,
+        newVtxCoords,
+        newUvCoords,
+        newNormCoords
     )
 }
 
@@ -123,12 +133,4 @@ private fun parseVertexOrNull(line: String): Vector3i? {
         return Vector3i(integers[0] - 1, integers[1] - 1, integers[2] - 1)
     }
     return null
-}
-
-private fun parseFace(line: String): IntArray {
-    return line.split(' ', '/')
-        .map { it.toIntOrNull() }
-        .filterNotNull()
-        .map { it - 1 }
-        .toIntArray()
 }
