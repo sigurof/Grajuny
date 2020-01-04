@@ -36,10 +36,6 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon(
         return
     }
 
-    fun loadSphereCenter(sphereCenter: Vector3f) {
-        loadVector3(locationPos, sphereCenter)
-        loadVector3(locationPosFr, sphereCenter)
-    }
     override fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
         return
     }
@@ -54,6 +50,26 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon(
         loadMatrix(locationViewMatrixFr, viewMatrix)
     }
 
+    override fun loadLight(light: Light) {
+        loadVector3(locationLightPos, light.position)
+        loadVector3(locationLightCol, light.color)
+        loadFloat(locationAmbient, light.ambient)
+    }
+
+    override fun loadSpecularValues(damper: Float, reflectivity: Float) {
+        loadFloat(locationShineDamper, damper)
+        loadFloat(locationReflectivity, reflectivity)
+    }
+
+    override fun loadColor(color: Vector3f) {
+        loadVector3(locationColor, color);
+    }
+
+    fun loadSphereCenter(sphereCenter: Vector3f) {
+        loadVector3(locationPos, sphereCenter)
+        loadVector3(locationPosFr, sphereCenter)
+    }
+
     fun loadSphereRadius(radius: Float) {
         loadFloat(locationSphereRadius, radius)
         loadFloat(locationSphereRadiusFr, radius)
@@ -64,16 +80,4 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon(
         loadVector3(locationCameraPosFr, cameraPos)
     }
 
-    override fun loadLight(light: Light) {
-        loadVector3(locationLightPos, light.position)
-        loadVector3(locationLightCol, light.color)
-        loadFloat(locationAmbient, light.ambient)
-    }
-    override fun loadSpecularValues(damper: Float, reflectivity: Float) {
-        loadFloat(locationShineDamper, damper)
-        loadFloat(locationReflectivity, reflectivity)
-    }
-    override fun loadColor(color: Vector3f) {
-        loadVector3(locationColor, color);
-    }
 }

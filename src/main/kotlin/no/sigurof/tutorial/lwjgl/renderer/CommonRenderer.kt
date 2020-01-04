@@ -8,7 +8,7 @@ import no.sigurof.tutorial.lwjgl.shaders.settings.ShaderSettings
 class CommonRenderer<S : ShaderSettings>(
     private val shader: S,
     private val resource: ResourceGl,
-    private var objects: List<GameObject> = mutableListOf()
+    private var objects: MutableList<out GameObject> = mutableListOf()
 ) : Renderer {
     override fun render(globalContext: GlobalContext) {
         shader.usingVaoDo(resource) {

@@ -8,13 +8,12 @@ import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.entity.obj.PlainObject
 import no.sigurof.tutorial.lwjgl.entity.obj.SphereBillboardObject
 import no.sigurof.tutorial.lwjgl.entity.surface.DiffuseSpecularSurface
-import no.sigurof.tutorial.lwjgl.renderer.BillboardRenderer
 import no.sigurof.tutorial.lwjgl.renderer.CommonRenderer
-import no.sigurof.tutorial.lwjgl.renderer.PlainRenderer
-import no.sigurof.tutorial.lwjgl.renderer.TexturedBillboardRenderer
 import no.sigurof.tutorial.lwjgl.resource.ResourceManager
 import no.sigurof.tutorial.lwjgl.scenario.Scenario
 import no.sigurof.tutorial.lwjgl.scenario.piHalf
+import no.sigurof.tutorial.lwjgl.shaders.settings.impl.BillboardShaderSettings
+import no.sigurof.tutorial.lwjgl.shaders.settings.impl.PlainShaderSettings
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.TextureShaderSettings
 import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Vector3f
@@ -44,7 +43,7 @@ fun billboard(window: Long) {
 
     val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blue)
 
-    val texDragon = CommonRenderer<TextureShaderSettings>(
+    val texDragon = CommonRenderer(
         TextureShaderSettings,
         ResourceManager.getTexturedMeshResource("dragon", "stall"),
         mutableListOf(
@@ -57,7 +56,8 @@ fun billboard(window: Long) {
         )
     )
 
-    val colDragon = PlainRenderer(
+    val colDragon = CommonRenderer(
+        PlainShaderSettings,
         ResourceManager.getMeshResource("dragon"),
         mutableListOf(
             PlainObject(
@@ -85,12 +85,14 @@ fun billboard(window: Long) {
         }
     }
 
-    val colSoftBall = BillboardRenderer(
+    val colSoftBall = CommonRenderer(
+        BillboardShaderSettings,
         ResourceManager.getBillboardResource(camera),
         coloredBalls
     )
 
-    val texSoftBall = TexturedBillboardRenderer(
+    val texSoftBall = CommonRenderer(
+        BillboardShaderSettings,
         ResourceManager.getTexturedBillboardResource("default", camera),
         mutableListOf(
             SphereBillboardObject(
