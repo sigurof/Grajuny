@@ -3,6 +3,7 @@ package no.sigurof.tutorial.lwjgl.context
 import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.shaders.settings.DefaultShaderSettings
+import no.sigurof.tutorial.lwjgl.shaders.settings.ShaderSettings
 import no.sigurof.tutorial.lwjgl.utils.Maths
 
 class DefaultSceneContext constructor(
@@ -11,9 +12,10 @@ class DefaultSceneContext constructor(
     private val farPlane: Float = 1000f,
     internal val camera: Camera,
     private val light: Light
-) : GlobalContext<DefaultShaderSettings> {
+) : GlobalContext {
 
-    override fun loadUniforms(shader: DefaultShaderSettings) {
+    override fun loadUniforms(shader: ShaderSettings) {
+        val shader = shader as DefaultShaderSettings
         shader.loadLight(light)
         shader.loadProjectionMatrix(Maths.createProjectionMatrix(fov, nearPlane, farPlane))
         shader.loadViewMatrix(Maths.createViewMatrix(camera))

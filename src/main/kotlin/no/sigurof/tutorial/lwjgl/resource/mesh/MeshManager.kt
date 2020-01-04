@@ -1,9 +1,5 @@
 package no.sigurof.tutorial.lwjgl.resource.mesh
 
-import no.sigurof.tutorial.lwjgl.resource.MeshResource
-import no.sigurof.tutorial.lwjgl.resource.TextureManager
-import no.sigurof.tutorial.lwjgl.resource.TexturedMeshResource
-
 object MeshManager {
     private val sources = mutableMapOf(
         "cube" to "src/main/resources/model/primitives/cube.obj",
@@ -16,17 +12,7 @@ object MeshManager {
     )
     private val meshes = mutableMapOf<String, Mesh>()
 
-    fun getMeshResource(name: String): MeshResource {
-        return MeshResource(getMesh(name))
-    }
-
-    fun getTexturedMeshResource(meshName: String, textureName: String): TexturedMeshResource {
-        val mesh = getMesh(meshName)
-        val texture = TextureManager.get(textureName)
-        return TexturedMeshResource(mesh, texture)
-    }
-
-    private fun getMesh(name: String): Mesh {
+    internal fun getMesh(name: String): Mesh {
         meshes[name] ?: let {
             meshes[name] = Loader.loadToVao(
 //     TODO Optimization idea: pass Float ant Int buffers directly here
