@@ -12,4 +12,5 @@ interface DefaultShaderSettings : ShaderSettings {
     fun loadLight(light: Light)
     fun loadSpecularValues(damper: Float, reflectivity: Float)
     fun loadColor(color: Vector3f)
+    fun loadCameraPosition(cameraPosition: Vector3f)
 }

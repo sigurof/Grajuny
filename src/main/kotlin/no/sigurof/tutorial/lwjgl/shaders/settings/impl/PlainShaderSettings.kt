@@ -13,7 +13,6 @@ object PlainShaderSettings : DefaultShaderSettings, ShaderCommon<PlainShaderSett
     vtxSource,
     frgSource
 ) {
-
     private val locationTrMatrix: Int = getUniformLocation("trMatrix")
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
     private val locationViewMatrix: Int = getUniformLocation("viewMatrix")
@@ -23,6 +22,7 @@ object PlainShaderSettings : DefaultShaderSettings, ShaderCommon<PlainShaderSett
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
     private val locationAmbient: Int = getUniformLocation("ambient")
     private val locationColor: Int = getUniformLocation("color")
+    private val locationCameraPos: Int = getUniformLocation("cameraPos")
     public override fun bindAttributes() {
         bindAttribute(0, "position")
         bindAttribute(2, "normal")
@@ -53,5 +53,9 @@ object PlainShaderSettings : DefaultShaderSettings, ShaderCommon<PlainShaderSett
 
     override fun loadColor(color: Vector3f) {
         loadVector3(locationColor, color);
+    }
+
+    override fun loadCameraPosition(cameraPosition: Vector3f) {
+        loadVector3(locationCameraPos, cameraPosition)
     }
 }

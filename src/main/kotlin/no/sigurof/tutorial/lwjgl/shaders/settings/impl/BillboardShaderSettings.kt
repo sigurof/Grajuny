@@ -61,6 +61,11 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardSh
         loadFloat(locationReflectivity, reflectivity)
     }
 
+    override fun loadCameraPosition(cameraPosition: Vector3f) {
+        loadVector3(locationCameraPos, cameraPosition)
+        loadVector3(locationCameraPosFr, cameraPosition)
+    }
+
     override fun loadColor(color: Vector3f) {
         loadVector3(locationColor, color);
     }
@@ -75,9 +80,5 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardSh
         loadFloat(locationSphereRadiusFr, radius)
     }
 
-    fun loadCameraPos(cameraPos: Vector3f) {
-        loadVector3(locationCameraPos, cameraPos)
-        loadVector3(locationCameraPosFr, cameraPos)
-    }
 
 }

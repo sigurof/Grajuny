@@ -16,6 +16,7 @@ out vec3 billboardVertexPosition;
 out vec3 billboardCenterPos;
 //out vec3 cameraPos;
 out float sphereToBbdDist;
+out vec3 billboardNormal;
 
 
 vec2 whichVertex(){
@@ -47,6 +48,7 @@ void getOrthonormalBasisOnBillboardSurface(out vec3 billboardUpDirection, out ve
     billboardRightDirection = normalize(cross(cameraToBillboard, billboardUpDirection));
     // The third orthonormal vector (pointing towards the camera), is:
     billboardOutwardsDirection = normalize(-cameraToBillboard);
+    billboardNormal = billboardOutwardsDirection;
 }
 
 
@@ -92,4 +94,5 @@ void main(void){
 
     // gl_Position = Screen space position of that vertex
     gl_Position = prjMatrix * viewMatrix * vec4(billboardVertexPosition, 1.0);
+    gl_Position.z = 1;
 }

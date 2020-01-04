@@ -19,8 +19,7 @@ object ResourceManager {
     fun getBillboardResource(camera: Camera): BillboardResource {
         return BillboardResource(
             Loader.createVao(),
-            4,
-            camera
+            4
         )
     }
 
@@ -28,8 +27,7 @@ object ResourceManager {
         return TexturedBillboardResource(
             TextureManager.get(textureName),
             Loader.createVao(),
-            4,
-            camera
+            4
         )
     }
 }

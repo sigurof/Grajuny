@@ -19,5 +19,6 @@ class DefaultSceneContext constructor(
         shader.loadLight(light)
         shader.loadProjectionMatrix(Maths.createProjectionMatrix(fov, nearPlane, farPlane))
         shader.loadViewMatrix(Maths.createViewMatrix(camera))
+        shader.loadCameraPosition(camera.pos)
     }
 }

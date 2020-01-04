@@ -23,6 +23,7 @@ object TextureShaderSettings : DefaultShaderSettings, ShaderCommon<TextureShader
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
     private val locationAmbient: Int = getUniformLocation("ambient")
     private val locationColor: Int = getUniformLocation("color")
+    private val locationCameraPosition: Int = getUniformLocation("cameraPos")
     public override fun bindAttributes() {
         bindAttribute(0, "position")
         bindAttribute(1, "textureCoords")
@@ -54,6 +55,10 @@ object TextureShaderSettings : DefaultShaderSettings, ShaderCommon<TextureShader
 
     override fun loadColor(color: Vector3f) {
         loadVector3(locationColor, color);
+    }
+
+    override fun loadCameraPosition(cameraPosition: Vector3f) {
+        loadVector3(locationCameraPosition, cameraPosition)
     }
 }
 

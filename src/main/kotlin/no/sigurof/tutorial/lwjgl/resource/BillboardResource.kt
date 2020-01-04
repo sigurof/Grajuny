@@ -1,13 +1,11 @@
 package no.sigurof.tutorial.lwjgl.resource
 
-import no.sigurof.tutorial.lwjgl.entity.Camera
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.BillboardShaderSettings
 import org.lwjgl.opengl.GL11
 
 class BillboardResource(
     private val vao: Int,
-    private val vertexCount: Int = 4,
-    private val camera: Camera
+    private val vertexCount: Int = 4
 ) : ResourceGl<BillboardShaderSettings> {
 
     override fun render() {
@@ -15,7 +13,6 @@ class BillboardResource(
     }
 
     override fun prepare(shader: BillboardShaderSettings) {
-        shader.loadCameraPos(camera.pos)
     }
 
     override fun getVao(): Int {

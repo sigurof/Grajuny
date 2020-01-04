@@ -14,21 +14,31 @@ uniform float reflectivity;
 uniform float ambient;
 uniform vec3 color;
 
-void main(void){
-    vec3 unitNormal = normalize(surfaceNormal);
-    vec3 unitToLight = normalize(toLightVec);
+vec3 calculateDiffuseLight(vec3 unitNormal, vec3 unitToLight){
     float nDotL = dot(unitNormal, unitToLight);
     float brightness = max(nDotL, ambient);
-    vec3 diffuse = brightness * lightCol;
+    return brightness * lightCol;
+}
 
-    // Specular
+vec3 calculateSpecularLight(vec3 unitToLight, vec3 unitNormal){
     vec3 unitVectorToCamera = normalize(toCameraVec);
     vec3 lightDirection = -unitToLight;
     vec3 reflectedLightDir = reflect(lightDirection, unitNormal);
     float specularFactor = dot(reflectedLightDir, unitVectorToCamera);
     specularFactor = max(specularFactor, 0.0);
     float dampedFactor = pow(specularFactor, shineDamper);
-    vec3 finalSpecular = dampedFactor* reflectivity * lightCol;
+    return dampedFactor* reflectivity * lightCol;
+}
+
+
+void main(void){
+
+    vec3 unitNormal = normalize(surfaceNormal);
+    vec3 unitToLight = normalize(toLightVec);
+
+    vec3 diffuse = calculateDiffuseLight(unitNormal, unitToLight);
+
+    vec3 specular = calculateSpecularLight(unitToLight, unitNormal);
 
     // Combine base color with texture color
     vec4 textureColor =texture(textureSampler, passTextureCoords);
@@ -37,5 +47,5 @@ void main(void){
     finalColor.g = min(textureColor.g, color.g);
     finalColor.b = min(textureColor.b, color.b);
 
-    out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(finalSpecular, 1.0);
+    out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(specular, 1.0);
 }

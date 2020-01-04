@@ -6,7 +6,7 @@ uniform float ambient;
 uniform vec3 color;
 uniform float shineDamper;
 uniform float reflectivity;
-uniform mat4 frPrjMatrix; // TODO Use uniform blocks to share with vertex shader
+uniform mat4 frPrjMatrix;// TODO Use uniform blocks to share with vertex shader
 uniform mat4 frViewMatrix;
 uniform float frSphereRadius;
 uniform vec3 frCameraPos;
@@ -22,6 +22,7 @@ in vec3 billboardVertexPosition;
 in vec3 billboardCenterPos;
 // The displacement of the billboard
 in float sphereToBbdDist;
+in vec3 billboardNormal;
 
 out vec4 out_Color;
 
@@ -33,7 +34,9 @@ vec3 findThePointOnSphereSurface(){
     // Calculate the height vector (vector of unit length pointing from billboard to camera)
     vec3 billboardToCamera = normalize(frCameraPos - billboardCenterPos);
     // Then get the actual point on the spherical surface:
-    return billboardVertexPosition + domeHeight * billboardToCamera;
+    // TODO Skal potensielt være billboard normal her, ikke billboardToCamera
+    // Nei, billboardNormal vil alltid være lik billboardToCamera.
+    return billboardVertexPosition + domeHeight * billboardNormal;
 }
 
 float calculateFragmentDepth(vec3 point){
@@ -45,7 +48,7 @@ float calculateFragmentDepth(vec3 point){
     return ((gl_DepthRange.diff * ndcDepth) + gl_DepthRange.near + gl_DepthRange.far) / 2.0;
 }
 
-vec3 calculateDiffuseLight(vec3 point, vec3 surfUnitNormal, vec3 unitToLight){
+vec3 calculateDiffuseLight(vec3 surfUnitNormal, vec3 unitToLight){
     float normalDotLight = dot(surfUnitNormal, unitToLight);
     float brightness = max(normalDotLight, ambient);
     return brightness * lightCol;
@@ -66,7 +69,7 @@ void diffuseAndSpecularLighting(out vec3 diffuse, out vec3 specular, vec3 point,
     vec3 unitToLight = normalize(toLightVec);
 
     // Diffuse lighting
-    diffuse = calculateDiffuseLight(point, surfUnitNormal, unitToLight);
+    diffuse = calculateDiffuseLight(surfUnitNormal, unitToLight);
     // Specular lighting
     specular = calculateSpecularLight(point, surfUnitNormal, unitToLight);
 }
@@ -74,19 +77,22 @@ void diffuseAndSpecularLighting(out vec3 diffuse, out vec3 specular, vec3 point,
 void main(void){
     // Discaring everything outside the sphere surface
     if (dot(coord2d, coord2d) > 1){
+//        out_Color = vec4(0, 0, 0, 1);
+//        gl_FragDepth = 1;
         discard;
+    } else {
+        vec3 point = findThePointOnSphereSurface();
+
+        // Writing the appropriate fragment depth value to the depth buffer
+        gl_FragDepth = calculateFragmentDepth(point);
+
+        // Surface
+        vec3 surfUnitNormal = normalize(point - frSphereCenter);// Valid because we're dealing with a sphere
+        vec3 diffuse;
+        vec3 specular;
+        diffuseAndSpecularLighting(diffuse, specular, point, surfUnitNormal);
+
+        out_Color = vec4(diffuse, 1.0)*vec4(color, 1) + vec4(specular, 1.0);
     }
-    vec3 point = findThePointOnSphereSurface();
-
-    // Writing the appropriate fragment depth value to the depth buffer
-    gl_FragDepth = calculateFragmentDepth(point);
-
-    // Surface
-    vec3 surfUnitNormal = normalize(point - frSphereCenter); // Valid because we're dealing with a sphere
-    vec3 diffuse;
-    vec3 specular;
-    diffuseAndSpecularLighting(diffuse, specular, point, surfUnitNormal);
-
-    out_Color = vec4(diffuse, 1.0)*vec4(color, 1) + vec4(specular, 1.0);
 }
 

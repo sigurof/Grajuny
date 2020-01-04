@@ -78,7 +78,7 @@ fun billboard(window: Long) {
                 val pos = Vector3f(i.toFloat(), j.toFloat(), k.toFloat()).mul(f)
                 coloredBalls.add(
                     SphereBillboardObject(
-                        blueSurface, pos, 0.5f
+                        blueSurface, pos, 1f
                     )
                 )
             }

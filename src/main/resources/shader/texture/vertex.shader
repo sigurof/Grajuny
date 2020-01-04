@@ -8,6 +8,7 @@ uniform mat4 trMatrix;
 uniform mat4 prjMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPos;
+uniform vec3 cameraPos;
 
 out vec2 passTextureCoords;
 out vec3 surfaceNormal;
@@ -21,6 +22,6 @@ void main(void){
     passTextureCoords = textureCoords;
     surfaceNormal = (trMatrix * vec4(normal, 0.0)).xyz;
     toLightVec = (lightPos - worldPos.xyz);
-    toCameraVec = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPos.xyz;
+    toCameraVec =  cameraPos - worldPos.xyz;
 
 }
