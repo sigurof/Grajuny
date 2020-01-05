@@ -11,12 +11,13 @@ class CommonRenderer<S : ShaderSettings>(
     private var objects: MutableList<out GameObject<S>> = mutableListOf()
 ) : Renderer {
     override fun render(globalContext: GlobalContext) {
-        shader.usingVaoDo(resource) {
+        shader.usingVaoDo(resource) { // TODO NOT GOOD!! shader -> resource
             globalContext.loadUniforms(shader)
-            resource.prepare(shader)
-            for (obj in objects) {
-                obj.loadUniforms(shader)
-                resource.render()
+            resource.using(shader){ // TODO NOT GOOD!! resource -> shader
+                for (obj in objects) {
+                    obj.loadUniforms(shader)
+                    resource.render()
+                }
             }
         }
     }

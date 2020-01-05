@@ -13,10 +13,12 @@ class TexturedBillboardResource(
         billboardResource.render()
     }
 
-    override fun prepare(shader: BillboardShaderSettings) {
+    override fun using(shader: BillboardShaderSettings, function: () -> Unit) {
         GL30.glActiveTexture(GL30.GL_TEXTURE0)
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, tex)
-        billboardResource.prepare(shader)
+        shader.loadUseTexture(true)
+        function()
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
     }
 
     override fun getVao(): Int {

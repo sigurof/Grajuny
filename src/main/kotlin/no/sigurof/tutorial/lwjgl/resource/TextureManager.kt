@@ -10,7 +10,8 @@ object TextureManager {
 
     private val sources = mapOf(
         "stall" to "src/main/resources/model/stall/stall-texture.png",
-        "default" to "src/main/resources/model/default-texture.png"
+        "default" to "src/main/resources/model/default-texture.png",
+        "earth512" to "src/main/resources/texture/earth512.png"
     )
 
     private val textures = mutableMapOf<String, Int>()

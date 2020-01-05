@@ -11,7 +11,8 @@ class MeshResource(
         GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.vertexCount, GL30.GL_UNSIGNED_INT, 0)
     }
 
-    override fun prepare(shader: PlainShaderSettings) {
+    override fun using(shader: PlainShaderSettings, function: () -> Unit) {
+        function()
     }
 
     override fun getVao(): Int {

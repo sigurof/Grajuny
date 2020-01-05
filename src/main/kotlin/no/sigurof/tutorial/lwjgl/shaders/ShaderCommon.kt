@@ -3,6 +3,7 @@ package no.sigurof.tutorial.lwjgl.shaders
 import no.sigurof.tutorial.lwjgl.resource.ResourceGl
 import no.sigurof.tutorial.lwjgl.shaders.settings.ShaderSettings
 import org.joml.Matrix4f
+import org.joml.Vector2f
 import org.joml.Vector3f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20.GL_COMPILE_STATUS
@@ -26,6 +27,7 @@ import org.lwjgl.opengl.GL20.glGetUniformLocation
 import org.lwjgl.opengl.GL20.glLinkProgram
 import org.lwjgl.opengl.GL20.glShaderSource
 import org.lwjgl.opengl.GL20.glUniform1f
+import org.lwjgl.opengl.GL20.glUniform2f
 import org.lwjgl.opengl.GL20.glUniform3f
 import org.lwjgl.opengl.GL20.glUniformMatrix4fv
 import org.lwjgl.opengl.GL20.glUseProgram
@@ -101,6 +103,10 @@ abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, f
 
     protected fun loadVector3(location: Int, vector: Vector3f) {
         glUniform3f(location, vector.x, vector.y, vector.z)
+    }
+
+    protected fun loadVector2(location: Int, vector: Vector2f) {
+        glUniform2f(location, vector.x, vector.y)
     }
 
     protected fun loadBoolean(location: Int, value: Boolean) {

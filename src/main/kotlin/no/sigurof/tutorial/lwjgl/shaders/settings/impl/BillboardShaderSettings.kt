@@ -4,6 +4,7 @@ import no.sigurof.tutorial.lwjgl.entity.Light
 import no.sigurof.tutorial.lwjgl.shaders.ShaderCommon
 import no.sigurof.tutorial.lwjgl.shaders.settings.DefaultShaderSettings
 import org.joml.Matrix4f
+import org.joml.Vector2f
 import org.joml.Vector3f
 
 private const val vtxSource = "src/main/resources/shader/billboard/vertex.shader"
@@ -25,6 +26,8 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardSh
     private val locationColor: Int = getUniformLocation("color")
     private val locationShineDamper: Int = getUniformLocation("shineDamper")
     private val locationReflectivity: Int = getUniformLocation("reflectivity")
+    private val locationPolarAngles: Int = getUniformLocation("frPolarAngles")
+    private val locationUseTexture: Int = getUniformLocation("frUseTexture")
 
     private val locationPrjMatrixFr: Int = getUniformLocation("frPrjMatrix")
     private val locationViewMatrixFr: Int = getUniformLocation("frViewMatrix")
@@ -80,5 +83,12 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardSh
         loadFloat(locationSphereRadiusFr, radius)
     }
 
+    fun loadPolarAngles(polarAngles: Vector2f) {
+        loadVector2(locationPolarAngles, polarAngles)
+    }
+
+    fun loadUseTexture(useTexture: Boolean){
+        loadBoolean(locationUseTexture, useTexture)
+    }
 
 }

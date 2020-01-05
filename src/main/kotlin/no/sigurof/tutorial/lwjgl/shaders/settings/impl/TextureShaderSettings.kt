@@ -13,7 +13,6 @@ object TextureShaderSettings : DefaultShaderSettings, ShaderCommon<TextureShader
     vtxSource,
     frgSource
 ) {
-
     private val locationTrMatrix: Int = getUniformLocation("trMatrix")
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
     private val locationViewMatrix: Int = getUniformLocation("viewMatrix")

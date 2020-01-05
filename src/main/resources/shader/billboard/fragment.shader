@@ -11,6 +11,9 @@ uniform mat4 frViewMatrix;
 uniform float frSphereRadius;
 uniform vec3 frCameraPos;
 uniform vec3 frSphereCenter;
+uniform vec2 frPolarAngles;
+uniform sampler2D textureSampler;
+uniform bool frUseTexture;
 
 // Which point on the billboard disk we're at "spherical space"
 in vec2 coord2d;
@@ -24,8 +27,11 @@ in vec3 billboardCenterPos;
 in float sphereToBbdDist;
 in vec3 billboardNormal;
 
+in vec3 cameraFwd;
+
 out vec4 out_Color;
 
+float pi = 3.14159265;
 vec3 findThePointOnSphereSurface(){
     // Finding
     float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
@@ -33,10 +39,11 @@ vec3 findThePointOnSphereSurface(){
     float domeHeight = sqrt(frSphereRadius*frSphereRadius- billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - sphereToBbdDist;
     // Calculate the height vector (vector of unit length pointing from billboard to camera)
     vec3 billboardToCamera = normalize(frCameraPos - billboardCenterPos);
-    // Then get the actual point on the spherical surface:
-    // TODO Skal potensielt være billboard normal her, ikke billboardToCamera
-    // Nei, billboardNormal vil alltid være lik billboardToCamera.
-    return billboardVertexPosition + domeHeight * billboardNormal;
+    // TODO Her skjer det feil
+    vec3 vec = billboardNormal;
+//    vec3 vec = normalize(billboardVertexPosition - frSphereCenter);
+//    vec3 vec = -normalize(cameraFwd);
+    return billboardVertexPosition + domeHeight * vec;
 }
 
 float calculateFragmentDepth(vec3 point){
@@ -74,11 +81,23 @@ void diffuseAndSpecularLighting(out vec3 diffuse, out vec3 specular, vec3 point,
     specular = calculateSpecularLight(point, surfUnitNormal, unitToLight);
 }
 
+vec2 getPolarAnglesOfPoint(vec3 point, vec3 sphereCenter, float radius){
+    vec3 onSphere = point - sphereCenter;
+    // spherical coordinate system angles separating point and reference point
+    float phi = acos(onSphere.y / radius);
+    float theta = acos(onSphere.x/radius/sin(phi));
+    if (onSphere.z > 0){
+        theta = -theta;
+    }
+    // convert angles (-1 to 1) to range (0, 1):
+    return vec2(theta, phi);
+}
+
 void main(void){
     // Discaring everything outside the sphere surface
     if (dot(coord2d, coord2d) > 1){
-//        out_Color = vec4(0, 0, 0, 1);
-//        gl_FragDepth = 1;
+        //        out_Color = vec4(0, 0, 0, 1);
+        //        gl_FragDepth = 1;
         discard;
     } else {
         vec3 point = findThePointOnSphereSurface();
@@ -92,7 +111,20 @@ void main(void){
         vec3 specular;
         diffuseAndSpecularLighting(diffuse, specular, point, surfUnitNormal);
 
-        out_Color = vec4(diffuse, 1.0)*vec4(color, 1) + vec4(specular, 1.0);
+        // Texture
+        vec3 finalColor = color;
+        vec2 frPolarAngles2  = getPolarAnglesOfPoint(point, frSphereCenter, frSphereRadius);
+        vec2 textureCoords = vec2((frPolarAngles2.x+pi)/2/pi , (frPolarAngles2.y+pi)/pi);
+
+        vec4 textureColor =texture(textureSampler, textureCoords);
+        if (frUseTexture){
+            finalColor.r = min(textureColor.r, finalColor.r);
+            finalColor.g = min(textureColor.g, finalColor.g);
+            finalColor.b = min(textureColor.b, finalColor.b);
+        }
+            out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(specular, 1.0);
+            //        out_Color = vec4(textureCoords.y, 0, 0, 1);
+
     }
 }
 

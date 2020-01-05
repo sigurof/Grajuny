@@ -12,7 +12,9 @@ class BillboardResource(
         GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, vertexCount)
     }
 
-    override fun prepare(shader: BillboardShaderSettings) {
+    override fun using(shader: BillboardShaderSettings, function: () -> Unit) {
+        shader.loadUseTexture(false)
+        function()
     }
 
     override fun getVao(): Int {

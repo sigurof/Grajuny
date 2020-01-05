@@ -23,7 +23,7 @@ object ResourceManager {
         )
     }
 
-    fun getTexturedBillboardResource(textureName: String, camera: Camera): TexturedBillboardResource {
+    fun getTexturedBillboardResource(textureName: String): TexturedBillboardResource {
         return TexturedBillboardResource(
             TextureManager.get(textureName),
             Loader.createVao(),

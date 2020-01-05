@@ -13,10 +13,11 @@ class TexturedMeshResource(
         meshResource.render()
     }
 
-    override fun prepare(shader: TextureShaderSettings) {
+    override fun using(shader: TextureShaderSettings, function: () -> Unit) {
         GL30.glActiveTexture(GL30.GL_TEXTURE0)
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, tex)
-//        meshResource.prepare(shader) Don't need to call
+        function()
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
     }
 
     override fun getVao(): Int {

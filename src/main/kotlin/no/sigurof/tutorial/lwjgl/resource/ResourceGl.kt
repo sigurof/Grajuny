@@ -4,6 +4,6 @@ import no.sigurof.tutorial.lwjgl.shaders.settings.ShaderSettings
 
 interface ResourceGl<in S: ShaderSettings> {
     fun render()
-    fun prepare(shader: S)
+    fun using(shader: S, function: ()->Unit)
     fun getVao() : Int
 }
