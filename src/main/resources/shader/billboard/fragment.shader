@@ -26,12 +26,23 @@ in vec3 billboardCenterPos;
 // The displacement of the billboard
 in float sphereToBbdDist;
 in vec3 billboardNormal;
+in float billboardRadius;
 
 in vec3 cameraFwd;
 
 out vec4 out_Color;
 
 float pi = 3.14159265;
+
+vec3 findThePointOnSphereSurface2(){
+    vec3 bbdPointToCameraUnit = normalize(frCameraPos - billboardVertexPosition); // Ray
+    vec3 sphereToBbdPoint = billboardVertexPosition - frSphereCenter;
+    float B = 2*dot(bbdPointToCameraUnit, sphereToBbdPoint);
+    float C = dot(sphereToBbdPoint, sphereToBbdPoint) - frSphereRadius*frSphereRadius;
+    float distance = (-B + sqrt(B*B - 4*C))/2;
+    return billboardVertexPosition + distance * bbdPointToCameraUnit;
+}
+
 vec3 findThePointOnSphereSurface(){
     // Finding
     float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
@@ -39,10 +50,10 @@ vec3 findThePointOnSphereSurface(){
     float domeHeight = sqrt(frSphereRadius*frSphereRadius- billboardCenterToBillboardPoint*billboardCenterToBillboardPoint) - sphereToBbdDist;
     // Calculate the height vector (vector of unit length pointing from billboard to camera)
     vec3 billboardToCamera = normalize(frCameraPos - billboardCenterPos);
-    // TODO Her skjer det feil
+
     vec3 vec = billboardNormal;
-//    vec3 vec = normalize(billboardVertexPosition - frSphereCenter);
-//    vec3 vec = -normalize(cameraFwd);
+    //    vec3 vec = normalize(billboardVertexPosition - frSphereCenter);
+    //    vec3 vec = -normalize(cameraFwd);
     return billboardVertexPosition + domeHeight * vec;
 }
 
@@ -81,16 +92,37 @@ void diffuseAndSpecularLighting(out vec3 diffuse, out vec3 specular, vec3 point,
     specular = calculateSpecularLight(point, surfUnitNormal, unitToLight);
 }
 
+float maxVec3(vec3 vec){
+    return max(vec.x, max(vec.y, vec.z));
+}
+
 vec2 getPolarAnglesOfPoint(vec3 point, vec3 sphereCenter, float radius){
     vec3 onSphere = point - sphereCenter;
     // spherical coordinate system angles separating point and reference point
     float phi = acos(onSphere.y / radius);
-    float theta = acos(onSphere.x/radius/sin(phi));
-    if (onSphere.z > 0){
+    float sqrtR2Miny2 = sqrt(radius*radius - onSphere.y*onSphere.y);
+    float sinphi = sqrtR2Miny2/radius;
+    float theta = acos(onSphere.x / sqrtR2Miny2);
+    if (onSphere.z >= 0){
         theta = -theta;
     }
     // convert angles (-1 to 1) to range (0, 1):
     return vec2(theta, phi);
+}
+
+
+vec2 getTextureCoordinatesOfPoint2(vec3 point, vec3 sphereCenter, float radius){
+    vec3 onSphere = point - sphereCenter;
+
+    vec3 onCylinder = vec3(normalize(onSphere.xz), onSphere.y/radius).xzy;
+    float sintheta = onCylinder.z;
+
+    return vec2(asin(sintheta)+pi, (onCylinder.y-1)/2);
+}
+
+vec2 getTextureCoordinatesOfPoint(vec3 point, vec3 sphereCenter, float radius){
+    vec2 frPolarAngles2  = getPolarAnglesOfPoint(point, sphereCenter, radius);
+    return vec2((frPolarAngles2.x+pi)/2/pi, (frPolarAngles2.y)/pi);
 }
 
 void main(void){
@@ -100,7 +132,7 @@ void main(void){
         //        gl_FragDepth = 1;
         discard;
     } else {
-        vec3 point = findThePointOnSphereSurface();
+        vec3 point = findThePointOnSphereSurface2();
 
         // Writing the appropriate fragment depth value to the depth buffer
         gl_FragDepth = calculateFragmentDepth(point);
@@ -113,8 +145,7 @@ void main(void){
 
         // Texture
         vec3 finalColor = color;
-        vec2 frPolarAngles2  = getPolarAnglesOfPoint(point, frSphereCenter, frSphereRadius);
-        vec2 textureCoords = vec2((frPolarAngles2.x+pi)/2/pi , (frPolarAngles2.y+pi)/pi);
+        vec2 textureCoords = getTextureCoordinatesOfPoint(point, frSphereCenter, frSphereRadius);
 
         vec4 textureColor =texture(textureSampler, textureCoords);
         if (frUseTexture){
@@ -122,8 +153,18 @@ void main(void){
             finalColor.g = min(textureColor.g, finalColor.g);
             finalColor.b = min(textureColor.b, finalColor.b);
         }
-            out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(specular, 1.0);
-            //        out_Color = vec4(textureCoords.y, 0, 0, 1);
+        vec3 x = vec3(1, 0, 0);
+        vec3 y = vec3(0, 1, 0);
+        vec3 z = vec3(0, 0, 1);
+        float r = dot(point, x);
+        float g = dot(point, z);
+        float b = dot(point, y);
+        out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(specular, 1.0);
+//         Experimenting:
+//        out_Color = vec4(frPolarAngles2.x / pi, 0, 0, 1);
+//        vec3 diff = (point-billboardCenterPos)/frSphereRadius;
+//        float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
+//        out_Color = vec4(finalColor, 1);
 
     }
 }

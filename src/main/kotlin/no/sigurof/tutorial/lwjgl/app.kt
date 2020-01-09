@@ -30,7 +30,7 @@ fun billboard(window: Long) {
 
     val light = Light.Builder()
         .position(Vector3f(0f, 11f, 0f))
-        .ambient(0.1f)
+        .ambient(0.5f)
         .build()
     val camera = Camera.Builder()
         .at(Vector3f(0f, 2f, -4f))
@@ -90,15 +90,15 @@ fun billboard(window: Long) {
         }
     }
 
-    val colSoftBall = CommonRenderer(
-        BillboardShaderSettings,
-        ResourceManager.getBillboardResource(camera),
-        coloredBalls
-    )
+//    val colSoftBall = CommonRenderer(
+//        BillboardShaderSettings,
+//        ResourceManager.getBillboardResource(camera),
+//        coloredBalls
+//    )
 
     val texSoftBall = CommonRenderer(
         BillboardShaderSettings,
-        ResourceManager.getTexturedBillboardResource("earth512"),
+        ResourceManager.getTexturedBillboardResource("earth1024"),
         mutableListOf(
             TexturedBbdSphereObject(
                 DiffuseSpecularSurface(damper, reflectivity, white),
@@ -108,8 +108,20 @@ fun billboard(window: Long) {
             )
         )
     )
+    val texSoftBall2 = CommonRenderer(
+        BillboardShaderSettings,
+        ResourceManager.getTexturedBillboardResource("earth1024"),
+        mutableListOf(
+            TexturedBbdSphereObject(
+                DiffuseSpecularSurface(damper, reflectivity, white),
+                Vector3f(0.9f, 0f, 0f),
+                Vector2f(0f, 0f),
+                1f
+            )
+        )
+    )
 
-    val models = mutableListOf(texSoftBall, colSoftBall)
+    val models = mutableListOf(texSoftBall, texSoftBall2)
     val context = DefaultSceneContext(
         camera = camera,
         light = light

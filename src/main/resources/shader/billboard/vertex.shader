@@ -18,6 +18,7 @@ out vec3 billboardCenterPos;
 out float sphereToBbdDist;
 out vec3 billboardNormal;
 out vec3 cameraFwd;
+out float billboardRadius;
 
 
 vec2 whichVertex(){
@@ -71,7 +72,7 @@ vec3 calcBillboardVertexCoord(){
     vec3 displacementVector = sphereToBbdDist * billboardSurfaceNormal;
     // At this distance from the sphere center in the direction of the camera, the radius of the circular intersection
     // between the sphere and the normal plane to said direction, is given by:
-    float billboardRadius = sqrt(sphereRadius*sphereRadius - sphereToBbdDist*sphereToBbdDist);
+    billboardRadius = sqrt(sphereRadius*sphereRadius - sphereToBbdDist*sphereToBbdDist);
 
     // The billboard space x component of the point on the billboard in world coordinates
     vec3 x = billboardRightDirection * coord2d.x * billboardRadius;
