@@ -2,6 +2,7 @@ package no.sigurof.tutorial.lwjgl.scenario
 
 import no.sigurof.tutorial.lwjgl.context.DefaultSceneContext
 import no.sigurof.tutorial.lwjgl.renderer.Renderer
+import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL30
 import kotlin.math.PI
@@ -11,7 +12,8 @@ const val piHalf = PI.toFloat() / 2f
 class Scenario internal constructor(
     private val window: Long,
     private val renderers: List<Renderer>,
-    private val context: DefaultSceneContext
+    private val context: DefaultSceneContext,
+    private val background: Vector4f = Vector4f(0.2f, 0.3f, 0.1f, 1.0f)
 ) {
 
     fun prepare() {
@@ -41,7 +43,7 @@ class Scenario internal constructor(
         GL30.glEnable(GL30.GL_DEPTH_TEST)
         GL30.glEnable(GL30.GL_CULL_FACE)
         GL30.glCullFace(GL30.GL_BACK)
-        GL30.glClearColor(0.2f, 0.3f, 0.1f, 1.0f)
+        GL30.glClearColor(background.x, background.y, background.z, background.w)
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT or GL30.GL_DEPTH_BUFFER_BIT)
     }
 

@@ -18,6 +18,7 @@ import no.sigurof.tutorial.lwjgl.shaders.settings.impl.PlainShaderSettings
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.TextureShaderSettings
 import org.joml.Vector2f
 import org.joml.Vector3f
+import org.joml.Vector4f
 
 fun main() {
     DisplayManager.withWindowOpen { window ->
@@ -91,12 +92,6 @@ fun billboard(window: Long) {
         }
     }
 
-//    val colSoftBall = CommonRenderer(
-//        BillboardShaderSettings,
-//        ResourceManager.getBillboardResource(camera),
-//        coloredBalls
-//    )
-
     val texSoftBall = CommonRenderer(
         BillboardShaderSettings,
         ResourceManager.getTexturedBillboardResource("earth8192"),
@@ -115,9 +110,10 @@ fun billboard(window: Long) {
         camera = camera,
         light = light
     )
+    val background = Vector4f(0f, 0f, 0f, 1f);
 
     DisplayManager.FPS = 60
-    val scenario = Scenario(window, models, context)
+    val scenario = Scenario(window, models, context, background)
     Visualization.play(scenario)
 }
 
