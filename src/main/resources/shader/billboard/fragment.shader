@@ -111,17 +111,16 @@ vec2 getPolarAnglesOfPoint(vec3 point, vec3 sphereCenter, float radius){
 }
 
 
-vec2 getTextureCoordinatesOfPoint2(vec3 point, vec3 sphereCenter, float radius){
+vec2 getPolarAnglesOfPoint2(vec3 point, vec3 sphereCenter, float radius){
     vec3 onSphere = point - sphereCenter;
-
-    vec3 onCylinder = vec3(normalize(onSphere.xz), onSphere.y/radius).xzy;
-    float sintheta = onCylinder.z;
-
-    return vec2(asin(sintheta)+pi, (onCylinder.y-1)/2);
+    float phi = acos(onSphere.y / radius);
+    vec3 onSphereUnit = normalize(point - sphereCenter);
+    float theta = atan(onSphereUnit.x, onSphereUnit.z);
+    return vec2(theta, phi);
 }
 
 vec2 getTextureCoordinatesOfPoint(vec3 point, vec3 sphereCenter, float radius){
-    vec2 frPolarAngles2  = getPolarAnglesOfPoint(point, sphereCenter, radius);
+    vec2 frPolarAngles2  = getPolarAnglesOfPoint2(point, sphereCenter, radius);
     return vec2((frPolarAngles2.x+pi)/2/pi, (frPolarAngles2.y)/pi);
 }
 

@@ -16,7 +16,6 @@ import no.sigurof.tutorial.lwjgl.scenario.piHalf
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.BillboardShaderSettings
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.PlainShaderSettings
 import no.sigurof.tutorial.lwjgl.shaders.settings.impl.TextureShaderSettings
-import no.sigurof.tutorial.lwjgl.utils.ORIGIN
 import org.joml.Vector2f
 import org.joml.Vector3f
 
@@ -28,14 +27,16 @@ fun main() {
 
 fun billboard(window: Long) {
 
+    val earthPos = Vector3f(0f, 0f, 0f);
+
     val light = Light.Builder()
-        .position(Vector3f(0f, 11f, 0f))
+        .position(earthPos.add(Vector3f(0f, 5f, 0f), Vector3f()))
         .ambient(0.5f)
         .build()
     val camera = Camera.Builder()
-        .at(Vector3f(0f, 2f, -4f))
-        .lookingAt(ORIGIN)
-        .withSpeed(4f)
+        .at(Vector3f(16f + 6f, 2f, 16 + 6f))
+        .lookingAt(earthPos)
+        .withSpeed(12f)
         .build()
 
     val blue = Vector3f(0.1f, 0.4f, 0.9f)
@@ -98,30 +99,18 @@ fun billboard(window: Long) {
 
     val texSoftBall = CommonRenderer(
         BillboardShaderSettings,
-        ResourceManager.getTexturedBillboardResource("earth1024"),
+        ResourceManager.getTexturedBillboardResource("earth8192"),
         mutableListOf(
             TexturedBbdSphereObject(
                 DiffuseSpecularSurface(damper, reflectivity, white),
-                ORIGIN,
+                earthPos,
                 Vector2f(0f, 0f),
-                1f
-            )
-        )
-    )
-    val texSoftBall2 = CommonRenderer(
-        BillboardShaderSettings,
-        ResourceManager.getTexturedBillboardResource("earth1024"),
-        mutableListOf(
-            TexturedBbdSphereObject(
-                DiffuseSpecularSurface(damper, reflectivity, white),
-                Vector3f(0.9f, 0f, 0f),
-                Vector2f(0f, 0f),
-                1f
+                15f
             )
         )
     )
 
-    val models = mutableListOf(texSoftBall, texSoftBall2)
+    val models = mutableListOf(texSoftBall)
     val context = DefaultSceneContext(
         camera = camera,
         light = light

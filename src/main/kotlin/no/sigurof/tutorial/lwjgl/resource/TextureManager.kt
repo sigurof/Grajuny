@@ -12,7 +12,8 @@ object TextureManager {
         "stall" to "src/main/resources/model/stall/stall-texture.png",
         "default" to "src/main/resources/model/default-texture.png",
         "earth512" to "src/main/resources/texture/earth512.png",
-        "earth1024" to "src/main/resources/texture/earth1024.png"
+        "earth1024" to "src/main/resources/texture/earth1024.png",
+        "earth8192" to "src/main/resources/texture/earth8192.png"
     )
 
     private val textures = mutableMapOf<String, Int>()
