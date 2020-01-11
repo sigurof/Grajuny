@@ -14,11 +14,11 @@ class DisplayManager {
     companion object {
         internal var WIDTH: Int = 1280
         internal var HEIGHT: Int = 720
-        internal var FPS = 120
+        var FPS = 120
         private var window: Long? = null
         private var lastUpdate: Long = currentTimeMillis()
 
-        internal fun withWindowOpen(program: (window: Long) -> Unit) {
+        fun withWindowOpen(program: (window: Long) -> Unit) {
             val win = createDisplay()
             program(win)
             closeDisplay()

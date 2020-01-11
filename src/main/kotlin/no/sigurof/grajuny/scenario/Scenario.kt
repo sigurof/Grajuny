@@ -5,15 +5,12 @@ import no.sigurof.grajuny.renderer.Renderer
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL30
-import kotlin.math.PI
-
-const val piHalf = PI.toFloat() / 2f
 
 /**
  * A `Scenario` represents a single session with an open window.
  *
  * */
-class Scenario internal constructor(
+class Scenario constructor(
     private val window: Long,
     private val renderers: List<Renderer>,
     private val context: DefaultSceneContext,
