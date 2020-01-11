@@ -2,6 +2,7 @@ package no.sigurof.grajuny.shaders
 
 import no.sigurof.grajuny.resource.ResourceGl
 import no.sigurof.grajuny.shaders.settings.ShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -32,7 +33,6 @@ import org.lwjgl.opengl.GL20.glUniform3f
 import org.lwjgl.opengl.GL20.glUniformMatrix4fv
 import org.lwjgl.opengl.GL20.glUseProgram
 import org.lwjgl.opengl.GL30
-import java.io.File
 import java.nio.FloatBuffer
 
 abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, frgSource: String) {
@@ -143,7 +143,7 @@ abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, f
     companion object {
 
         private fun compileShaderFromSource(source: String, typeGl: Int): Int {
-            val text: String = File(source).readText()
+            val text = BillboardShaderSettings::class.java.getResource(source).readText()
             val shader = glCreateShader(typeGl)
             glShaderSource(shader, text)
             glCompileShader(shader)

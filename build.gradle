@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         mavenLocal()
@@ -14,6 +13,16 @@ plugins {
 
 group 'no.sigurof'
 version '0.0.1'
+
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
 
 repositories {
     mavenLocal()
