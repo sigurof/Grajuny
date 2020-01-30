@@ -5,6 +5,7 @@ import no.sigurof.grajuny.engine.DisplayManager
 import no.sigurof.grajuny.engine.Visualization
 import no.sigurof.grajuny.entity.Camera
 import no.sigurof.grajuny.entity.Light
+import no.sigurof.grajuny.entity.obj.SphereBillboardObject
 import no.sigurof.grajuny.entity.obj.TexturedBbdSphereObject
 import no.sigurof.grajuny.entity.surface.DiffuseSpecularSurface
 import no.sigurof.grajuny.renderer.CommonRenderer
@@ -50,6 +51,18 @@ fun billboard(window: Long) {
                 15f
             )
         )
+    )
+    val objects = mutableListOf(
+        SphereBillboardObject(
+            DiffuseSpecularSurface(damper, reflectivity, white),
+            Vector3f(10f, 1f, 1f),
+            1f
+        )
+    )
+    val colSoftBall = CommonRenderer(
+        BillboardShaderSettings,
+        ResourceManager.getBillboardResource(camera),
+        objects
     )
 
     val models = mutableListOf(texSoftBall)

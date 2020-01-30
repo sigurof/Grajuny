@@ -17,18 +17,18 @@ class Scenario constructor(
     private val background: Vector4f = Vector4f(0.2f, 0.3f, 0.1f, 1.0f)
 ) {
 
-    internal fun prepare() {
+    fun prepare() {
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
         context.camera.setCursorPosCallback(window)
     }
 
-    internal fun run() {
+    fun run() {
         context.camera.move(window)
         prepareFrame()
         render()
     }
 
-    internal fun cleanUp() {
+    fun cleanUp() {
         for (model in renderers) {
             model.cleanShader()
         }

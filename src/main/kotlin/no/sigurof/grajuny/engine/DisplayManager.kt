@@ -49,7 +49,7 @@ class DisplayManager {
             return window!!
         }
 
-        internal fun eachFrameDo(func: (() -> Unit)) {
+        fun eachFrameDo(func: (() -> Unit)) {
             window
                 ?.let {
                     val now = currentTimeMillis()
@@ -68,7 +68,7 @@ class DisplayManager {
             }
         }
 
-        internal fun isOpen(): Boolean {
+        fun isOpen(): Boolean {
             return window?.let { !GLFW.glfwWindowShouldClose(it) } ?: false
         }
     }

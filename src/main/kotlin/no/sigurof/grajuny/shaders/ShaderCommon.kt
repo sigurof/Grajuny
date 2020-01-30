@@ -59,16 +59,16 @@ abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, f
             frgSource,
             GL_FRAGMENT_SHADER
         )
-    private val program: Int = glCreateProgram().run {
-        glAttachShader(this, vtxShader)
-        glAttachShader(this, frgShader)
+    private val program: Int = glCreateProgram().let {
+        glAttachShader(it, vtxShader)
+        glAttachShader(it, frgShader)
         bindAttributes()
-        glLinkProgram(this)
-        if (glGetProgrami(this, GL_LINK_STATUS) == GL_FALSE) {
-            val info = glGetProgramInfoLog(this, 512)
+        glLinkProgram(it)
+        if (glGetProgrami(it, GL_LINK_STATUS) == GL_FALSE) {
+            val info = glGetProgramInfoLog(it, 512)
             throw RuntimeException("Feil ved linking av shadere:\n $info")
         }
-        return@run this
+        it
     }
 
     protected fun getUniformLocation(uniformName: String): Int {
