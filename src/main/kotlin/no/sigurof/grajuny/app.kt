@@ -5,6 +5,7 @@ import no.sigurof.grajuny.engine.DisplayManager
 import no.sigurof.grajuny.engine.Visualization
 import no.sigurof.grajuny.entity.Camera
 import no.sigurof.grajuny.entity.Light
+import no.sigurof.grajuny.entity.obj.PlainObject
 import no.sigurof.grajuny.entity.obj.SphereBillboardObject
 import no.sigurof.grajuny.entity.obj.TexturedBbdSphereObject
 import no.sigurof.grajuny.entity.surface.DiffuseSpecularSurface
@@ -12,6 +13,7 @@ import no.sigurof.grajuny.renderer.CommonRenderer
 import no.sigurof.grajuny.resource.ResourceManager
 import no.sigurof.grajuny.scenario.Scenario
 import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.PlainShaderSettings
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -52,6 +54,20 @@ fun billboard(window: Long) {
             )
         )
     )
+
+    val dragon = CommonRenderer(
+        PlainShaderSettings,
+        ResourceManager.getMeshResource("cube"),
+        mutableListOf(
+            PlainObject(
+                DiffuseSpecularSurface(damper, reflectivity, white),
+                earthPos,
+                Vector3f(0f, 0f, 0f),
+                Vector3f(1f, 1f, 1f)
+            )
+        )
+    )
+
     val objects = mutableListOf(
         SphereBillboardObject(
             DiffuseSpecularSurface(damper, reflectivity, white),
@@ -65,7 +81,7 @@ fun billboard(window: Long) {
         objects
     )
 
-    val models = mutableListOf(texSoftBall)
+    val models = mutableListOf(dragon)
     val context = DefaultSceneContext(
         camera = camera,
         light = light

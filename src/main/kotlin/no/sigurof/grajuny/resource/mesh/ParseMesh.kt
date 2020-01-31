@@ -3,7 +3,6 @@ package no.sigurof.grajuny.resource.mesh
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector3i
-import java.io.File
 
 data class ParsedMesh(
     val eboIndices: List<Int> = mutableListOf(),
@@ -25,7 +24,7 @@ fun parseObjFile(source: String): ParsedMesh {
         .map { it to mutableListOf<Int>() }
         .toMap()
 
-    val lines = File(source).readLines()
+    val lines = ParsedMesh::class.java.getResource(source).file.lines()
     for ((i, line) in lines.withIndex()) {
         parseKeyword(line)?.let {
             lineIndsByKeyword.getValue(it).add(i)
