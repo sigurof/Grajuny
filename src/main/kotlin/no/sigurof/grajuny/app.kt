@@ -14,6 +14,7 @@ import no.sigurof.grajuny.resource.ResourceManager
 import no.sigurof.grajuny.scenario.Scenario
 import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import no.sigurof.grajuny.shaders.settings.impl.PlainShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.TextureShaderSettings
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -68,6 +69,19 @@ fun billboard(window: Long) {
         )
     )
 
+    val texDragon = CommonRenderer(
+        TextureShaderSettings,
+        ResourceManager.getTexturedMeshResource("dragon", "stall"),
+        mutableListOf(
+            PlainObject(
+                DiffuseSpecularSurface(damper, reflectivity, white),
+                earthPos,
+                Vector3f(0f, 0f, 0f),
+                Vector3f(1f, 1f, 1f)
+            )
+        )
+    )
+
     val objects = mutableListOf(
         SphereBillboardObject(
             DiffuseSpecularSurface(damper, reflectivity, white),
@@ -81,12 +95,12 @@ fun billboard(window: Long) {
         objects
     )
 
-    val models = mutableListOf(dragon)
+    val models = mutableListOf(texDragon)
     val context = DefaultSceneContext(
         camera = camera,
         light = light
     )
-    val background = Vector4f(0f, 0f, 0f, 1f);
+    val background = Vector4f(0f, 0.5f, 0.1f, 1f)
 
     DisplayManager.FPS = 60
     val scenario = Scenario(window, models, context, background)
