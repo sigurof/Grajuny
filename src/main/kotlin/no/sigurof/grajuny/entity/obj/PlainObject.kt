@@ -1,12 +1,12 @@
 package no.sigurof.grajuny.entity.obj
 
-import no.sigurof.grajuny.entity.surface.DiffuseSpecularSurface
+import no.sigurof.grajuny.entity.surface.Surface
 import no.sigurof.grajuny.shaders.settings.DefaultShaderSettings
 import no.sigurof.grajuny.utils.Maths
 import org.joml.Vector3f
 
 class PlainObject constructor(
-    private val surface: DiffuseSpecularSurface,
+    private val surface: Surface<DefaultShaderSettings>,
     private var position: Vector3f,
     private val eulerAngles: Vector3f,
     private val scale: Vector3f

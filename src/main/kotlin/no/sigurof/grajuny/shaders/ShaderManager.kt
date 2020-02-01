@@ -124,6 +124,10 @@ object ShaderManager {
         GL20.glUseProgram(shader.program)
     }
 
+    fun useShader(program: Int){
+        GL20.glUseProgram(program)
+    }
+
     fun usingVaoDo(shader: ShaderSettings, vao: Int, function: () -> Unit) {
         GL20.glUseProgram(shader.program)
         bindVertAttrArrayAndVao(vao, shader.attributes)

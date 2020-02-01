@@ -17,6 +17,7 @@ class TexturedBillboardResource(
         get() = billboardResource.vao
 
     override fun activate(shader: BillboardShaderSettings) {
+        GL30.glBindVertexArray(vao)
         GL30.glActiveTexture(GL30.GL_TEXTURE0)
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, tex)
         shader.loadUseTexture(true)
@@ -24,5 +25,6 @@ class TexturedBillboardResource(
 
     override fun deactivate(shader: BillboardShaderSettings) {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
+        GL30.glBindVertexArray(0)
     }
 }

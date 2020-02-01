@@ -109,7 +109,7 @@ fun billboard(window: Long) {
         camera = camera,
         light = light
     )
-    val background = Vector4f(1f, 1f, 1f, 1f)
+    val background = Vector4f(0.2f, 0.1f, 0.04f, 1f)
 
     DisplayManager.FPS = 60
     val scenario = Scenario(window, models, context, background)

@@ -6,9 +6,10 @@ import org.lwjgl.opengl.GL30
 
 class TexturedMeshResource(
     private val tex: Int,
-    mesh: Mesh
+    mesh: Mesh,
+    attributes: List<Int>
 ) : ResourceGl<StandardShader> {
-    private val meshResource: MeshResource = MeshResource(mesh)
+    private val meshResource: MeshResource = MeshResource(mesh, attributes)
     override fun render() {
         meshResource.render()
     }
@@ -17,6 +18,10 @@ class TexturedMeshResource(
         get() = meshResource.vao
 
     override fun activate(shader: StandardShader) {
+        GL30.glBindVertexArray(vao)
+        for (attr in meshResource.attributes) {
+            GL30.glEnableVertexAttribArray(attr)
+        }
         GL30.glActiveTexture(GL30.GL_TEXTURE0)
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, tex)
         shader.loadUseTexture(true)
@@ -24,6 +29,10 @@ class TexturedMeshResource(
 
     override fun deactivate(shader: StandardShader) {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
+        for (attr in meshResource.attributes) {
+            GL30.glDisableVertexAttribArray(attr)
+        }
+        GL30.glBindVertexArray(0)
     }
 
 }

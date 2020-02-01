@@ -7,13 +7,13 @@ import no.sigurof.grajuny.resource.mesh.MeshManager
 object ResourceManager {
 
     fun getMeshResource(name: String): MeshResource {
-        return MeshResource(MeshManager.getMesh(name))
+        return MeshResource(MeshManager.getMesh(name), listOf(0, 1, 2))
     }
 
     fun getTexturedMeshResource(meshName: String, textureName: String): TexturedMeshResource {
         val mesh = MeshManager.getMesh(meshName)
         val texture = TextureManager.get(textureName)
-        return TexturedMeshResource(texture, mesh)
+        return TexturedMeshResource(texture, mesh, listOf(0, 1, 2))
     }
 
     fun getBillboardResource(camera: Camera): BillboardResource {
