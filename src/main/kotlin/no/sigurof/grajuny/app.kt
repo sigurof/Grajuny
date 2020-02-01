@@ -13,8 +13,7 @@ import no.sigurof.grajuny.renderer.CommonRenderer
 import no.sigurof.grajuny.resource.ResourceManager
 import no.sigurof.grajuny.scenario.Scenario
 import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
-import no.sigurof.grajuny.shaders.settings.impl.PlainShaderSettings
-import no.sigurof.grajuny.shaders.settings.impl.TextureShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.StandardShader
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -29,10 +28,9 @@ fun billboard(window: Long) {
 
     val origin = Vector3f(0f, 0f, 0f)
     val x = Vector3f(1f, 0f, 0f)
-    val earthPos = origin
 
     val light = Light.Builder()
-        .position(earthPos.add(Vector3f(0f, 5f, 0f), Vector3f()))
+        .position(origin.add(Vector3f(0f, 5f, 0f), Vector3f()))
         .ambient(0.5f)
         .build()
     val camera = Camera.Builder()
@@ -50,7 +48,7 @@ fun billboard(window: Long) {
     val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blue)
 
     val texDragon = CommonRenderer(
-        TextureShaderSettings,
+        StandardShader,
         ResourceManager.getTexturedMeshResource("dragon", "stall"),
         mutableListOf(
             PlainObject(
@@ -63,7 +61,7 @@ fun billboard(window: Long) {
     )
 
     val colDragon = CommonRenderer(
-        PlainShaderSettings,
+        StandardShader,
         ResourceManager.getMeshResource("cube"),
         mutableListOf(
             PlainObject(
@@ -94,7 +92,7 @@ fun billboard(window: Long) {
     }
 
     val texSoftBall = CommonRenderer(
-        BillboardShaderSettings(),
+        BillboardShaderSettings,
         ResourceManager.getTexturedBillboardResource("earth8192"),
         mutableListOf(
             TexturedBbdSphereObject(

@@ -6,45 +6,41 @@ import no.sigurof.grajuny.shaders.settings.DefaultShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-private const val vtxSource = "/shader/billboard/vertex.shader"
-private const val frgSource = "/shader/billboard/fragment.shader"
+private const val vtxSource = "/shader/texture/vertex.shader"
+private const val frgSource = "/shader/texture/fragment.shader"
 
-object BillboardShaderSettings : DefaultShaderSettings {
-    override val attributes: List<Pair<Int, String>> = emptyList()
+object StandardShader : DefaultShaderSettings {
+    override val attributes = listOf(
+        0 to "position",
+        1 to "textureCoords",
+        2 to "normal"
+    )
     override val program = ShaderManager.compileProgram(vtxSource, frgSource, attributes)
     private val uniforms = listOf(
+        "trMatrix",
         "prjMatrix",
         "viewMatrix",
-        "sphereRadius",
-        "sphereCenter",
-        "cameraPos",
         "lightPos",
         "lightCol",
-        "ambient",
-        "color",
         "shineDamper",
         "reflectivity",
-        "frUseTexture",
-        "frPrjMatrix",
-        "frViewMatrix",
-        "frSphereRadius",
-        "frCameraPos",
-        "frSphereCenter"
+        "ambient",
+        "color",
+        "cameraPos",
+        "useTexture"
     )
     private val locations = uniforms.map { it to ShaderManager.getUniformLocation(it, program) }.toMap()
 
     override fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
-        return
+        ShaderManager.loadMatrix(locations.getValue("trMatrix"), transformationMatrix)
     }
 
     override fun loadProjectionMatrix(projectionMatrix: Matrix4f) {
         ShaderManager.loadMatrix(locations.getValue("prjMatrix"), projectionMatrix)
-        ShaderManager.loadMatrix(locations.getValue("frPrjMatrix"), projectionMatrix)
     }
 
     override fun loadViewMatrix(viewMatrix: Matrix4f) {
         ShaderManager.loadMatrix(locations.getValue("viewMatrix"), viewMatrix)
-        ShaderManager.loadMatrix(locations.getValue("frViewMatrix"), viewMatrix)
     }
 
     override fun loadLight(light: Light) {
@@ -58,27 +54,16 @@ object BillboardShaderSettings : DefaultShaderSettings {
         ShaderManager.loadFloat(locations.getValue("reflectivity"), reflectivity)
     }
 
-    override fun loadCameraPosition(cameraPosition: Vector3f) {
-        ShaderManager.loadVector3(locations.getValue("cameraPos"), cameraPosition)
-        ShaderManager.loadVector3(locations.getValue("frCameraPos"), cameraPosition)
-    }
-
     override fun loadColor(color: Vector3f) {
         ShaderManager.loadVector3(locations.getValue("color"), color);
     }
 
-    fun loadSphereCenter(sphereCenter: Vector3f) {
-        ShaderManager.loadVector3(locations.getValue("sphereCenter"), sphereCenter)
-        ShaderManager.loadVector3(locations.getValue("frSphereCenter"), sphereCenter)
-    }
-
-    fun loadSphereRadius(radius: Float) {
-        ShaderManager.loadFloat(locations.getValue("sphereRadius"), radius)
-        ShaderManager.loadFloat(locations.getValue("frSphereRadius"), radius)
+    override fun loadCameraPosition(cameraPosition: Vector3f) {
+        ShaderManager.loadVector3(locations.getValue("cameraPos"), cameraPosition)
     }
 
     fun loadUseTexture(useTexture: Boolean) {
-        ShaderManager.loadBoolean(locations.getValue("frUseTexture"), useTexture)
+        ShaderManager.loadBoolean(locations.getValue("useTexture"), useTexture)
     }
-
 }
+
