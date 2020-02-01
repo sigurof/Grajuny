@@ -25,18 +25,14 @@ class Scenario constructor(
     fun run() {
         context.camera.move(window)
         prepareFrame()
-        render()
+        for (model in renderers) {
+            model.render(context)
+        }
     }
 
     fun cleanUp() {
         for (model in renderers) {
             model.cleanShader()
-        }
-    }
-
-    private fun render() {
-        for (model in renderers) {
-            model.render(context)
         }
     }
 

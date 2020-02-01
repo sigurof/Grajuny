@@ -19,7 +19,6 @@ import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
 
-
 fun main() {
     DisplayManager.withWindowOpen { window ->
         billboard(window)
@@ -28,7 +27,9 @@ fun main() {
 
 fun billboard(window: Long) {
 
-    val earthPos = Vector3f(0f, 0f, 0f);
+    val origin = Vector3f(0f, 0f, 0f)
+    val x = Vector3f(1f, 0f, 0f)
+    val earthPos = origin
 
     val light = Light.Builder()
         .position(earthPos.add(Vector3f(0f, 5f, 0f), Vector3f()))
@@ -36,7 +37,7 @@ fun billboard(window: Long) {
         .build()
     val camera = Camera.Builder()
         .at(Vector3f(16f + 6f, 2f, 16 + 6f))
-        .lookingAt(earthPos)
+        .lookingAt(origin)
         .withSpeed(12f)
         .build()
 
@@ -50,11 +51,11 @@ fun billboard(window: Long) {
 
     val texDragon = CommonRenderer(
         TextureShaderSettings,
-        ResourceManager.getTexturedMeshResource("cube", "stall"),
+        ResourceManager.getTexturedMeshResource("dragon", "stall"),
         mutableListOf(
             PlainObject(
                 blueSurface,
-                Vector3f(-6f, 0f, 0f),
+                origin,
                 Vector3f(0f, -0.5f, 0f),
                 Vector3f(1f, 1f, 1f)
             )
@@ -67,7 +68,7 @@ fun billboard(window: Long) {
         mutableListOf(
             PlainObject(
                 DiffuseSpecularSurface(damper, reflectivity, red),
-                Vector3f(0f, 0f, 0f),
+                origin + 10 * x,
                 Vector3f(0f, -0.5f, 0f),
                 Vector3f(1f, 1f, 1f)
             )
@@ -98,21 +99,29 @@ fun billboard(window: Long) {
         mutableListOf(
             TexturedBbdSphereObject(
                 DiffuseSpecularSurface(damper, reflectivity, white),
-                earthPos,
+                origin + 20 * x,
                 Vector2f(0f, 0f),
-                15f
+                2f
             )
         )
     )
 
-    val models = mutableListOf(texDragon)
+    val models = mutableListOf(colDragon, texDragon, texSoftBall)
     val context = DefaultSceneContext(
         camera = camera,
         light = light
     )
-    val background = Vector4f(0f, 0f, 0f, 1f);
+    val background = Vector4f(1f, 1f, 1f, 1f)
 
     DisplayManager.FPS = 60
     val scenario = Scenario(window, models, context, background)
     Visualization.play(scenario)
+}
+
+private operator fun Int.times(x: Vector3f): Vector3f {
+    return x.mul(this.toFloat(), Vector3f())
+}
+
+private operator fun Vector3f.plus(x: Vector3f): Vector3f {
+    return this.add(x, Vector3f())
 }

@@ -16,6 +16,7 @@ class TexturedMeshResource(
     override fun using(shader: TextureShaderSettings, function: () -> Unit) {
         GL30.glActiveTexture(GL30.GL_TEXTURE0)
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, tex)
+        shader.loadUseTexture(true)
         function()
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
     }
