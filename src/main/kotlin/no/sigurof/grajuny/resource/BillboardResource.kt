@@ -4,7 +4,7 @@ import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import org.lwjgl.opengl.GL11
 
 class BillboardResource(
-    private val vao: Int,
+    override val vao: Int,
     private val vertexCount: Int = 4
 ) : ResourceGl<BillboardShaderSettings> {
 
@@ -17,7 +17,4 @@ class BillboardResource(
         function()
     }
 
-    override fun getVao(): Int {
-        return vao
-    }
 }

@@ -21,7 +21,7 @@ class TexturedMeshResource(
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
     }
 
-    override fun getVao(): Int {
-        return meshResource.getVao()
-    }
+    override val vao: Int
+        get() = meshResource.vao
+
 }

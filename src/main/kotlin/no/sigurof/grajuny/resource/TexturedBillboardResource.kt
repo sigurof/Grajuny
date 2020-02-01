@@ -21,7 +21,6 @@ class TexturedBillboardResource(
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
     }
 
-    override fun getVao(): Int {
-        return billboardResource.getVao()
-    }
+    override val vao: Int
+        get() = billboardResource.vao
 }

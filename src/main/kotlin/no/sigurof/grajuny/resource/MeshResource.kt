@@ -16,7 +16,7 @@ class MeshResource(
         function()
     }
 
-    override fun getVao(): Int {
-        return mesh.vao
-    }
+    override val vao: Int
+        get() = mesh.vao
+
 }

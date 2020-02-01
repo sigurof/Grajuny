@@ -3,6 +3,7 @@ package no.sigurof.grajuny.renderer
 import no.sigurof.grajuny.context.GlobalContext
 import no.sigurof.grajuny.entity.obj.GameObject
 import no.sigurof.grajuny.resource.ResourceGl
+import no.sigurof.grajuny.shaders.ShaderManager
 import no.sigurof.grajuny.shaders.settings.ShaderSettings
 
 class CommonRenderer<S : ShaderSettings>(
@@ -11,7 +12,7 @@ class CommonRenderer<S : ShaderSettings>(
     private var objects: MutableList<out GameObject<S>> = mutableListOf()
 ) : Renderer {
     override fun render(globalContext: GlobalContext) {
-        shader.usingVaoDo(resource) { // TODO NOT GOOD!! shader -> resource
+        ShaderManager.usingVaoDo(shader, resource.vao) {
             globalContext.loadUniforms(shader)
             resource.using(shader){ // TODO NOT GOOD!! resource -> shader
                 for (obj in objects) {
@@ -23,6 +24,6 @@ class CommonRenderer<S : ShaderSettings>(
     }
 
     override fun cleanShader() {
-        shader.cleanUp()
+        ShaderManager.cleanUp(shader.program)
     }
 }
