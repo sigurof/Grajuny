@@ -94,7 +94,7 @@ fun billboard(window: Long) {
     }
 
     val texSoftBall = CommonRenderer(
-        BillboardShaderSettings,
+        BillboardShaderSettings(),
         ResourceManager.getTexturedBillboardResource("earth8192"),
         mutableListOf(
             TexturedBbdSphereObject(

@@ -17,7 +17,6 @@ class TexturedBbdSphereObject constructor(
         shader.loadSphereCenter(position)
         shader.loadSphereRadius(radius)
         surface.loadUniforms(shader)
-        shader.loadPolarAngles(polarAngles)
     }
 
 }

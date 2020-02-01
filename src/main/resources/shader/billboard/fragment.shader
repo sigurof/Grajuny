@@ -11,7 +11,6 @@ uniform mat4 frViewMatrix;
 uniform float frSphereRadius;
 uniform vec3 frCameraPos;
 uniform vec3 frSphereCenter;
-uniform vec2 frPolarAngles;
 uniform sampler2D textureSampler;
 uniform bool frUseTexture;
 
