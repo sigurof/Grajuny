@@ -23,6 +23,7 @@ class Camera private constructor(
     private var lastX: Double = 400.0
     private var lastY: Double = 300.0
     private var firstMouse: Boolean = true
+    private var nextDirection: Vector3f? = null
 
     data class Builder(
         private var at: Vector3f? = null,
@@ -92,7 +93,6 @@ class Camera private constructor(
         fwAxis.set(newFwAxis)
         rtAxis = fwAxis.cross(up, Vector3f()).normalize()
         upAxis = fwAxis.cross(rtAxis, Vector3f()).negate().normalize()
-
     }
 
     private fun incrementPositionInDirection(direction: Vector3f, deltaTime: Float) {

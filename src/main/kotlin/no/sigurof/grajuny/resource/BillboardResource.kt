@@ -12,9 +12,11 @@ class BillboardResource(
         GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, vertexCount)
     }
 
-    override fun using(shader: BillboardShaderSettings, function: () -> Unit) {
+    override fun activate(shader: BillboardShaderSettings){
         shader.loadUseTexture(false)
-        function()
+    }
+
+    override fun deactivate(shader: BillboardShaderSettings) {
     }
 
 }

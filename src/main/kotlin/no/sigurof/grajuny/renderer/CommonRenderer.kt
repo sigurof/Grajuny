@@ -14,12 +14,12 @@ class CommonRenderer<S : ShaderSettings>(
     override fun render(globalContext: GlobalContext) {
         ShaderManager.usingVaoDo(shader, resource.vao) {
             globalContext.loadUniforms(shader)
-            resource.using(shader){ // TODO NOT GOOD!! resource -> shader
-                for (obj in objects) {
-                    obj.loadUniforms(shader)
-                    resource.render()
-                }
+            resource.activate(shader)
+            for (obj in objects) {
+                obj.loadUniforms(shader)
+                resource.render()
             }
+            resource.deactivate(shader)
         }
     }
 

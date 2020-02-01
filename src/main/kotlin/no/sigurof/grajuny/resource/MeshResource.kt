@@ -11,12 +11,14 @@ class MeshResource(
         GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.vertexCount, GL30.GL_UNSIGNED_INT, 0)
     }
 
-    override fun using(shader: StandardShader, function: () -> Unit) {
-        shader.loadUseTexture(false)
-        function()
-    }
-
     override val vao: Int
         get() = mesh.vao
+
+    override fun activate(shader: StandardShader) {
+        shader.loadUseTexture(false)
+    }
+
+    override fun deactivate(shader: StandardShader) {
+    }
 
 }
