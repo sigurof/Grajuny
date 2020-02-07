@@ -1,10 +1,8 @@
 package no.sigurof.grajuny.resource
 
-import no.sigurof.grajuny.shaders.settings.ShaderSettings
-
-interface ResourceGl<in S: ShaderSettings> {
+interface ResourceGl {
     val vao: Int
     fun render()
-    fun activate(shader: S)
-    fun deactivate(shader: S)
+    fun activate()
+    fun deactivate()
 }

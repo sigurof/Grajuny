@@ -1,7 +1,7 @@
 package no.sigurof.grajuny.scenario
 
 import no.sigurof.grajuny.context.DefaultSceneContext
-import no.sigurof.grajuny.renderer.Renderer
+import no.sigurof.grajuny.experimental.ShaderInterface
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL30
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL30
  * */
 class Scenario constructor(
     private val window: Long,
-    private val renderers: List<Renderer>,
+    private val renderers: List<ShaderInterface<DefaultSceneContext>>,
     private val context: DefaultSceneContext,
     private val background: Vector4f = Vector4f(0.2f, 0.3f, 0.1f, 1.0f)
 ) {
@@ -31,8 +31,8 @@ class Scenario constructor(
     }
 
     fun cleanUp() {
-        for (model in renderers) {
-            model.cleanShader()
+        for (renderer in renderers) {
+            renderer.cleanShader()
         }
     }
 

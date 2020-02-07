@@ -9,11 +9,12 @@ import no.sigurof.grajuny.entity.obj.PlainObject
 import no.sigurof.grajuny.entity.obj.SphereBillboardObject
 import no.sigurof.grajuny.entity.obj.TexturedBbdSphereObject
 import no.sigurof.grajuny.entity.surface.DiffuseSpecularSurface
-import no.sigurof.grajuny.renderer.CommonRenderer
+import no.sigurof.grajuny.experimental.BbdObjBbdResourceBillboard
+import no.sigurof.grajuny.experimental.PlainObjectMeshStandard
+import no.sigurof.grajuny.experimental.PlainObjectTexturedMeshStandard
+import no.sigurof.grajuny.experimental.TexBbdObjectTexBbdBillboard
 import no.sigurof.grajuny.resource.ResourceManager
 import no.sigurof.grajuny.scenario.Scenario
-import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
-import no.sigurof.grajuny.shaders.settings.impl.StandardShader
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -28,6 +29,8 @@ fun billboard(window: Long) {
 
     val origin = Vector3f(0f, 0f, 0f)
     val x = Vector3f(1f, 0f, 0f)
+    val y = Vector3f(0f, 1f, 0f)
+    val z = Vector3f(0f, 0f, 1f)
 
     val light = Light.Builder()
         .position(origin.add(Vector3f(0f, 5f, 0f), Vector3f()))
@@ -47,8 +50,7 @@ fun billboard(window: Long) {
 
     val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blue)
 
-    val texDragon = CommonRenderer(
-        StandardShader,
+    val texDragon = PlainObjectTexturedMeshStandard(
         ResourceManager.getTexturedMeshResource("dragon", "stall"),
         mutableListOf(
             PlainObject(
@@ -60,8 +62,7 @@ fun billboard(window: Long) {
         )
     )
 
-    val colDragon = CommonRenderer(
-        StandardShader,
+    val colCube = PlainObjectMeshStandard(
         ResourceManager.getMeshResource("cube"),
         mutableListOf(
             PlainObject(
@@ -73,30 +74,12 @@ fun billboard(window: Long) {
         )
     )
 
-    val coloredBalls = mutableListOf<SphereBillboardObject>()
-    val f = 5f
-    val lim = 1
-    for (i in -lim..lim) {
-        for (j in -lim..lim) {
-            for (k in -lim..lim) {
-                val pos = Vector3f(i.toFloat(), j.toFloat(), k.toFloat()).mul(f)
-                coloredBalls.add(
-                    SphereBillboardObject(
-                        blueSurface,
-                        pos,
-                        1f
-                    )
-                )
-            }
-        }
-    }
-
-    val texSoftBall = CommonRenderer(
-        BillboardShaderSettings,
+    val surface = DiffuseSpecularSurface(damper, reflectivity, white)
+    val texBbd = TexBbdObjectTexBbdBillboard(
         ResourceManager.getTexturedBillboardResource("earth8192"),
         mutableListOf(
             TexturedBbdSphereObject(
-                DiffuseSpecularSurface(damper, reflectivity, white),
+                surface,
                 origin + 20 * x,
                 Vector2f(0f, 0f),
                 2f
@@ -104,7 +87,31 @@ fun billboard(window: Long) {
         )
     )
 
-    val models = mutableListOf(colDragon, texDragon, texSoftBall)
+    val texBbd2 = TexBbdObjectTexBbdBillboard(
+        ResourceManager.getTexturedBillboardResource("stall"),
+        (0..5).map {
+            TexturedBbdSphereObject(
+                surface,
+                origin + 20 * x + it * y,
+                Vector2f(0f, 0f),
+                1f
+            )
+        }.toMutableList()
+    )
+
+    val colBbd = BbdObjBbdResourceBillboard(
+        ResourceManager.getBillboardResource(camera),
+        (1..5).map {
+            SphereBillboardObject(
+                surface,
+                Vector3f(origin + (20 + it) * x),
+                3f
+            )
+        }.toMutableList()
+    )
+
+    val models = mutableListOf(colCube, texDragon, texBbd, colBbd, texBbd2)
+//    val models = mutableListOf(texDragon)
     val context = DefaultSceneContext(
         camera = camera,
         light = light
