@@ -1,6 +1,7 @@
 package no.sigurof.grajuny.scenario
 
 import no.sigurof.grajuny.context.DefaultSceneContext
+import no.sigurof.grajuny.engine.DisplayManager
 import no.sigurof.grajuny.experimental.ShaderInterface
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
@@ -17,12 +18,12 @@ class Scenario constructor(
     private val background: Vector4f = Vector4f(0.2f, 0.3f, 0.1f, 1.0f)
 ) {
 
-    fun prepare() {
+    private fun prepare() {
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
         context.camera.setCursorPosCallback(window)
     }
 
-    fun run() {
+    private fun run() {
         context.camera.move(window)
         prepareFrame()
         for (model in renderers) {
@@ -42,6 +43,16 @@ class Scenario constructor(
         GL30.glCullFace(GL30.GL_BACK)
         GL30.glClearColor(background.x, background.y, background.z, background.w)
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT or GL30.GL_DEPTH_BUFFER_BIT)
+    }
+
+    fun play() {
+        prepare()
+        while (DisplayManager.isOpen()) {
+            DisplayManager.eachFrameDo {
+                run()
+            }
+        }
+        cleanUp()
     }
 
 }

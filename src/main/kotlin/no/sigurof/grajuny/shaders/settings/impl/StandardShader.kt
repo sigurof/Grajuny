@@ -1,6 +1,7 @@
 package no.sigurof.grajuny.shaders.settings.impl
 
 import no.sigurof.grajuny.entity.Light
+import no.sigurof.grajuny.experimental2.LightData
 import no.sigurof.grajuny.shaders.ShaderManager
 import no.sigurof.grajuny.shaders.settings.DefaultShaderSettings
 import org.joml.Matrix4f
@@ -49,6 +50,10 @@ object StandardShader : DefaultShaderSettings {
         ShaderManager.loadFloat(locations.getValue("ambient"), light.ambient)
     }
 
+    fun loadLightPos(pos: Vector3f) {
+        ShaderManager.loadVector3(locations.getValue("lightPos"), pos)
+    }
+
     override fun loadSpecularValues(damper: Float, reflectivity: Float) {
         ShaderManager.loadFloat(locations.getValue("shineDamper"), damper)
         ShaderManager.loadFloat(locations.getValue("reflectivity"), reflectivity)
@@ -64,6 +69,11 @@ object StandardShader : DefaultShaderSettings {
 
     fun loadUseTexture(useTexture: Boolean) {
         ShaderManager.loadBoolean(locations.getValue("useTexture"), useTexture)
+    }
+
+    fun loadLightData(lightData: LightData) {
+        ShaderManager.loadVector3(locations.getValue("lightPos"), lightData.position)
+        ShaderManager.loadVector3(locations.getValue("lightCol"), lightData.color)
     }
 }
 

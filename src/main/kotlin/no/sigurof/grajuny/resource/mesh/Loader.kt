@@ -1,5 +1,6 @@
 package no.sigurof.grajuny.resource.mesh
 
+import no.sigurof.grajuny.experimental2.MeshData
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray
 import org.lwjgl.opengl.ARBVertexArrayObject.glDeleteVertexArrays
@@ -21,7 +22,21 @@ object Loader {
     private val vaos = ArrayList<Int>()
     private val vbos = ArrayList<Int>()
 
-    fun loadToVao(parsedMesh: ParsedMesh): Mesh {
+    fun meshLoadToVao(parsedMesh: ParsedMesh): Mesh {
+        return loadToVao(parsedMesh).let {
+            Mesh(it.first, it.second)
+        }
+    }
+
+    fun meshDataLoadToVao(parsedMesh: ParsedMesh): MeshData {
+        return loadToVao(parsedMesh).let {
+            MeshData(
+                it.first, it.second, 0, 1, 2
+            )
+        }
+    }
+
+    fun loadToVao(parsedMesh: ParsedMesh): Pair<Int, Int> {
         val indices = parsedMesh.eboIndices.toIntArray()
         val vao = createVao()
         glBindVertexArray(vao)
@@ -42,7 +57,7 @@ object Loader {
             parsedMesh.normalVectors.toFloatArray()
         )
         unbindVao()
-        return Mesh(vao, indices.size)
+        return Pair(vao, indices.size)
     }
 
     fun cleanUp() {

@@ -2,7 +2,6 @@ package no.sigurof.grajuny
 
 import no.sigurof.grajuny.context.DefaultSceneContext
 import no.sigurof.grajuny.engine.DisplayManager
-import no.sigurof.grajuny.engine.Visualization
 import no.sigurof.grajuny.entity.Camera
 import no.sigurof.grajuny.entity.Light
 import no.sigurof.grajuny.entity.obj.PlainObject
@@ -24,6 +23,7 @@ fun main() {
         billboard(window)
     }
 }
+
 
 fun billboard(window: Long) {
 
@@ -120,7 +120,7 @@ fun billboard(window: Long) {
 
     DisplayManager.FPS = 60
     val scenario = Scenario(window, models, context, background)
-    Visualization.play(scenario)
+    scenario.play()
 }
 
 private operator fun Int.times(x: Vector3f): Vector3f {
@@ -129,4 +129,8 @@ private operator fun Int.times(x: Vector3f): Vector3f {
 
 private operator fun Vector3f.plus(x: Vector3f): Vector3f {
     return this.add(x, Vector3f())
+}
+
+private operator fun Vector3f.minus(x: Vector3f): Vector3f {
+    return this.sub(x, Vector3f())
 }
