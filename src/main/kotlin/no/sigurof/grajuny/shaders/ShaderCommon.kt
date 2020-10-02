@@ -2,6 +2,7 @@ package no.sigurof.grajuny.shaders
 
 import no.sigurof.grajuny.resource.ResourceGl
 import no.sigurof.grajuny.shaders.settings.ShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -32,7 +33,6 @@ import org.lwjgl.opengl.GL20.glUniform3f
 import org.lwjgl.opengl.GL20.glUniformMatrix4fv
 import org.lwjgl.opengl.GL20.glUseProgram
 import org.lwjgl.opengl.GL30
-import java.io.File
 import java.nio.FloatBuffer
 
 abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, frgSource: String) {
@@ -59,16 +59,16 @@ abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, f
             frgSource,
             GL_FRAGMENT_SHADER
         )
-    private val program: Int = glCreateProgram().run {
-        glAttachShader(this, vtxShader)
-        glAttachShader(this, frgShader)
+    private val program: Int = glCreateProgram().let {
+        glAttachShader(it, vtxShader)
+        glAttachShader(it, frgShader)
         bindAttributes()
-        glLinkProgram(this)
-        if (glGetProgrami(this, GL_LINK_STATUS) == GL_FALSE) {
-            val info = glGetProgramInfoLog(this, 512)
+        glLinkProgram(it)
+        if (glGetProgrami(it, GL_LINK_STATUS) == GL_FALSE) {
+            val info = glGetProgramInfoLog(it, 512)
             throw RuntimeException("Feil ved linking av shadere:\n $info")
         }
-        return@run this
+        it
     }
 
     protected fun getUniformLocation(uniformName: String): Int {
@@ -143,7 +143,7 @@ abstract class ShaderCommon<S : ShaderSettings> constructor(vtxSource: String, f
     companion object {
 
         private fun compileShaderFromSource(source: String, typeGl: Int): Int {
-            val text: String = File(source).readText()
+            val text = BillboardShaderSettings::class.java.getResource(source).readText()
             val shader = glCreateShader(typeGl)
             glShaderSource(shader, text)
             glCompileShader(shader)

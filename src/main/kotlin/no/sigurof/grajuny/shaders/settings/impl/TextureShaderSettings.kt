@@ -6,8 +6,8 @@ import no.sigurof.grajuny.shaders.settings.DefaultShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-private const val vtxSource = "src/main/resources/shader/texture/vertex.shader"
-private const val frgSource = "src/main/resources/shader/texture/fragment.shader"
+private const val vtxSource = "/shader/texture/vertex.shader"
+private const val frgSource = "/shader/texture/fragment.shader"
 
 object TextureShaderSettings : DefaultShaderSettings, ShaderCommon<TextureShaderSettings>(
     vtxSource,
@@ -23,6 +23,7 @@ object TextureShaderSettings : DefaultShaderSettings, ShaderCommon<TextureShader
     private val locationAmbient: Int = getUniformLocation("ambient")
     private val locationColor: Int = getUniformLocation("color")
     private val locationCameraPosition: Int = getUniformLocation("cameraPos")
+    private val locationUseTexture: Int = getUniformLocation("useTexture")
     public override fun bindAttributes() {
         bindAttribute(0, "position")
         bindAttribute(1, "textureCoords")
@@ -58,6 +59,10 @@ object TextureShaderSettings : DefaultShaderSettings, ShaderCommon<TextureShader
 
     override fun loadCameraPosition(cameraPosition: Vector3f) {
         loadVector3(locationCameraPosition, cameraPosition)
+    }
+
+    fun loadUseTexture(useTexture: Boolean) {
+        loadBoolean(locationUseTexture, useTexture)
     }
 }
 

@@ -7,13 +7,14 @@ import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
 
-private const val vtxSource = "src/main/resources/shader/billboard/vertex.shader"
-private const val frgSource = "src/main/resources/shader/billboard/fragment.shader"
+private const val vtxSource = "/shader/billboard/vertex.shader"
+private const val frgSource = "/shader/billboard/fragment.shader"
 
-object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardShaderSettings>(
-    vtxSource,
-    frgSource
-) {
+object BillboardShaderSettings : DefaultShaderSettings,
+    ShaderCommon<BillboardShaderSettings>(
+        vtxSource,
+        frgSource
+    ) {
 
     private val locationPos: Int = getUniformLocation("sphereCenter")
     private val locationPrjMatrix: Int = getUniformLocation("prjMatrix")
@@ -87,7 +88,7 @@ object BillboardShaderSettings : DefaultShaderSettings, ShaderCommon<BillboardSh
         loadVector2(locationPolarAngles, polarAngles)
     }
 
-    fun loadUseTexture(useTexture: Boolean){
+    fun loadUseTexture(useTexture: Boolean) {
         loadBoolean(locationUseTexture, useTexture)
     }
 

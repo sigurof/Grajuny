@@ -12,6 +12,7 @@ class MeshResource(
     }
 
     override fun using(shader: PlainShaderSettings, function: () -> Unit) {
+        shader.loadUseTexture(false)
         function()
     }
 

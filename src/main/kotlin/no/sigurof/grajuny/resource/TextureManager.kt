@@ -3,17 +3,16 @@ package no.sigurof.grajuny.resource
 import de.matthiasmann.twl.utils.PNGDecoder
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL30
-import java.io.FileInputStream
 import java.nio.ByteBuffer
 
 object TextureManager {
 
     private val sources = mapOf(
-        "stall" to "src/main/resources/model/stall/stall-texture.png",
-        "default" to "src/main/resources/model/default-texture.png",
-        "earth512" to "src/main/resources/texture/earth512.png",
-        "earth1024" to "src/main/resources/texture/earth1024.png",
-        "earth8192" to "src/main/resources/texture/earth8192.png"
+        "stall" to "/model/stall/stall-texture.png",
+        "default" to "/model/default-texture.png",
+        "earth512" to "/texture/earth512.png",
+        "earth1024" to "/texture/earth1024.png",
+        "earth8192" to "/texture/earth8192.png"
     )
 
     private val textures = mutableMapOf<String, Int>()
@@ -32,11 +31,10 @@ object TextureManager {
             GL15.glDeleteTextures(tex)
         }
     }
-
 }
 
-private fun loadTexture(filePath: String): Int {
-    val inputStream = FileInputStream(filePath)
+private fun loadTexture(source: String): Int {
+    val inputStream =  TextureManager::class.java.getResourceAsStream(source)
     val decoder = PNGDecoder(inputStream)
     val buffer: ByteBuffer = ByteBuffer.allocateDirect(3 * decoder.width * decoder.height)
     decoder.decode(buffer, decoder.width * 3, PNGDecoder.Format.RGB)
@@ -54,4 +52,3 @@ private fun loadTexture(filePath: String): Int {
     GL15.glTexParameteri(GL15.GL_TEXTURE_2D, GL15.GL_TEXTURE_MAG_FILTER, GL15.GL_NEAREST)
     return texture
 }
-

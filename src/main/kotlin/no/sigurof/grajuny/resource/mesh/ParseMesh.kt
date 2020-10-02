@@ -25,7 +25,7 @@ fun parseObjFile(source: String): ParsedMesh {
         .map { it to mutableListOf<Int>() }
         .toMap()
 
-    val lines = File(source).readLines()
+    val lines = File(ParsedMesh::class.java.getResource(source).file).readLines()
     for ((i, line) in lines.withIndex()) {
         parseKeyword(line)?.let {
             lineIndsByKeyword.getValue(it).add(i)

@@ -2,13 +2,13 @@ package no.sigurof.grajuny.resource.mesh
 
 object MeshManager {
     private val sources = mutableMapOf(
-        "cube" to "src/main/resources/model/primitives/cube.obj",
-        "sphere" to "src/main/resources/model/primitives/sphere.obj",
-        "lowp-sphere" to "src/main/resources/model/primitives/lowp-sphere.obj",
-        "torus" to "src/main/resources/model/primitives/torus.obj",
-        "cylinder" to "src/main/resources/model/primitives/cylinder.obj",
-        "dragon" to "src/main/resources/model/stamford-dragon/dragon.obj",
-        "stall" to "src/main/resources/model/stall/stall.obj"
+        "cube" to "/model/primitives/cube.obj",
+        "sphere" to "/model/primitives/sphere.obj",
+        "lowp-sphere" to "/model/primitives/lowp-sphere.obj",
+        "torus" to "/model/primitives/torus.obj",
+        "cylinder" to "/model/primitives/cylinder.obj",
+        "dragon" to "/model/stamford-dragon/dragon.obj",
+        "stall" to "/model/stall/stall.obj"
     )
     private val meshes = mutableMapOf<String, Mesh>()
 
