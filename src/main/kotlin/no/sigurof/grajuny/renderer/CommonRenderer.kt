@@ -8,7 +8,7 @@ import no.sigurof.grajuny.shaders.settings.ShaderSettings
 class CommonRenderer<S : ShaderSettings>(
     private val shader: S,
     private val resource: ResourceGl<S>,
-    private var objects: MutableList<out GameObject<S>> = mutableListOf()
+    val objects: MutableList<out GameObject<S>> = mutableListOf()
 ) : Renderer {
     override fun render(globalContext: GlobalContext) {
         shader.usingVaoDo(resource) { // TODO NOT GOOD!! shader -> resource

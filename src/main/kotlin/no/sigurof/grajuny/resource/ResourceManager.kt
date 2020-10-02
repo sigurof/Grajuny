@@ -1,6 +1,5 @@
 package no.sigurof.grajuny.resource
 
-import no.sigurof.grajuny.entity.Camera
 import no.sigurof.grajuny.resource.mesh.Loader
 import no.sigurof.grajuny.resource.mesh.MeshManager
 
@@ -16,7 +15,7 @@ object ResourceManager {
         return TexturedMeshResource(texture, mesh)
     }
 
-    fun getBillboardResource(camera: Camera): BillboardResource {
+    fun getBillboardResource(): BillboardResource {
         return BillboardResource(
             Loader.createVao(),
             4

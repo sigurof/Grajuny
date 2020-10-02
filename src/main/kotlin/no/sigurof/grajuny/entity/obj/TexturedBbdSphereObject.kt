@@ -7,10 +7,10 @@ import org.joml.Vector3f
 
 class TexturedBbdSphereObject constructor(
 
-    private val surface: DiffuseSpecularSurface,
+    val surface: DiffuseSpecularSurface,
     var position: Vector3f,
     private val polarAngles: Vector2f,
-    private val radius: Float
+    var radius: Float
 ) : GameObject<BillboardShaderSettings> {
 
     override fun loadUniforms(shader: BillboardShaderSettings) {

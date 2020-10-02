@@ -5,9 +5,9 @@ import org.joml.Vector3f
 
 // TODO Implement "DiffuseSurface" and "SpecularSurface"?
 class DiffuseSpecularSurface constructor(
-    private val shineDamper: Float,
-    private val reflectivity: Float,
-    private val color: Vector3f
+    var shineDamper: Float,
+    var reflectivity: Float,
+    var color: Vector3f
 ) : Surface<DefaultShaderSettings> {
 
     override fun loadUniforms(shader: DefaultShaderSettings) {

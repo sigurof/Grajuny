@@ -5,7 +5,7 @@ import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import org.joml.Vector3f
 
 class SphereBillboardObject constructor(
-    private val surface: DiffuseSpecularSurface,
+    val surface: DiffuseSpecularSurface,
     var position: Vector3f,
     private val radius: Float
 ) : GameObject<BillboardShaderSettings> {

@@ -14,10 +14,10 @@ const val piHalf = PI.toFloat() / 2f
  *
  * */
 class Scenario internal constructor(
-    private val window: Long,
-    private val renderers: List<Renderer>,
-    private val context: DefaultSceneContext,
-    private val background: Vector4f = Vector4f(0.2f, 0.3f, 0.1f, 1.0f)
+    val window: Long,
+    val renderers: List<Renderer>,
+    val context: DefaultSceneContext,
+    val background: Vector4f = Vector4f(0.2f, 0.3f, 0.1f, 1.0f)
 ) {
 
     internal fun prepare() {
