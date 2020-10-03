@@ -4,13 +4,20 @@ import no.sigurof.grajuny.context.DefaultSceneContext
 import no.sigurof.grajuny.engine.DisplayManager
 import no.sigurof.grajuny.entity.Camera
 import no.sigurof.grajuny.entity.Light
+import no.sigurof.grajuny.entity.obj.PlainObject
+import no.sigurof.grajuny.entity.obj.SphereBillboardObject
 import no.sigurof.grajuny.entity.obj.TexturedBbdSphereObject
 import no.sigurof.grajuny.entity.surface.DiffuseSpecularSurface
 import no.sigurof.grajuny.renderer.CommonRenderer
 import no.sigurof.grajuny.resource.ResourceManager
 import no.sigurof.grajuny.scenario.Scenario
 import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.PlainShaderSettings
+import no.sigurof.grajuny.shaders.settings.impl.TextureShaderSettings
+import no.sigurof.grajuny.utils.BLUE
+import no.sigurof.grajuny.utils.RED
 import no.sigurof.grajuny.utils.WHITE
+import no.sigurof.grajuny.utils.YELLOW
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -41,9 +48,6 @@ fun billboard(window: Long) {
         .withSpeed(12f)
         .build()
 
-    val blue = Vector3f(0.1f, 0.4f, 0.9f)
-    val red = Vector3f(0.9f, 0.1f, 0.1f)
-    val white = Vector3f(1f, 1f, 1f)
     val reflectivity = 1f
     val damper = 100f
 
@@ -60,7 +64,7 @@ fun billboard(window: Long) {
         )
     )
 
-    val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blue)
+    val blueSurface = DiffuseSpecularSurface(damper, reflectivity, BLUE)
 
     val texDragon = CommonRenderer(
         TextureShaderSettings,
@@ -80,7 +84,7 @@ fun billboard(window: Long) {
         ResourceManager.getMeshResource("cube"),
         mutableListOf(
             PlainObject(
-                DiffuseSpecularSurface(damper, reflectivity, red),
+                DiffuseSpecularSurface(damper, reflectivity, RED),
                 origin + 10 * x,
                 Vector3f(0f, -0.5f, 0f),
                 Vector3f(1f, 1f, 1f)
@@ -124,7 +128,7 @@ fun billboard(window: Long) {
         camera = camera,
         light = light
     )
-    val background = Vector4f(1f, 1f, 1f, 1f)
+    val background = Vector4f(0.5f, 1f, 1f, 1f)
 
     DisplayManager.FPS = 60
     val scenario = Scenario(
