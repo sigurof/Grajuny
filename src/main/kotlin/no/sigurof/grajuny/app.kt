@@ -42,16 +42,17 @@ fun billboard(window: Long) {
         .withSpeed(12f)
         .build()
 
+    val blueStrong = Vector3f(0f, 0f, 1f)
     val blue = Vector3f(0.1f, 0.4f, 0.9f)
     val red = Vector3f(0.9f, 0.1f, 0.1f)
     val white = Vector3f(1f, 1f, 1f)
     val reflectivity = 1f
     val damper = 100f
 
-    val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blue)
+    val blueSurface = DiffuseSpecularSurface(damper, reflectivity, blueStrong)
 
     val texDragon = PlainObjectTexturedMeshStandard(
-        ResourceManager.getTexturedMeshResource("dragon", "stall"),
+        ResourceManager.getTexturedMeshResource("stall", "stall"),
         mutableListOf(
             PlainObject(
                 blueSurface,

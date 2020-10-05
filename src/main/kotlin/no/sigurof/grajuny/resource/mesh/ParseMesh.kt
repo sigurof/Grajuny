@@ -11,6 +11,12 @@ data class ParsedMesh(
     val uvCoordinates: List<Float> = mutableListOf(),
     val normalVectors: List<Float> = mutableListOf()
 ) {
+
+    fun centerAt(coord: Vector3f): ParsedMesh {
+        // TODO Find the center of mass and put it back at coord
+        return this
+    }
+
     companion object {
         fun from(source: String): ParsedMesh {
             return parseObjFile(source)

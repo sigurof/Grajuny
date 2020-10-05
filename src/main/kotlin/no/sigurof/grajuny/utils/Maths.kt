@@ -2,6 +2,7 @@ package no.sigurof.grajuny.utils
 
 import no.sigurof.grajuny.engine.DisplayManager
 import no.sigurof.grajuny.entity.Camera
+import no.sigurof.grajuny.restructuring.TCamera
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -24,6 +25,14 @@ class Maths {
         }
 
         fun createViewMatrix(camera: Camera): Matrix4f {
+            return Matrix4f().lookAt(
+                camera.pos,
+                camera.pos.add(camera.fwAxis, Vector3f()),
+                camera.upAxis
+            )
+        }
+
+        fun createViewMatrix(camera: TCamera): Matrix4f {
             return Matrix4f().lookAt(
                 camera.pos,
                 camera.pos.add(camera.fwAxis, Vector3f()),
