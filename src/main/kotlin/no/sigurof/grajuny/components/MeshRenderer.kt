@@ -1,9 +1,9 @@
 package no.sigurof.grajuny.components
 
 import no.sigurof.grajuny.node.GameComponent
-import no.sigurof.grajuny.resource.TMaterial
-import no.sigurof.grajuny.resource.TMeshResource
-import no.sigurof.grajuny.resource.TTexture
+import no.sigurof.grajuny.resource.Material
+import no.sigurof.grajuny.resource.MeshResource
+import no.sigurof.grajuny.resource.Texture
 import no.sigurof.grajuny.shader.Basic3DShader
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.interfaces.ColorSpecularShader
@@ -12,9 +12,9 @@ import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.joml.Matrix4f
 
 class MeshRenderer(
-    val mesh: TMeshResource,
-    val texture: TTexture? = null,
-    val material: TMaterial,
+    val mesh: MeshResource,
+    val texture: Texture? = null,
+    val material: Material,
     shadersToUse: List<Shader> = listOf(Basic3DShader)
 ) : GameComponent(
     shadersToUse = shadersToUse

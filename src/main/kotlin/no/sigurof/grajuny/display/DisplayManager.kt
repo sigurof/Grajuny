@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL20
 import java.lang.System.currentTimeMillis
 
-class TDisplayManager {
+class DisplayManager {
 
     companion object {
         internal var WIDTH: Int = 1280

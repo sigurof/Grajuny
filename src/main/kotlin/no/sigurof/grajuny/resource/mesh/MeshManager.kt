@@ -2,7 +2,7 @@ package no.sigurof.grajuny.resource.mesh
 
 import no.sigurof.grajuny.utils.ORIGIN
 
-object TMeshManager {
+object MeshManager {
     private val sources = mutableMapOf(
         "cube" to "/model/primitives/cube.obj",
         "sphere" to "/model/primitives/sphere.obj",
@@ -12,9 +12,9 @@ object TMeshManager {
         "dragon" to "/model/stamford-dragon/dragon.obj",
         "stall" to "/model/stall/stall.obj"
     )
-    private val meshes = mutableMapOf<String, TMesh>()
+    private val meshes = mutableMapOf<String, Mesh>()
 
-    internal fun getMesh(name: String): TMesh {
+    internal fun getMesh(name: String): Mesh {
         meshes[name] ?: let {
             meshes[name] = Loader.tmeshLoadToVao(
 //     TODO Optimization idea: pass Float ant Int buffers directly here

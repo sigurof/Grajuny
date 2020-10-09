@@ -3,7 +3,7 @@ package no.sigurof.grajuny.resource
 import no.sigurof.grajuny.shader.interfaces.ColorSpecularShader
 import org.joml.Vector3f
 
-class TMaterial(
+class Material(
     val color: Vector3f,
     val reflectivity: Float,
     val shineDamper: Float

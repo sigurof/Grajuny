@@ -1,10 +1,10 @@
 package no.sigurof.grajuny
 
-import no.sigurof.grajuny.engine.TCoreEngine
-import no.sigurof.grajuny.game.TTestGame
+import no.sigurof.grajuny.engine.CoreEngine
+import no.sigurof.grajuny.game.TestGame
 
 fun main() {
-    TCoreEngine.play { window ->
-        TTestGame(window)
+    CoreEngine.play { window ->
+        TestGame(window)
     }
 }

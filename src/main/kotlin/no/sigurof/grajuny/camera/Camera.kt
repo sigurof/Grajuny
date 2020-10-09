@@ -13,7 +13,7 @@ import org.lwjgl.glfw.GLFW.GLFW_KEY_W
 import org.lwjgl.glfw.GLFW.glfwGetKey
 import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
 
-class TCamera private constructor(
+class Camera private constructor(
     internal val pos: Vector3f,
     lookingAt: Vector3f,
     private val speed: Float
@@ -43,11 +43,11 @@ class TCamera private constructor(
             window = win
         }
 
-        fun build(): TCamera {
+        fun build(): Camera {
             if (at?.equals(lookingAt) == true) {
                 error("Camera position must be different from the position it looks towards")
             }
-            val camera = TCamera(
+            val camera = Camera(
                 at ?: error("Must supply camera position"),
                 lookingAt ?: error("Must supply point to look at"),
                 speed
@@ -127,9 +127,9 @@ class TCamera private constructor(
     }
 
     companion object {
-        var activeCamera: TCamera? = null
+        var activeCamera: Camera? = null
 
-        fun default(): TCamera {
+        fun default(): Camera {
             return Builder().at(ORIGIN).lookingAt(Vector3f(1f, 0f, 0f)).build()
         }
     }

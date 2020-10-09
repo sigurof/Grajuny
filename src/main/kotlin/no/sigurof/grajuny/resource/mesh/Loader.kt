@@ -21,9 +21,9 @@ object Loader {
     private val vaos = ArrayList<Int>()
     private val vbos = ArrayList<Int>()
 
-    fun tmeshLoadToVao(parsedMesh: ParsedMesh): TMesh {
+    fun tmeshLoadToVao(parsedMesh: ParsedMesh): Mesh {
         return loadToVao(parsedMesh).let {
-            TMesh(it.first, it.second)
+            Mesh(it.first, it.second)
         }
     }
 

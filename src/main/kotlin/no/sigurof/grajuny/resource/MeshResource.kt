@@ -1,10 +1,10 @@
 package no.sigurof.grajuny.resource
 
-import no.sigurof.grajuny.resource.mesh.TMesh
+import no.sigurof.grajuny.resource.mesh.Mesh
 import org.lwjgl.opengl.GL30
 
-class TMeshResource(
-    private val mesh: TMesh,
+class MeshResource(
+    private val mesh: Mesh,
     val attributes: List<Int>
 ) {
 

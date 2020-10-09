@@ -1,10 +1,10 @@
 package no.sigurof.grajuny.components
 
-import no.sigurof.grajuny.manager.TBillboardManager
+import no.sigurof.grajuny.manager.BillboardManager
 import no.sigurof.grajuny.node.GameComponent
-import no.sigurof.grajuny.resource.TBillboardResource
-import no.sigurof.grajuny.resource.TMaterial
-import no.sigurof.grajuny.resource.TTexture
+import no.sigurof.grajuny.resource.BillboardResource
+import no.sigurof.grajuny.resource.Material
+import no.sigurof.grajuny.resource.Texture
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.SphereBillboardShader
 import no.sigurof.grajuny.shader.interfaces.BillboardShader
@@ -14,14 +14,14 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class SphereBillboardRenderer(
-    val texture: TTexture,
-    val material: TMaterial,
+    val texture: Texture,
+    val material: Material,
     val radius: Float,
     val position: Vector3f,
     shadersToUse: List<Shader> = listOf(SphereBillboardShader)
 ) : GameComponent(shadersToUse = shadersToUse) {
 
-    private val billboard: TBillboardResource = TBillboardManager.getBillboardResource()
+    private val billboard: BillboardResource = BillboardManager.getBillboardResource()
 
     override var transform: Matrix4f = Matrix4f()
 

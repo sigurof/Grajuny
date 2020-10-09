@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.game
 
-import no.sigurof.grajuny.camera.TCamera
+import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.shader.Shader
@@ -11,7 +11,7 @@ import no.sigurof.grajuny.utils.Maths
 import org.joml.Matrix4f
 import org.joml.Vector4f
 
-abstract class TGame(
+abstract class Game(
     val window: Long,
     val root: GameObject = GameObject(),
     var background: Vector4f,
@@ -20,7 +20,7 @@ abstract class TGame(
     private val farPlane: Float = 1000f
 ) {
 
-    abstract val camera: TCamera
+    abstract val camera: Camera
     private var startTime: Long = System.currentTimeMillis()
     private var lastTime: Long = System.currentTimeMillis()
     internal val deltaTime: Long
@@ -58,9 +58,9 @@ abstract class TGame(
             }
         }
         if (shader is CameraShader){
-            (TCamera.activeCamera ?: run {
+            (Camera.activeCamera ?: run {
                 println("WARN: No active camera. Using default.")
-                TCamera.default()
+                Camera.default()
             }).render(shader)
             shader.loadViewMatrix(createViewMatrix())
         }

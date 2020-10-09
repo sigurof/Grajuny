@@ -1,7 +1,7 @@
 package no.sigurof.grajuny.engine
 
-import no.sigurof.grajuny.camera.TCamera
-import no.sigurof.grajuny.game.TGame
+import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.game.Game
 import no.sigurof.grajuny.shader.Shader
 import org.joml.Vector4f
 import org.lwjgl.opengl.GL11.GL_BACK
@@ -23,7 +23,7 @@ class RenderingEngine(
         glEnable(GL_DEPTH_TEST)
     }
 
-    fun render(game: TGame) {
+    fun render(game: Game) {
         clearScreen(game.background)
         shaders.forEach { shader ->
             shader.use()
@@ -31,7 +31,7 @@ class RenderingEngine(
             game.onUpdate()
             game.render(shader)
         }
-        TCamera.activeCamera?.move(window)
+        Camera.activeCamera?.move(window)
     }
 
     private fun clearScreen(background: Vector4f) {
