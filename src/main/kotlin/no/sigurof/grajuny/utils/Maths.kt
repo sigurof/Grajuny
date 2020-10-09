@@ -1,7 +1,7 @@
 package no.sigurof.grajuny.utils
 
-import no.sigurof.grajuny.engine.DisplayManager
-import no.sigurof.grajuny.entity.Camera
+import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.display.DisplayManager
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -40,5 +40,6 @@ class Maths {
                     farPlane
                 )
         }
+
     }
 }

@@ -54,7 +54,7 @@ void getOrthonormalBasisOnBillboardSurface(out vec3 billboardUpDirection, out ve
 }
 
 
-vec3 calcBillboardVertexCoord(){
+vec3 calcBillboardVertexCoord(vec3 sphereCenter, float sphereRadius){
 
     // The vector from camera to the billboard
     vec3 cameraToBillboard = sphereCenter - cameraPos;
@@ -92,7 +92,7 @@ void main(void){
     // Find Which of the 4 elements is being rendered
     coord2d = whichVertex();
 
-    billboardVertexPosition = calcBillboardVertexCoord();
+    billboardVertexPosition = calcBillboardVertexCoord(sphereCenter, sphereRadius);
 
     // gl_Position = Screen space position of that vertex
     gl_Position = prjMatrix * viewMatrix * vec4(billboardVertexPosition, 1.0);

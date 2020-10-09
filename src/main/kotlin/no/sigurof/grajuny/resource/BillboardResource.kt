@@ -1,23 +1,23 @@
 package no.sigurof.grajuny.resource
 
-import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL30
 
 class BillboardResource(
-    private val vao: Int,
+    val vao: Int,
     private val vertexCount: Int = 4
-) : ResourceGl<BillboardShaderSettings> {
+) {
 
-    override fun render() {
+    fun render() {
         GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, vertexCount)
     }
 
-    override fun using(shader: BillboardShaderSettings, function: () -> Unit) {
-        shader.loadUseTexture(false)
-        function()
+    fun activate(){
+        GL30.glBindVertexArray(vao)
     }
 
-    override fun getVao(): Int {
-        return vao
+    fun deactivate() {
+        GL30.glBindVertexArray(0)
     }
+
 }

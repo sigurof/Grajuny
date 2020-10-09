@@ -21,7 +21,14 @@ object Loader {
     private val vaos = ArrayList<Int>()
     private val vbos = ArrayList<Int>()
 
-    fun loadToVao(parsedMesh: ParsedMesh): Mesh {
+    fun tmeshLoadToVao(parsedMesh: ParsedMesh): Mesh {
+        return loadToVao(parsedMesh).let {
+            Mesh(it.first, it.second)
+        }
+    }
+
+
+    fun loadToVao(parsedMesh: ParsedMesh): Pair<Int, Int> {
         val indices = parsedMesh.eboIndices.toIntArray()
         val vao = createVao()
         glBindVertexArray(vao)
@@ -42,7 +49,7 @@ object Loader {
             parsedMesh.normalVectors.toFloatArray()
         )
         unbindVao()
-        return Mesh(vao, indices.size)
+        return Pair(vao, indices.size)
     }
 
     fun cleanUp() {
