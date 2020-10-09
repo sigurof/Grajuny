@@ -1,6 +1,5 @@
 package no.sigurof.grajuny.resource.mesh
 
-import no.sigurof.grajuny.experimental2.MeshData
 import no.sigurof.grajuny.restructuring.TMesh
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray
@@ -35,13 +34,6 @@ object Loader {
         }
     }
 
-    fun meshDataLoadToVao(parsedMesh: ParsedMesh): MeshData {
-        return loadToVao(parsedMesh).let {
-            MeshData(
-                it.first, it.second, 0, 1, 2
-            )
-        }
-    }
 
     fun loadToVao(parsedMesh: ParsedMesh): Pair<Int, Int> {
         val indices = parsedMesh.eboIndices.toIntArray()

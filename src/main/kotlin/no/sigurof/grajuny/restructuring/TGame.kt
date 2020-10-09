@@ -39,7 +39,7 @@ abstract class TGame(
     }
 
     private fun createProjectionMatrix(): Matrix4f {
-        return Maths.createProjectionMatrixNew(fov, nearPlane, farPlane)
+        return Maths.createProjectionMatrix(fov, nearPlane, farPlane)
     }
 
     private fun createViewMatrix(): Matrix4f {

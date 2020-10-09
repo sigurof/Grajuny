@@ -1,13 +1,10 @@
 package no.sigurof.grajuny.shaders
 
-import no.sigurof.grajuny.shaders.settings.ShaderSettings
-import no.sigurof.grajuny.shaders.settings.impl.BillboardShaderSettings
 import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL30
 import java.nio.FloatBuffer
 
 object ShaderManager {
@@ -49,7 +46,7 @@ object ShaderManager {
     }
 
     private fun compileShaderFromSource(source: String, typeGl: Int): Int {
-        val text = BillboardShaderSettings::class.java.getResource(source).readText()
+        val text = ShaderManager::class.java.getResource(source).readText()
         val shader = GL20.glCreateShader(typeGl)
         GL20.glShaderSource(shader, text)
         GL20.glCompileShader(shader)
@@ -99,41 +96,9 @@ object ShaderManager {
         GL20.glUseProgram(0)
     }
 
-    fun bindVertAttrArrayAndVao(vao: Int, attributes: List<Pair<Int, String>>) {
-        // TODO If the same vao is used by several models, this call should be moved
-        GL30.glBindVertexArray(vao) // TODO Should maybe move this to shader
-        for (attr in attributes) {
-            GL30.glEnableVertexAttribArray(attr.first)
-        }
-    }
-
-    fun unbindVertAttrArrayAndVao(attributes: List<Pair<Int, String>>) {
-        for (attr in attributes) {
-            GL30.glDisableVertexAttribArray(attr.first)
-        }
-        // TODO If the same vao is used by several models, this call should be moved
-        GL30.glBindVertexArray(0)
-    }
-
     fun cleanUp(program: Int) {
         stop()
         GL20.glDeleteProgram(program)
-    }
-
-    fun activateShader(shader: ShaderSettings, vao: Int) {
-        GL20.glUseProgram(shader.program)
-    }
-
-    fun useShader(program: Int){
-        GL20.glUseProgram(program)
-    }
-
-    fun usingVaoDo(shader: ShaderSettings, vao: Int, function: () -> Unit) {
-        GL20.glUseProgram(shader.program)
-        bindVertAttrArrayAndVao(vao, shader.attributes)
-        function()
-        unbindVertAttrArrayAndVao(shader.attributes)
-        stop()
     }
 
 }
