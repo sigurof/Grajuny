@@ -1,6 +1,5 @@
 package no.sigurof.grajuny.resource.mesh
 
-import no.sigurof.grajuny.restructuring.TMesh
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray
 import org.lwjgl.opengl.ARBVertexArrayObject.glDeleteVertexArrays
@@ -21,12 +20,6 @@ object Loader {
 
     private val vaos = ArrayList<Int>()
     private val vbos = ArrayList<Int>()
-
-    fun meshLoadToVao(parsedMesh: ParsedMesh): Mesh {
-        return loadToVao(parsedMesh).let {
-            Mesh(it.first, it.second)
-        }
-    }
 
     fun tmeshLoadToVao(parsedMesh: ParsedMesh): TMesh {
         return loadToVao(parsedMesh).let {

@@ -1,7 +1,7 @@
 package no.sigurof.grajuny.utils
 
-import no.sigurof.grajuny.restructuring.TCamera
-import no.sigurof.grajuny.restructuring.TDisplayManager
+import no.sigurof.grajuny.camera.TCamera
+import no.sigurof.grajuny.display.TDisplayManager
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
