@@ -1,7 +1,6 @@
 package no.sigurof.grajuny.restructuring.node
 
-import no.sigurof.grajuny.restructuring.GameComponent
-import no.sigurof.grajuny.restructuring.Shader
+import no.sigurof.grajuny.restructuring.shader.Shader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 

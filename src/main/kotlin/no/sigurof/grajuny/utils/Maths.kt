@@ -3,6 +3,7 @@ package no.sigurof.grajuny.utils
 import no.sigurof.grajuny.engine.DisplayManager
 import no.sigurof.grajuny.entity.Camera
 import no.sigurof.grajuny.restructuring.TCamera
+import no.sigurof.grajuny.restructuring.TDisplayManager
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -45,6 +46,16 @@ class Maths {
                 .perspective(
                     fov,
                     DisplayManager.WIDTH.toFloat() / DisplayManager.HEIGHT.toFloat(),
+                    nearPlane,
+                    farPlane
+                )
+        }
+
+        fun createProjectionMatrixNew(fov: Float, nearPlane: Float, farPlane: Float): Matrix4f {
+            return Matrix4f()
+                .perspective(
+                    fov,
+                    TDisplayManager.WIDTH.toFloat() / TDisplayManager.HEIGHT.toFloat(),
                     nearPlane,
                     farPlane
                 )

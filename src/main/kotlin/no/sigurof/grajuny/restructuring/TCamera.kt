@@ -1,5 +1,6 @@
 package no.sigurof.grajuny.restructuring
 
+import no.sigurof.grajuny.restructuring.shader.interfaces.CameraShader
 import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW
@@ -116,7 +117,7 @@ class TCamera private constructor(
         glfwSetCursorPosCallback(window, ::mouseCallback)
     }
 
-    fun render(shader: BasicShader) {
+    fun render(shader: CameraShader) {
         shader.loadCameraPosition(pos)
     }
 

@@ -1,6 +1,10 @@
-package no.sigurof.grajuny.restructuring
+package no.sigurof.grajuny.restructuring.engine
 
 import no.sigurof.grajuny.resource.TextureManager
+import no.sigurof.grajuny.restructuring.TDisplayManager
+import no.sigurof.grajuny.restructuring.TGame
+import no.sigurof.grajuny.restructuring.TMeshManager
+import no.sigurof.grajuny.restructuring.TShaderManager
 
 object TCoreEngine {
 

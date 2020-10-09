@@ -42,7 +42,14 @@ class TDisplayManager {
                 GLFW.glfwShowWindow(window!!)
                 GL.createCapabilities()
             }
+            GLFW.glfwSetWindowSizeCallback(window!!, ::windowResizeCallback)
             return window!!
+        }
+
+        private fun windowResizeCallback(w: Long, width: Int, height: Int) {
+            WIDTH = width
+            HEIGHT = height
+            GL20.glViewport(0, 0, WIDTH, HEIGHT)
         }
 
         fun eachFrameDo(func: (() -> Unit)) {

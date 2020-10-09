@@ -1,5 +1,6 @@
 package no.sigurof.grajuny.restructuring
 
+import no.sigurof.grajuny.restructuring.shader.interfaces.ColorSpecularShader
 import org.joml.Vector3f
 
 class TMaterial(
@@ -7,7 +8,7 @@ class TMaterial(
     val reflectivity: Float,
     val shineDamper: Float
 ) {
-    fun render(shader: BasicShader) {
+    fun render(shader: ColorSpecularShader) {
         shader.loadColor(color)
         shader.loadSpecularValues(shineDamper, reflectivity)
     }

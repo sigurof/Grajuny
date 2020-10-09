@@ -1,8 +1,16 @@
-package no.sigurof.grajuny.restructuring
+package no.sigurof.grajuny.restructuring.node
 
+import no.sigurof.grajuny.restructuring.engine.RenderingEngine
+import no.sigurof.grajuny.restructuring.shader.Shader
 import org.joml.Matrix4f
 
-abstract class GameComponent {
+abstract class GameComponent(
+    shadersToUse: List<Shader>
+) {
+
+    init {
+        RenderingEngine.shaders.addAll(shadersToUse)
+    }
 
     abstract var transform: Matrix4f
     abstract fun input()

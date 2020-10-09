@@ -1,5 +1,8 @@
-package no.sigurof.grajuny.restructuring
+package no.sigurof.grajuny.restructuring.engine
 
+import no.sigurof.grajuny.restructuring.TCamera
+import no.sigurof.grajuny.restructuring.TGame
+import no.sigurof.grajuny.restructuring.shader.Shader
 import org.joml.Vector4f
 import org.lwjgl.opengl.GL11.GL_BACK
 import org.lwjgl.opengl.GL11.GL_CULL_FACE
@@ -37,6 +40,6 @@ class RenderingEngine(
     }
 
     companion object{
-        val shaders = mutableListOf<Shader>()
+        val shaders = mutableSetOf<Shader>()
     }
 }

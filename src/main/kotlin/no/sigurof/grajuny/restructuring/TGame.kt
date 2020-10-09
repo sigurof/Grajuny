@@ -1,6 +1,10 @@
 package no.sigurof.grajuny.restructuring
 
 import no.sigurof.grajuny.restructuring.node.GameObject
+import no.sigurof.grajuny.restructuring.shader.Shader
+import no.sigurof.grajuny.restructuring.shader.interfaces.CameraShader
+import no.sigurof.grajuny.restructuring.shader.interfaces.LightShader
+import no.sigurof.grajuny.restructuring.shader.interfaces.ProjectionMatrixShader
 import no.sigurof.grajuny.utils.Maths
 import org.joml.Matrix4f
 import org.joml.Vector4f
@@ -9,9 +13,9 @@ abstract class TGame(
     val window: Long,
     val root: GameObject = GameObject(),
     var background: Vector4f,
-    val fov: Float = 70f,
-    val nearPlane: Float = 0.1f,
-    val farPlane: Float = 1000f
+    private val fov: Float = 70f,
+    private val nearPlane: Float = 0.1f,
+    private val farPlane: Float = 1000f
 ) {
 
     abstract val camera: TCamera
@@ -28,34 +32,30 @@ abstract class TGame(
 
     abstract fun onUpdate()
 
-    fun input() {
-        root.input()
-    }
-
-    fun update() {
-        root.update()
-    }
-
     fun render(shader: Shader) {
         root.update()
         root.render(shader, Matrix4f().identity())
         lastTime = System.currentTimeMillis()
     }
 
-    fun createProjectionMatrix(): Matrix4f {
-        return Maths.createProjectionMatrix(fov, nearPlane, farPlane)
+    private fun createProjectionMatrix(): Matrix4f {
+        return Maths.createProjectionMatrixNew(fov, nearPlane, farPlane)
     }
 
-    fun createViewMatrix(): Matrix4f {
+    private fun createViewMatrix(): Matrix4f {
         return Maths.createViewMatrix(camera)
     }
 
     fun doNecessaryStuff(shader: Shader) {
-        if (shader is BasicShader) {
+        if (shader is ProjectionMatrixShader) {
             shader.loadProjectionMatrix(createProjectionMatrix())
+        }
+        if (shader is LightShader){
             LightSource.LIGHT_SOURCES.forEach {
                 it.render(shader)
             }
+        }
+        if (shader is CameraShader){
             (TCamera.activeCamera ?: run {
                 println("WARN: No active camera. Using default.")
                 TCamera.default()
@@ -63,5 +63,7 @@ abstract class TGame(
             shader.loadViewMatrix(createViewMatrix())
         }
     }
+
+
 
 }

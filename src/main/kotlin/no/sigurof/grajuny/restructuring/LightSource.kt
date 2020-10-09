@@ -1,5 +1,6 @@
 package no.sigurof.grajuny.restructuring
 
+import no.sigurof.grajuny.restructuring.shader.interfaces.LightShader
 import org.joml.Vector3f
 
 class LightSource(
@@ -7,7 +8,7 @@ class LightSource(
     var color: Vector3f,
     var ambient: Float
 ) {
-    fun render(shader: BasicShader) {
+    fun render(shader: LightShader) {
         shader.loadLight(this)
     }
 
