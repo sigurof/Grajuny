@@ -5,7 +5,7 @@ import no.sigurof.grajuny.shader.Shader
 import org.joml.Matrix4f
 
 abstract class GameComponent(
-    shadersToUse: List<Shader>
+    val shadersToUse: List<Shader>
 ) {
 
     init {

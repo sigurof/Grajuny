@@ -1,28 +1,23 @@
-package no.sigurof.grajuny.shader
+package no.sigurof.grajuny.shader.shaders
 
 import no.sigurof.grajuny.light.LightSource
+import no.sigurof.grajuny.shader.Shader
+import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.BillboardShader
 import no.sigurof.grajuny.shader.interfaces.CameraShader
-import no.sigurof.grajuny.shader.interfaces.ColorSpecularShader
+import no.sigurof.grajuny.shader.interfaces.ColorShader
 import no.sigurof.grajuny.shader.interfaces.LightShader
 import no.sigurof.grajuny.shader.interfaces.ProjectionMatrixShader
+import no.sigurof.grajuny.shader.interfaces.SpecularShader
 import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-private const val vtxSource = "/shader/billboard/vertex.shader"
-private const val frgSource = "/shader/billboard/fragment.shader"
-
-object SphereBillboardShader : Shader(),
-    TextureShader,
-    ColorSpecularShader,
-    ProjectionMatrixShader,
-    CameraShader,
-    LightShader,
-    BillboardShader {
-    val attributes: List<Pair<Int, String>> = emptyList()
-
-    private val uniforms = listOf(
+object SphereBillboardShader : Shader(
+    vtxSource = "/shader/billboard/vertex.shader",
+    frgSource = "/shader/billboard/fragment.shader",
+    attributes = emptyList(),
+    uniforms = listOf(
         "prjMatrix",
         "viewMatrix",
         "sphereRadius",
@@ -34,7 +29,6 @@ object SphereBillboardShader : Shader(),
         "color",
         "shineDamper",
         "reflectivity",
-
         "frUseTexture",
         "frPrjMatrix",
         "frViewMatrix",
@@ -42,9 +36,14 @@ object SphereBillboardShader : Shader(),
         "frCameraPos",
         "frSphereCenter"
     )
-
-    override val program: Int = ShaderManager.compileProgram(vtxSource, frgSource, attributes)
-    override val locations = uniforms.map { it to ShaderManager.getUniformLocation(it, program) }.toMap()
+),
+    TextureShader,
+    ColorShader,
+    SpecularShader,
+    ProjectionMatrixShader,
+    CameraShader,
+    LightShader,
+    BillboardShader {
 
     override fun loadUseTexture(useTexture: Boolean) {
         ShaderManager.loadBoolean(locations.getValue("frUseTexture"), useTexture)
@@ -79,7 +78,6 @@ object SphereBillboardShader : Shader(),
         ShaderManager.loadVector3(locations.getValue("lightCol"), lightSource.color)
         ShaderManager.loadFloat(locations.getValue("ambient"), lightSource.ambient)
     }
-
 
     override fun loadSphereCenter(sphereCenter: Vector3f) {
         ShaderManager.loadVector3(locations.getValue("sphereCenter"), sphereCenter)

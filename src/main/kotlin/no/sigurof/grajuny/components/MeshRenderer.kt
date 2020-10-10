@@ -1,14 +1,12 @@
 package no.sigurof.grajuny.components
 
 import no.sigurof.grajuny.node.GameComponent
-import no.sigurof.grajuny.resource.Material
 import no.sigurof.grajuny.resource.MeshResource
 import no.sigurof.grajuny.resource.Texture
-import no.sigurof.grajuny.shader.Basic3DShader
+import no.sigurof.grajuny.resource.material.Material
 import no.sigurof.grajuny.shader.Shader
-import no.sigurof.grajuny.shader.interfaces.ColorSpecularShader
-import no.sigurof.grajuny.shader.interfaces.Shader3D
-import no.sigurof.grajuny.shader.interfaces.TextureShader
+import no.sigurof.grajuny.shader.shaders.Basic3DShader
+import no.sigurof.grajuny.shader.shaders.FeaturelessShader
 import org.joml.Matrix4f
 
 class MeshRenderer(
@@ -26,18 +24,24 @@ class MeshRenderer(
     }
 
     override fun upload(shader: Shader, transform: Matrix4f) {
-        if (shader is ColorSpecularShader
-            && shader is TextureShader
-            && shader is Shader3D
-        ) {
-            shader.loadTransformationMatrix(transform)
-            material.render(shader)
-            texture?.activate()
-            texture?.render(shader) ?: shader.loadUseTexture(false)
-            mesh.activate()
-            mesh.render()
-            mesh.deactivate()
-            texture?.deactivate()
+        if (shader in shadersToUse) {
+            if (shader is Basic3DShader) {
+                material.render(shader)
+                texture?.activate()
+                texture?.render(shader) ?: shader.loadUseTexture(false)
+                shader.loadTransformationMatrix(transform)
+                mesh.activate()
+                mesh.render()
+                mesh.deactivate()
+                texture?.deactivate()
+            }
+            if (shader is FeaturelessShader) {
+                material.render(shader)
+                shader.loadTransformationMatrix(transform)
+                mesh.activate()
+                mesh.render()
+                mesh.deactivate()
+            }
         }
     }
 

@@ -3,13 +3,10 @@ package no.sigurof.grajuny.components
 import no.sigurof.grajuny.manager.BillboardManager
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.resource.BillboardResource
-import no.sigurof.grajuny.resource.Material
 import no.sigurof.grajuny.resource.Texture
+import no.sigurof.grajuny.resource.material.Material
 import no.sigurof.grajuny.shader.Shader
-import no.sigurof.grajuny.shader.SphereBillboardShader
-import no.sigurof.grajuny.shader.interfaces.BillboardShader
-import no.sigurof.grajuny.shader.interfaces.ColorSpecularShader
-import no.sigurof.grajuny.shader.interfaces.TextureShader
+import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -29,20 +26,18 @@ class SphereBillboardRenderer(
     }
 
     override fun upload(shader: Shader, transform: Matrix4f) {
-        if (
-            shader is ColorSpecularShader
-            && shader is TextureShader
-            && shader is BillboardShader
-        ) {
-            shader.loadSphereCenter(position)
-            shader.loadSphereRadius(radius)
-            material.render(shader)
-            texture.activate()
-            texture.render(shader)
-            billboard.activate()
-            billboard.render()
-            billboard.deactivate()
-            texture.deactivate()
+        if (shader in shadersToUse){
+            if (shader is SphereBillboardShader){
+                material.render(shader)
+                shader.loadSphereCenter(position)
+                shader.loadSphereRadius(radius)
+                texture.activate()
+                texture.render(shader)
+                billboard.activate()
+                billboard.render()
+                billboard.deactivate()
+                texture.deactivate()
+            }
         }
     }
 

@@ -1,37 +1,32 @@
-package no.sigurof.grajuny.shader
+package no.sigurof.grajuny.shader.shaders
 
 import no.sigurof.grajuny.light.LightSource
+import no.sigurof.grajuny.shader.Shader
+import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.CameraShader
-import no.sigurof.grajuny.shader.interfaces.ColorSpecularShader
+import no.sigurof.grajuny.shader.interfaces.ColorShader
 import no.sigurof.grajuny.shader.interfaces.LightShader
 import no.sigurof.grajuny.shader.interfaces.ProjectionMatrixShader
 import no.sigurof.grajuny.shader.interfaces.Shader3D
+import no.sigurof.grajuny.shader.interfaces.SpecularShader
 import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-private const val vtxSource = "/shader/texture/vertex.shader"
-private const val frgSource = "/shader/texture/fragment.shader"
-
-object Basic3DShader : Shader(),
-    TextureShader,
-    ColorSpecularShader,
-    Shader3D,
-    ProjectionMatrixShader,
-    CameraShader,
-    LightShader{
-    val attributes = listOf(
+object Basic3DShader : Shader(
+    vtxSource = "/shader/texture/vertex.shader",
+    frgSource = "/shader/texture/fragment.shader",
+    attributes = listOf(
         0 to "position",
         1 to "textureCoords",
         2 to "normal"
-    )
-    private val uniforms = listOf(
+    ),
+    uniforms = listOf(
         "trMatrix",
         "prjMatrix",
         "viewMatrix",
         "lightPos",
         "cameraPos",
-
         "lightCol",
         "shineDamper",
         "reflectivity",
@@ -39,8 +34,14 @@ object Basic3DShader : Shader(),
         "color",
         "useTexture"
     )
-    override val program: Int = ShaderManager.compileProgram(vtxSource, frgSource, attributes)
-    override val locations = uniforms.map { it to ShaderManager.getUniformLocation(it, program) }.toMap()
+),
+    TextureShader,
+    ColorShader,
+    SpecularShader,
+    Shader3D,
+    ProjectionMatrixShader,
+    CameraShader,
+    LightShader {
 
     override fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
         ShaderManager.loadMatrix(locations.getValue("trMatrix"), transformationMatrix)
