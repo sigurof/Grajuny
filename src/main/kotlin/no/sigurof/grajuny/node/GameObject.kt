@@ -4,9 +4,9 @@ import no.sigurof.grajuny.shader.Shader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-class GameObject(
+class GameObject private constructor(
     private var parent: GameObject? = null,
-    private val children: MutableList<GameObject> = mutableListOf(),
+    val children: MutableList<GameObject> = mutableListOf(),
     val components: MutableList<GameComponent> = mutableListOf(),
     var transform: Matrix4f = Matrix4f().identity()
 ) {
@@ -17,6 +17,7 @@ class GameObject(
     }
 
     fun addGameComponent(gameComponent: GameComponent) {
+        gameComponent.parent = this
         this.components.add(gameComponent)
     }
 
@@ -40,6 +41,14 @@ class GameObject(
         transform = transform.rotate(angle, axis)
     }
 
+    fun getRoot(): GameObject {
+        return parent?.getRoot() ?: this
+    }
+
+    fun getPosition(): Vector3f {
+        return transform.getColumn(3, Vector3f())
+    }
+
     data class Builder(
         val children: MutableList<GameObject> = mutableListOf(),
         val components: MutableList<GameComponent> = mutableListOf(),
@@ -51,7 +60,9 @@ class GameObject(
         }
 
         fun build(): GameObject {
-            return if (children.isEmpty() and components.isEmpty()) error("") else GameObject(
+            return if (children.isEmpty() and components.isEmpty())
+                error("")
+            else GameObject(
                 children = children,
                 components = components,
                 transform = transform
@@ -60,6 +71,10 @@ class GameObject(
     }
 
     companion object {
+        fun buildRoot(): GameObject {
+            return GameObject()
+        }
+
         fun withComponents(components: List<GameComponent>): Builder {
             return Builder(
                 components = components.toMutableList()

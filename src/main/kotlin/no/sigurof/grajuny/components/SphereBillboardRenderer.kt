@@ -3,8 +3,8 @@ package no.sigurof.grajuny.components
 import no.sigurof.grajuny.manager.BillboardManager
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.resource.BillboardResource
-import no.sigurof.grajuny.resource.Texture
 import no.sigurof.grajuny.resource.material.Material
+import no.sigurof.grajuny.resource.texture.Texture
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Matrix4f

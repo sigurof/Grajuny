@@ -13,7 +13,7 @@ import org.joml.Vector4f
 
 abstract class Game(
     val window: Long,
-    val root: GameObject = GameObject(),
+    val root: GameObject = GameObject.buildRoot(),
     var background: Vector4f,
     private val fov: Float = 70f,
     private val nearPlane: Float = 0.1f,
@@ -48,7 +48,7 @@ abstract class Game(
         return Maths.createViewMatrix(camera)
     }
 
-    fun doNecessaryStuff(shader: Shader) {
+    fun activate(shader: Shader) {
         if (shader is ProjectionMatrixShader) {
             shader.loadProjectionMatrix(createProjectionMatrix())
         }

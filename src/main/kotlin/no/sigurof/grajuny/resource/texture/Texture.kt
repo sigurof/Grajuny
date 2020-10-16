@@ -1,4 +1,4 @@
-package no.sigurof.grajuny.resource
+package no.sigurof.grajuny.resource.texture
 
 import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.lwjgl.opengl.GL30

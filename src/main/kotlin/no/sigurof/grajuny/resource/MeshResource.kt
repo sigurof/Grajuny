@@ -5,14 +5,14 @@ import org.lwjgl.opengl.GL30
 
 class MeshResource(
     private val mesh: Mesh,
-    val attributes: List<Int>
+    private val attributes: List<Int>
 ) {
 
     fun render() {
         GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.vertexCount, GL30.GL_UNSIGNED_INT, 0)
     }
 
-    val vao: Int
+    private val vao: Int
         get() = mesh.vao
 
     fun activate() {

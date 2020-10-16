@@ -1,5 +1,6 @@
 package no.sigurof.grajuny.resource.mesh
 
+import no.sigurof.grajuny.utils.plus
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector3i
@@ -12,9 +13,43 @@ data class ParsedMesh(
     val normalVectors: List<Float> = mutableListOf()
 ) {
 
-    fun centerAt(coord: Vector3f): ParsedMesh {
-        // TODO Find the center of mass and put it back at coord
-        return this
+    fun atCenterOfMass(): ParsedMesh {
+        val com = findCenterOfMass()
+        val numberOfVertices = vertexCoordinates.size / 3
+        val newVertexCoordinates = (0 until numberOfVertices)
+            .flatMap { i ->
+                listOf(
+                    vertexCoordinates[i + 0] - com.x,
+                    vertexCoordinates[i + 1] - com.y,
+                    vertexCoordinates[i + 2] - com.z
+                )
+            }
+        if (newVertexCoordinates.size != vertexCoordinates.size) {
+            throw IllegalStateException("newVertexCoords has size ${newVertexCoordinates.size}, old vertexCoordinates has size ${vertexCoordinates.size}")
+        }
+        return ParsedMesh(
+            eboIndices = eboIndices,
+            vertexCoordinates = vertexCoordinates,
+            uvCoordinates = uvCoordinates,
+            normalVectors = normalVectors
+        )
+
+    }
+
+    private fun findCenterOfMass(): Vector3f {
+        if (vertexCoordinates.size % 3 != 0) {
+            throw IllegalStateException("Forentet 3 dimensjoner.")
+        }
+        val numberOfVertices = vertexCoordinates.size / 3
+        return (0 until numberOfVertices)
+            .map { i ->
+                Vector3f(
+                    vertexCoordinates[i],
+                    vertexCoordinates[i + 1],
+                    vertexCoordinates[i + 2]
+                )
+            }
+            .reduce { subCom, newPoint -> subCom + newPoint } / numberOfVertices.toFloat()
     }
 
     companion object {

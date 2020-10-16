@@ -27,7 +27,7 @@ class RenderingEngine(
         clearScreen(game.background)
         shaders.forEach { shader ->
             shader.use()
-            game.doNecessaryStuff(shader)
+            game.activate(shader)
             game.onUpdate()
             game.render(shader)
         }

@@ -2,8 +2,8 @@ package no.sigurof.grajuny.engine
 
 import no.sigurof.grajuny.display.DisplayManager
 import no.sigurof.grajuny.game.Game
-import no.sigurof.grajuny.resource.TextureManager
 import no.sigurof.grajuny.resource.mesh.MeshManager
+import no.sigurof.grajuny.resource.texture.TextureManager
 import no.sigurof.grajuny.shader.ShaderManager
 
 object CoreEngine {

@@ -1,4 +1,4 @@
-package no.sigurof.grajuny.resource
+package no.sigurof.grajuny.resource.texture
 
 import de.matthiasmann.twl.utils.PNGDecoder
 import org.lwjgl.opengl.GL15

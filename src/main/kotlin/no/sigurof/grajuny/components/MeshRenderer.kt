@@ -2,8 +2,8 @@ package no.sigurof.grajuny.components
 
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.resource.MeshResource
-import no.sigurof.grajuny.resource.Texture
 import no.sigurof.grajuny.resource.material.Material
+import no.sigurof.grajuny.resource.texture.Texture
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.Basic3DShader
 import no.sigurof.grajuny.shader.shaders.FeaturelessShader

@@ -1,7 +1,5 @@
 package no.sigurof.grajuny.resource.mesh
 
-import no.sigurof.grajuny.utils.ORIGIN
-
 object MeshManager {
     private val sources = mutableMapOf(
         "cube" to "/model/primitives/cube.obj",
@@ -16,11 +14,11 @@ object MeshManager {
 
     internal fun getMesh(name: String): Mesh {
         meshes[name] ?: let {
-            meshes[name] = Loader.tmeshLoadToVao(
+            meshes[name] = Loader.meshLoadToVao(
 //     TODO Optimization idea: pass Float ant Int buffers directly here
                 ParsedMesh.from(
                     sources[name] ?: error("Couldn't find mesh associated with identifier \"$name\"")
-                ).centerAt(ORIGIN)
+                ).atCenterOfMass()
             )
         }
         return meshes[name]!!

@@ -21,18 +21,17 @@ object Loader {
     private val vaos = ArrayList<Int>()
     private val vbos = ArrayList<Int>()
 
-    fun tmeshLoadToVao(parsedMesh: ParsedMesh): Mesh {
+    fun meshLoadToVao(parsedMesh: ParsedMesh): Mesh {
         return loadToVao(parsedMesh).let {
             Mesh(it.first, it.second)
         }
     }
 
-
-    fun loadToVao(parsedMesh: ParsedMesh): Pair<Int, Int> {
+    private fun loadToVao(parsedMesh: ParsedMesh): Pair<Int, Int> {
         val indices = parsedMesh.eboIndices.toIntArray()
         val vao = createVao()
         glBindVertexArray(vao)
-        bindIndicesBuffer(indices)
+        bindIndicesBuffer(indices, GL_STATIC_DRAW)
         storeDataInAttributeList(
             0,
             3,
@@ -68,12 +67,12 @@ object Loader {
         return vao
     }
 
-    private fun storeDataInAttributeList(attributeNumber: Int, coordinateSize: Int, data: FloatArray): Int {
+    fun storeDataInAttributeList(attributeNumber: Int, coordinateSize: Int, data: FloatArray, usage: Int = GL_STATIC_DRAW): Int {
         val vbo = glGenBuffers()
         vbos.add(vbo)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
         val buffer = storeDataInFloatBuffer(data)
-        glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, buffer, usage)
         glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, false, 0, 0)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         return vbo
@@ -83,22 +82,23 @@ object Loader {
         glBindVertexArray(0)
     }
 
-    private fun bindIndicesBuffer(indices: IntArray) {
+    fun bindIndicesBuffer(indices: IntArray, usage: Int): Int {
         val ebo = glGenBuffers()
         vbos.add(ebo)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
         val buffer = storeDataInIntBuffer(indices)
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, usage)
+        return ebo
     }
 
-    private fun storeDataInIntBuffer(data: IntArray): IntBuffer {
+    fun storeDataInIntBuffer(data: IntArray): IntBuffer {
         val buffer = BufferUtils.createIntBuffer(data.size)
         buffer.put(data)
         buffer.flip()
         return buffer
     }
 
-    private fun storeDataInFloatBuffer(data: FloatArray): FloatBuffer {
+    fun storeDataInFloatBuffer(data: FloatArray): FloatBuffer {
         val buffer: FloatBuffer = BufferUtils.createFloatBuffer(data.size)
         buffer.put(data)
         buffer.flip()
