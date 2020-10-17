@@ -6,7 +6,7 @@ import no.sigurof.grajuny.resource.material.Material
 import no.sigurof.grajuny.resource.texture.Texture
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.Basic3DShader
-import no.sigurof.grajuny.shader.shaders.FeaturelessShader
+import no.sigurof.grajuny.shader.shaders.SilhouetteShader
 import org.joml.Matrix4f
 
 class MeshRenderer(
@@ -35,7 +35,7 @@ class MeshRenderer(
                 mesh.deactivate()
                 texture?.deactivate()
             }
-            if (shader is FeaturelessShader) {
+            if (shader is SilhouetteShader) {
                 material.render(shader)
                 shader.loadTransformationMatrix(transform)
                 mesh.activate()

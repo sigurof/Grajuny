@@ -10,7 +10,7 @@ import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.MeshResource
 import no.sigurof.grajuny.resource.material.ReflectiveMaterial
 import no.sigurof.grajuny.resource.mesh.MeshManager
-import no.sigurof.grajuny.shader.shaders.FeaturelessShader
+import no.sigurof.grajuny.shader.shaders.SilhouetteShader
 import no.sigurof.grajuny.utils.BLUE
 import no.sigurof.grajuny.utils.GRAY
 import no.sigurof.grajuny.utils.ORIGIN
@@ -55,7 +55,7 @@ class SolarSystemGame(
         sun = MeshRenderer(
             mesh = MeshResource(MeshManager.getMesh("sphere"), listOf(0, 1, 2)),
             material = yellowShiny,
-            shadersToUse = listOf(FeaturelessShader)
+            shadersToUse = listOf(SilhouetteShader)
         )
         val earth = SphereBillboardRenderer(
             material = blueShiny,

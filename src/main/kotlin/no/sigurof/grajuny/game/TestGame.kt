@@ -74,7 +74,7 @@ class TestGame(
 //            MeshRenderer(
 //                mesh = MeshResource(MeshManager.getMesh("dragon"), listOf(0, 1, 2)),
 //                material = yellowShiny,
-//                shadersToUse = listOf(FeaturelessShader)
+//                shadersToUse = listOf(SilhouetteShader)
 //            ).apply { transform = Matrix4f().translate(Vector3f(10f, 0f, 0f)) }
 //        ).at(Vector3f(0f, 0f, 0f)).build()
 //        root.addGameComponent(torus)

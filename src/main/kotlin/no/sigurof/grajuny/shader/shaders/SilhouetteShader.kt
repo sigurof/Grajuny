@@ -9,9 +9,9 @@ import no.sigurof.grajuny.shader.interfaces.Shader3D
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-object FeaturelessShader : Shader(
-    vtxSource = "/shader/featureless/vertex.shader",
-    frgSource = "/shader/featureless/fragment.shader",
+object SilhouetteShader : Shader(
+    vtxSource = "/shader/silhouette/vertex.shader",
+    frgSource = "/shader/silhouette/fragment.shader",
     attributes = listOf(
         0 to "position"
     ),
