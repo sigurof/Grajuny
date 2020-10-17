@@ -91,6 +91,12 @@ class GameObject private constructor(
             )
         }
 
+        fun withChildren(vararg children: GameObject): Builder {
+            return Builder(
+                children = children.toMutableList()
+            )
+        }
+
         fun withChild(child: GameObject): Builder {
             return withChildren(mutableListOf(child))
         }

@@ -15,8 +15,12 @@ import no.sigurof.grajuny.resource.texture.TextureManager
 import no.sigurof.grajuny.utils.RED
 import no.sigurof.grajuny.utils.WHITE
 import no.sigurof.grajuny.utils.YELLOW
+import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.joml.Vector3fc
 import org.joml.Vector4f
+import kotlin.math.cos
+import kotlin.math.sin
 
 class TestGame(
     window: Long
@@ -24,13 +28,11 @@ class TestGame(
     window = window,
     background = Vector4f(0f, 0.0f, 0f, 1f)
 ) {
+    private var sphereObj: GameObject
     private val cube: GameObject
     override val camera: Camera
-//    private val torus: GameComponent
+
     private val sphere: GameComponent
-//    private val sphere2: GameComponent
-//    private val dragon: GameObject
-//    private val line: GameComponent
 
     init {
 //        val texture = Texture(TextureManager.get("stall"))
@@ -63,10 +65,11 @@ class TestGame(
         sphere = SphereBillboardRenderer(
             texture = earthTex,
             material = redShiny,
-            radius = 0.1f,
+            radius = 1f,
             position = Vector3f(0f, 0f, 0f)
         )
-        root.addChild(GameObject.withComponent(sphere).build())
+        sphereObj = GameObject.withComponent(sphere).build()
+        root.addChild(sphereObj)
 //        dragon = GameObject.withComponent(
 //            MeshRenderer(
 //                mesh = MeshResource(MeshManager.getMesh("dragon"), listOf(0, 1, 2)),
@@ -84,7 +87,7 @@ class TestGame(
         camera = Camera.Builder()
             .at(cameraPos)
             .lookingAt(cube.getPosition())
-//            .capturingMouseInput(window)
+            .capturingMouseInput(window)
             .build()
 /*
         line = LineRenderer(
@@ -98,7 +101,7 @@ class TestGame(
 */
 //        root.addGameComponent(line)
         TraceRenderer.Builder(color = WHITE, numberOfPoints = 50)
-            .attachTo(cube.children.first())
+            .attachTo(sphereObj)
             .build()
     }
 
@@ -108,6 +111,12 @@ class TestGame(
         val angle = deltaTime / 1000f
 //        torus.transform.rotate(angle, Vector3f(0f, 1f, 0f))
         cube.rotate(angle, Vector3f(0f, 0f, 1f))
+        sphereObj.transform=
+            Matrix4f().translate(10 * Vector3f(cos(elapsedSeconds), sin(elapsedSeconds), sin(sin(elapsedSeconds))))
     }
 
+}
+
+private operator fun Number.times(vector3f: Vector3f): Vector3fc? {
+    return vector3f.mul(this.toFloat())
 }

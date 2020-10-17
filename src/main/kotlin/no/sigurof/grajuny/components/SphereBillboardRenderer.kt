@@ -11,7 +11,7 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class SphereBillboardRenderer(
-    val texture: Texture,
+    val texture: Texture? = null,
     val material: Material,
     val radius: Float,
     val position: Vector3f,
@@ -29,14 +29,15 @@ class SphereBillboardRenderer(
         if (shader in shadersToUse){
             if (shader is SphereBillboardShader){
                 material.render(shader)
-                shader.loadSphereCenter(position)
+                shader.loadSphereCenter(transform.getColumn(3, Vector3f()))
                 shader.loadSphereRadius(radius)
-                texture.activate()
-                texture.render(shader)
+                texture?.render(shader) ?: shader.loadUseTexture(false)
+                texture?.activate()
+                texture?.render(shader)
                 billboard.activate()
                 billboard.render()
                 billboard.deactivate()
-                texture.deactivate()
+                texture?.deactivate()
             }
         }
     }
