@@ -32,7 +32,9 @@ object Basic3DShader : Shader(
         "reflectivity",
         "ambient",
         "color",
-        "useTexture"
+        "useTexture",
+        "useSpecular",
+        "useDiffuse"
     )
 ),
     TextureShader,
@@ -76,6 +78,14 @@ object Basic3DShader : Shader(
 
     override fun loadUseTexture(useTexture: Boolean) {
         ShaderManager.loadBoolean(locations.getValue("useTexture"), useTexture)
+    }
+
+    fun loadUseSpecular(useSpecular: Boolean) {
+        ShaderManager.loadBoolean(locations.getValue("useSpecular"), useSpecular)
+    }
+
+    fun loadUseDiffuse(useDiffuse: Boolean) {
+        ShaderManager.loadBoolean(locations.getValue("useDiffuse"), useDiffuse)
     }
 
 }

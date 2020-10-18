@@ -34,7 +34,9 @@ object SphereBillboardShader : Shader(
         "frViewMatrix",
         "frSphereRadius",
         "frCameraPos",
-        "frSphereCenter"
+        "frSphereCenter",
+        "useSpecular",
+        "useDiffuse"
     )
 ),
     TextureShader,
@@ -54,6 +56,8 @@ object SphereBillboardShader : Shader(
     }
 
     override fun loadSpecularValues(damper: Float, reflectivity: Float) {
+        ShaderManager.loadBoolean(locations.getValue("useSpecular"), true)
+        ShaderManager.loadBoolean(locations.getValue("useDiffuse"), true)
         ShaderManager.loadFloat(locations.getValue("shineDamper"), damper)
         ShaderManager.loadFloat(locations.getValue("reflectivity"), reflectivity)
     }
@@ -87,5 +91,13 @@ object SphereBillboardShader : Shader(
     override fun loadSphereRadius(radius: Float) {
         ShaderManager.loadFloat(locations.getValue("sphereRadius"), radius)
         ShaderManager.loadFloat(locations.getValue("frSphereRadius"), radius)
+    }
+
+    fun loadUseSpecular(useSpecular: Boolean) {
+        ShaderManager.loadBoolean(locations.getValue("useSpecular"), useSpecular)
+    }
+
+    fun loadUseDiffuse(useDiffuse: Boolean) {
+        ShaderManager.loadBoolean(locations.getValue("useDiffuse"), useDiffuse)
     }
 }

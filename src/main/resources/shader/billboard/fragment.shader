@@ -13,6 +13,8 @@ uniform vec3 frCameraPos;
 uniform vec3 frSphereCenter;
 uniform sampler2D textureSampler;
 uniform bool frUseTexture;
+uniform bool useSpecular;
+uniform bool useDiffuse;
 
 // Which point on the billboard disk we're at "spherical space"
 in vec2 coord2d;
@@ -82,8 +84,7 @@ vec3 calculateSpecularLight(vec3 point, vec3 surfUnitNormal, vec3 unitToLight){
 }
 
 void diffuseAndSpecularLighting(out vec3 diffuse, out vec3 specular, vec3 point, vec3 surfUnitNormal){
-    vec3 toLightVec = normalize(lightPos - point);
-    vec3 unitToLight = normalize(toLightVec);
+    vec3 unitToLight = normalize(lightPos - point);
 
     // Diffuse lighting
     diffuse = calculateDiffuseLight(surfUnitNormal, unitToLight);
@@ -123,6 +124,22 @@ vec2 getTextureCoordinatesOfPoint(vec3 point, vec3 sphereCenter, float radius){
     return vec2((frPolarAngles2.x+pi)/2/pi, (frPolarAngles2.y)/pi);
 }
 
+vec4 addDiffuseAndSpecular(vec3 finalColor, vec3 point){
+    // Surface
+    vec3 surfUnitNormal = normalize(point - frSphereCenter);// Valid because we're dealing with a sphere
+    vec3 unitToLight = normalize(lightPos - point);
+    vec4 outColor = vec4(finalColor, 1);
+    if (useDiffuse){
+        vec3 diffuse = calculateDiffuseLight(surfUnitNormal, unitToLight);
+        outColor = vec4(diffuse, 1.0) * outColor;
+    }
+    if (useSpecular){
+        vec3 specular = calculateSpecularLight(point, surfUnitNormal, unitToLight);
+        outColor = outColor + vec4(specular, 1.0);
+    }
+    return outColor;
+}
+
 void main(void){
     // Discaring everything outside the sphere surface
     if (dot(coord2d, coord2d) > 1){
@@ -135,12 +152,6 @@ void main(void){
         // Writing the appropriate fragment depth value to the depth buffer
         gl_FragDepth = calculateFragmentDepth(point);
 
-        // Surface
-        vec3 surfUnitNormal = normalize(point - frSphereCenter);// Valid because we're dealing with a sphere
-        vec3 diffuse;
-        vec3 specular;
-        diffuseAndSpecularLighting(diffuse, specular, point, surfUnitNormal);
-
         // Texture
         vec3 finalColor = color;
         vec2 textureCoords = getTextureCoordinatesOfPoint(point, frSphereCenter, frSphereRadius);
@@ -151,19 +162,7 @@ void main(void){
             finalColor.g = min(textureColor.g, finalColor.g);
             finalColor.b = min(textureColor.b, finalColor.b);
         }
-        vec3 x = vec3(1, 0, 0);
-        vec3 y = vec3(0, 1, 0);
-        vec3 z = vec3(0, 0, 1);
-        float r = dot(point, x);
-        float g = dot(point, z);
-        float b = dot(point, y);
-        out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(specular, 1.0);
-//         Experimenting:
-//        out_Color = vec4(frPolarAngles2.x / pi, 0, 0, 1);
-//        vec3 diff = (point-billboardCenterPos)/frSphereRadius;
-//        float billboardCenterToBillboardPoint = length(billboardVertexPosition - billboardCenterPos);
-//        out_Color = vec4(finalColor, 1);
-
+        out_Color = addDiffuseAndSpecular(finalColor, point);
     }
 }
 

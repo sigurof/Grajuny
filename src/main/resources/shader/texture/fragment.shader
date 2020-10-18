@@ -14,6 +14,8 @@ uniform float reflectivity;
 uniform float ambient;
 uniform vec3 color;
 uniform bool useTexture;
+uniform bool useSpecular;
+uniform bool useDiffuse;
 
 vec3 calculateDiffuseLight(vec3 unitNormal, vec3 unitToLight){
     float nDotL = dot(unitNormal, unitToLight);
@@ -32,14 +34,28 @@ vec3 calculateSpecularLight(vec3 unitToLight, vec3 unitNormal){
 }
 
 
-void main(void){
+vec4 addDiffuseAndSpecular(vec3 finalColor){
+    // Surface
+    vec4 outColor = vec4(finalColor, 1);
 
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitToLight = normalize(toLightVec);
 
-    vec3 diffuse = calculateDiffuseLight(unitNormal, unitToLight);
 
-    vec3 specular = calculateSpecularLight(unitToLight, unitNormal);
+
+    if (useDiffuse){
+        vec3 diffuse = calculateDiffuseLight(unitNormal, unitToLight);
+        outColor = vec4(diffuse, 1.0) * outColor;
+    }
+    if (useSpecular){
+        vec3 specular = calculateSpecularLight(unitToLight, unitNormal);
+        outColor = outColor + vec4(specular, 1.0);
+    }
+    return outColor;
+}
+
+
+void main(void){
 
     // Combine base color with texture color
     vec3 finalColor = color;
@@ -49,5 +65,5 @@ void main(void){
         finalColor.g = min(textureColor.g, color.g);
         finalColor.b = min(textureColor.b, color.b);
     }
-    out_Color = vec4(diffuse, 1.0)*vec4(finalColor, 1) + vec4(specular, 1.0);
+    out_Color = addDiffuseAndSpecular(finalColor);
 }

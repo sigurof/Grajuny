@@ -11,7 +11,7 @@ import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.MeshResource
-import no.sigurof.grajuny.resource.material.ReflectiveMaterial
+import no.sigurof.grajuny.resource.material.RegularMaterial
 import no.sigurof.grajuny.resource.mesh.MeshManager
 import no.sigurof.grajuny.resource.texture.Texture
 import no.sigurof.grajuny.resource.texture.TextureManager
@@ -40,8 +40,8 @@ class TestGame(
 //        val torusMesh = MeshResource(MeshManager.getMesh("torus"), listOf(0, 1, 2))
         val cubeMesh = MeshResource(MeshManager.getMesh("cube"), listOf(0, 1, 2))
 //        val blueShiny = ReflectiveMaterial(BLUE, 1f, 100f)
-        val redShiny = ReflectiveMaterial(RED, 1f, 100f)
-        val yellowShiny = ReflectiveMaterial(YELLOW, 10f, 100f)
+        val redShiny = RegularMaterial(RED, 1f, 100f)
+        val yellowShiny = RegularMaterial(YELLOW, 10f, 100f)
         cube = GameObject.withChild(
             GameObject.withComponent(
                 MeshRenderer(

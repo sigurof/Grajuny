@@ -9,8 +9,7 @@ import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
-import no.sigurof.grajuny.resource.material.ReflectiveMaterial
-import no.sigurof.grajuny.resource.material.SilhouetteMaterial
+import no.sigurof.grajuny.resource.material.RegularMaterial
 import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -40,19 +39,19 @@ class SolarSystemGame(
             .lookingAt(ORIGIN)
             .capturingMouseInput(window)
             .build()
-        val yellowShiny = ReflectiveMaterial(YELLOW, 10f, 100f)
-        val blueShiny = ReflectiveMaterial(BLUE, 10f, 100f)
-        val gray = ReflectiveMaterial(GRAY, 1f, 100f)
+        val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
+        val blueShiny = RegularMaterial(BLUE, 10f, 100f)
+        val gray = RegularMaterial(GRAY, 1f, 100f)
         val earthMoonPos = Vector3f(15f, 0f, 0f)
 //        sun = SphereBillboardRenderer(
 //            material = yellowShiny,
 //            radius = 5f,
 //            position = Vector3f(0f, 0f, 0f)
 //        )
-        sun = MeshRenderer(
-            mesh = MeshResource(MeshManager.getMesh("sphere"), listOf(0, 1, 2)),
-            material = yellowShiny,
-            shadersToUse = listOf(SilhouetteShader)
+        sun = SphereBillboardRenderer(
+            material = pureYellow,
+            radius = 8f,
+            position = Vector3f(0f, 0f, 0f)
         )
         val earth = SphereBillboardRenderer(
             material = blueShiny,
