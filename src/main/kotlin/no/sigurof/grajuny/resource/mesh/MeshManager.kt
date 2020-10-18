@@ -1,5 +1,7 @@
 package no.sigurof.grajuny.resource.mesh
 
+import no.sigurof.grajuny.resource.MeshResource
+
 object MeshManager {
     private val sources = mutableMapOf(
         "cube" to "/model/primitives/cube.obj",
@@ -14,7 +16,7 @@ object MeshManager {
 
     fun getMesh(name: String): Mesh {
         meshes[name] ?: let {
-            meshes[name] = Loader.meshLoadToVao(
+            meshes[name] = Loader.loadToVao(
 //     TODO Optimization idea: pass Float ant Int buffers directly here
                 ParsedMesh.from(
                     sources[name] ?: error("Couldn't find mesh associated with identifier \"$name\"")
@@ -26,5 +28,10 @@ object MeshManager {
 
     fun cleanUp() {
         Loader.cleanUp()
+    }
+
+    fun getMeshResource(meshName: String): MeshResource {
+        val mesh = getMesh(meshName)
+        return MeshResource(mesh, mesh.attributes)
     }
 }

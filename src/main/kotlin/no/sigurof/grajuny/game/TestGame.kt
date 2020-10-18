@@ -45,7 +45,7 @@ class TestGame(
         cube = GameObject.withChild(
             GameObject.withComponent(
                 MeshRenderer(
-                    mesh = cubeMesh,
+                    meshName = "cube",
                     texture = null,
                     material = yellowShiny
                 )

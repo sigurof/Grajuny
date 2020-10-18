@@ -4,6 +4,7 @@ import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.YELLOW
+import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.light.LightSource
@@ -40,6 +41,7 @@ class SolarSystemGame(
             .capturingMouseInput(window)
             .build()
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
+        val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = false)
         val blueShiny = RegularMaterial(BLUE, 10f, 100f)
         val gray = RegularMaterial(GRAY, 1f, 100f)
         val earthMoonPos = Vector3f(15f, 0f, 0f)
@@ -48,11 +50,10 @@ class SolarSystemGame(
 //            radius = 5f,
 //            position = Vector3f(0f, 0f, 0f)
 //        )
-        sun = SphereBillboardRenderer(
-            material = pureYellow,
-            radius = 8f,
-            position = Vector3f(0f, 0f, 0f)
-        )
+        sun = MeshRenderer(
+            meshName = "torus",
+            material = diffuseYellow
+            )
         val earth = SphereBillboardRenderer(
             material = blueShiny,
             radius = 1f,

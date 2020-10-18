@@ -3,6 +3,7 @@ package no.sigurof.grajuny.components
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.resource.MeshResource
 import no.sigurof.grajuny.resource.material.Material
+import no.sigurof.grajuny.resource.mesh.MeshManager
 import no.sigurof.grajuny.resource.texture.Texture
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.Basic3DShader
@@ -10,15 +11,15 @@ import no.sigurof.grajuny.shader.shaders.Basic3DShader
 import org.joml.Matrix4f
 
 class MeshRenderer(
-    val mesh: MeshResource,
     val texture: Texture? = null,
     val material: Material,
-    shadersToUse: List<Shader> = listOf(Basic3DShader)
+    shadersToUse: List<Shader> = listOf(Basic3DShader),
+    meshName: String
 ) : GameComponent(
     shadersToUse = shadersToUse
 ) {
     override var transform: Matrix4f = Matrix4f()
-
+    val mesh: MeshResource = MeshManager.getMeshResource(meshName)
     override fun input() {
 
     }

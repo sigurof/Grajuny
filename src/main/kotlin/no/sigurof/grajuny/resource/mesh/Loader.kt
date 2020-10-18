@@ -16,39 +16,44 @@ import org.lwjgl.opengl.GL20.glVertexAttribPointer
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
+class MeshInfo(
+    val vao: Int,
+    val numberOfIndices: Int,
+    val attributes: List<Int>
+)
+
 object Loader {
 
     private val vaos = ArrayList<Int>()
     private val vbos = ArrayList<Int>()
 
-    fun meshLoadToVao(parsedMesh: ParsedMesh): Mesh {
-        return loadToVao(parsedMesh).let {
-            Mesh(it.first, it.second)
-        }
-    }
-
-    private fun loadToVao(parsedMesh: ParsedMesh): Pair<Int, Int> {
+    fun loadToVao(parsedMesh: ParsedMesh): Mesh {
         val indices = parsedMesh.eboIndices.toIntArray()
         val vao = createVao()
         glBindVertexArray(vao)
         bindIndicesBuffer(indices, GL_STATIC_DRAW)
+        val attributes = listOf(0, 1, 2)
         storeDataInAttributeList(
-            0,
+            attributes[0],
             3,
             parsedMesh.vertexCoordinates.toFloatArray()
         )
         storeDataInAttributeList(
-            1,
+            attributes[1],
             2,
             parsedMesh.uvCoordinates.toFloatArray()
         )
         storeDataInAttributeList(
-            2,
+            attributes[2],
             3,
             parsedMesh.normalVectors.toFloatArray()
         )
         unbindVao()
-        return Pair(vao, indices.size)
+        return Mesh(
+            vao = vao,
+            vertexCount = indices.size,
+            attributes = attributes
+        )
     }
 
     fun cleanUp() {
@@ -67,7 +72,12 @@ object Loader {
         return vao
     }
 
-    fun storeDataInAttributeList(attributeNumber: Int, coordinateSize: Int, data: FloatArray, usage: Int = GL_STATIC_DRAW): Int {
+    fun storeDataInAttributeList(
+        attributeNumber: Int,
+        coordinateSize: Int,
+        data: FloatArray,
+        usage: Int = GL_STATIC_DRAW
+    ): Int {
         val vbo = glGenBuffers()
         vbos.add(vbo)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
