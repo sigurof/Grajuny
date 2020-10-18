@@ -5,36 +5,37 @@ import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.TraceResource
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.LineShader
+import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class TraceRenderer private constructor(
     private val color: Vector3f,
     private val numberOfPoints: Int,
-    parent: GameObject
+    parent: GameObject,
+    points: MutableList<Vector3f>
 ) : GameComponent(
     shadersToUse = listOf(LineShader),
     parent = parent
 ) {
     override var transform: Matrix4f = Matrix4f()
 
-    private val points = (0 until numberOfPoints).map { i ->
-        Vector3f(i.toFloat(), i.toFloat() * i.toFloat() * 0.05f, 0f)
-    }.toMutableList()
-
     private val trace = TraceResource(points)
 
     data class Builder(
         private val color: Vector3f,
-        private val numberOfPoints: Int = 10
+        private val numberOfPoints: Int = 10,
+        private var firstPos: Vector3f = ORIGIN
     ) {
         private var parent: GameObject? = null
         fun attachTo(value: GameObject) = apply { parent = value }
+        fun firstPos(value: Vector3f) = apply { firstPos = value  }
         fun build(): TraceRenderer {
             val trace = TraceRenderer(
                 color = color,
                 numberOfPoints = numberOfPoints,
-                parent = parent ?: error("Parent not set!")
+                parent = parent ?: error("Parent not set!"),
+                points = (0 until numberOfPoints).map { firstPos }.toMutableList()
             )
             parent?.addGameComponent(trace as GameComponent)
             return trace

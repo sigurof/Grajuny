@@ -1,6 +1,9 @@
 package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.color.RED
+import no.sigurof.grajuny.color.WHITE
+import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
@@ -12,9 +15,6 @@ import no.sigurof.grajuny.resource.material.ReflectiveMaterial
 import no.sigurof.grajuny.resource.mesh.MeshManager
 import no.sigurof.grajuny.resource.texture.Texture
 import no.sigurof.grajuny.resource.texture.TextureManager
-import no.sigurof.grajuny.utils.RED
-import no.sigurof.grajuny.utils.WHITE
-import no.sigurof.grajuny.utils.YELLOW
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector3fc

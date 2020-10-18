@@ -1,4 +1,4 @@
-package no.sigurof.grajuny.utils
+package no.sigurof.grajuny.color
 
 import org.joml.Vector3f
 

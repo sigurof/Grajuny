@@ -12,7 +12,7 @@ object MeshManager {
     )
     private val meshes = mutableMapOf<String, Mesh>()
 
-    internal fun getMesh(name: String): Mesh {
+    fun getMesh(name: String): Mesh {
         meshes[name] ?: let {
             meshes[name] = Loader.meshLoadToVao(
 //     TODO Optimization idea: pass Float ant Int buffers directly here

@@ -7,7 +7,7 @@ import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Vector3f
 
 class ReflectiveMaterial(
-    val color: Vector3f,
+    var color: Vector3f,
     val reflectivity: Float,
     val shineDamper: Float
 ) : Material {

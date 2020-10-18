@@ -4,6 +4,8 @@ import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.display.DisplayManager
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import kotlin.math.max
+import kotlin.math.min
 
 class Maths {
 
@@ -11,6 +13,10 @@ class Maths {
         private val x = Vector3f(1f, 0f, 0f)
         private val y = Vector3f(0f, 1f, 0f)
         private val z = Vector3f(0f, 0f, 1f)
+
+        fun clamp(value: Float, atLeast: Float, atMost: Float): Float {
+            return min(max(atLeast, value), atMost)
+        }
 
         fun createTransformationMatrix(position: Vector3f, eulerAngles: Vector3f, scale: Vector3f): Matrix4f {
             val matrix4f = Matrix4f()

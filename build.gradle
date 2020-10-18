@@ -54,6 +54,13 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     compile "org.joml:joml:${jomlVersion}"
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
+}
+
+test {
+    useJUnitPlatform()
+
 }
 
 compileKotlin {
