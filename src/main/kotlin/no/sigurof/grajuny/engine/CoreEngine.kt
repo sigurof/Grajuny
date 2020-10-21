@@ -14,10 +14,9 @@ object CoreEngine {
         DisplayManager.withWindowOpen { window ->
             val renderingEngine = RenderingEngine(window)
             val game = initGame(window)
-            while (DisplayManager.isOpen()) {
-                DisplayManager.eachFrameDo {
-                    renderingEngine.render(game)
-                }
+            DisplayManager.eachFrameDo {
+                renderingEngine.render(game)
+                game.update()
             }
             TextureManager.cleanUp()
             MeshManager.cleanUp()

@@ -53,23 +53,25 @@ class DisplayManager {
         }
 
         fun eachFrameDo(func: (() -> Unit)) {
-            window
-                ?.let {
-                    val now = currentTimeMillis()
-                    if (now - lastUpdate > (1000 / FPS).toLong()) {
-                        func.invoke()
-                        lastUpdate = now
+            while (isOpen()){
+                window
+                    ?.let {
+                        val now = currentTimeMillis()
+                        if (now - lastUpdate > (1000 / FPS).toLong()) {
+                            func.invoke()
+                            lastUpdate = now
+                        }
+                        GLFW.glfwPollEvents()
+                        glfwSwapBuffers(it)
                     }
-                    GLFW.glfwPollEvents()
-                    glfwSwapBuffers(it)
-                }
+            }
         }
 
         private fun closeDisplay(window: Long) {
             GLFW.glfwDestroyWindow(window)
         }
 
-        fun isOpen(): Boolean {
+        private fun isOpen(): Boolean {
             return window?.let { !GLFW.glfwWindowShouldClose(it) } ?: false
         }
     }

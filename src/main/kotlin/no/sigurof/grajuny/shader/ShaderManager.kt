@@ -8,9 +8,11 @@ import org.lwjgl.opengl.GL20
 import java.nio.FloatBuffer
 
 object ShaderManager {
+
     private val matrixBuffer: FloatBuffer = BufferUtils.createFloatBuffer(16)
 
-    private val activeShaders: MutableSet<Shader> = mutableSetOf()
+    var activeShaders: MutableSet<Shader> = mutableSetOf()
+        private set
 
     fun cleanUp() {
         activeShaders.forEach { it.cleanUp() }

@@ -29,12 +29,6 @@ abstract class Game(
     abstract fun onUpdate()
 
     fun render(shader: Shader) {
-        root.update()
-        root.render(shader, Matrix4f().identity())
-        lastTime = System.currentTimeMillis()
-    }
-
-    fun activate(shader: Shader) {
         if (shader is LightShader) {
             LightSource.LIGHT_SOURCES.forEach {
                 it.render(shader)
@@ -46,6 +40,14 @@ abstract class Game(
                 CameraManager.default()
             }).render(shader)
         }
+        root.render(shader, Matrix4f().identity())
+    }
+
+    fun update() {
+        CameraManager.activeCamera?.update(window)
+        onUpdate()
+        root.update()
+        lastTime = System.currentTimeMillis()
     }
 
 }

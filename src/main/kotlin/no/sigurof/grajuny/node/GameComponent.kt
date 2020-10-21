@@ -1,7 +1,7 @@
 package no.sigurof.grajuny.node
 
-import no.sigurof.grajuny.engine.RenderingEngine
 import no.sigurof.grajuny.shader.Shader
+import no.sigurof.grajuny.shader.ShaderManager
 import org.joml.Matrix4f
 
 abstract class GameComponent(
@@ -10,7 +10,7 @@ abstract class GameComponent(
 ) {
 
     init {
-        RenderingEngine.shaders.addAll(shadersToUse)
+        ShaderManager.activeShaders.addAll(shadersToUse)
     }
 
     abstract var transform: Matrix4f
