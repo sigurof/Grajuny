@@ -34,7 +34,7 @@ class CyclicCounter private constructor(
 
     companion object {
 
-        fun exclusive_max(max: Int): CyclicCounter {
+        fun exclusiveMax(max: Int): CyclicCounter {
             return CyclicCounter(
                 max = max,
                 current = 0

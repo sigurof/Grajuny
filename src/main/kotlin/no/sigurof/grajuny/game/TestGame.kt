@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.game
 
-import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.camera.DefaultCamera
 import no.sigurof.grajuny.color.RED
 import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.color.YELLOW
@@ -30,7 +30,7 @@ class TestGame(
 ) {
     private var sphereObj: GameObject
     private val cube: GameObject
-    override val camera: Camera
+    private val camera: DefaultCamera
 
     private val sphere: GameComponent
 
@@ -84,7 +84,7 @@ class TestGame(
         // Make light
         LightSource.Builder().position(Vector3f(0f, 100f, 40f)).build()
         val cameraPos = Vector3f(0f, 0f, 20f)
-        camera = Camera.Builder()
+        camera = DefaultCamera.Builder()
             .at(cameraPos)
             .lookingAt(cube.getPosition())
             .capturingMouseInput(window)

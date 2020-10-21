@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.game
 
-import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.camera.CameraManager
 import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.shader.Shader
@@ -15,7 +15,6 @@ abstract class Game(
     var background: Vector4f
 ) {
 
-    abstract val camera: Camera
     private var startTime: Long = System.currentTimeMillis()
     private var lastTime: Long = System.currentTimeMillis()
     internal val deltaTime: Long
@@ -36,19 +35,17 @@ abstract class Game(
     }
 
     fun activate(shader: Shader) {
-        if (shader is LightShader){
+        if (shader is LightShader) {
             LightSource.LIGHT_SOURCES.forEach {
                 it.render(shader)
             }
         }
-        if (shader is CameraShader){
-            (Camera.activeCamera ?: run {
+        if (shader is CameraShader) {
+            (CameraManager.activeCamera ?: run {
                 println("WARN: No active camera. Using default.")
-                Camera.default()
+                CameraManager.default()
             }).render(shader)
         }
     }
-
-
 
 }

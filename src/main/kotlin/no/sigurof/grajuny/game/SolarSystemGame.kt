@@ -1,6 +1,8 @@
 package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.camera.CameraManager
+import no.sigurof.grajuny.camera.DefaultCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.YELLOW
@@ -11,9 +13,11 @@ import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.material.RegularMaterial
+import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Vector3f
 import org.joml.Vector4f
+import org.lwjgl.glfw.GLFW
 
 class SolarSystemGame(
     window: Long
@@ -23,7 +27,8 @@ class SolarSystemGame(
 ) {
     private var earthMoonObject: GameObject
     private var solarSystem: GameObject
-    override val camera: Camera
+    private val cameras: List<Camera>
+    private val cameraIndex: CyclicCounter = CyclicCounter.exclusiveMax(2)
 
     //    private val baryCenter: GameObject
     private val sun: GameComponent
@@ -35,25 +40,27 @@ class SolarSystemGame(
         val sunPos = Vector3f(1f, 0f, 0f)
         LightSource.Builder().position(sunPos).build()
         val cameraPos = Vector3f(0f, 0f, 20f)
-        camera = Camera.Builder()
-            .at(cameraPos)
-            .lookingAt(ORIGIN)
-            .capturingMouseInput(window)
-            .build()
+        cameras = listOf(
+            DefaultCamera.Builder()
+                .at(cameraPos)
+                .lookingAt(ORIGIN)
+                .capturingMouseInput(window)
+                .build(),
+            DefaultCamera.Builder()
+                .at(Vector3f(100f, 0f, 0f))
+                .lookingAt(ORIGIN)
+                .capturingMouseInput(window)
+                .build()
+        )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = false)
         val blueShiny = RegularMaterial(BLUE, 10f, 100f)
         val gray = RegularMaterial(GRAY, 1f, 100f)
         val earthMoonPos = Vector3f(15f, 0f, 0f)
-//        sun = SphereBillboardRenderer(
-//            material = yellowShiny,
-//            radius = 5f,
-//            position = Vector3f(0f, 0f, 0f)
-//        )
         sun = MeshRenderer(
             meshName = "torus",
             material = diffuseYellow
-            )
+        )
         val earth = SphereBillboardRenderer(
             material = blueShiny,
             radius = 1f,
@@ -87,6 +94,10 @@ class SolarSystemGame(
         val angle = deltaTime / 300f
         solarSystem.transform.rotate(angle / 12f, Vector3f(0f, 1f, 0f))
         earthMoonObject.transform.rotate(angle, Vector3f(0f, 1f, 0f))
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW.GLFW_TRUE) {
+            cameraIndex.incrementByOne()
+            CameraManager.activeCamera = cameras[cameraIndex.current]
+        }
 
     }
 }

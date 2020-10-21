@@ -24,8 +24,8 @@ class TraceResource(
     private val numVertices = vertices.size
     private val numLines = numVertices - 1
     private val eboIndsLength = 2 * numLines
-    private val eboIndsEnd = CyclicCounter.exclusive_max(eboIndsLength)
-    private val vtxEnd = CyclicCounter.exclusive_max(numVertices)
+    private val eboIndsEnd = CyclicCounter.exclusiveMax(eboIndsLength)
+    private val vtxEnd = CyclicCounter.exclusiveMax(numVertices)
     private val eboInds = (0 until numLines).flatMap { listOf(it, it + 1) }.toMutableList()
     private val vao = Loader.createVao()
     private val vbo: Int

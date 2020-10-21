@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.engine
 
-import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.camera.CameraManager
 import no.sigurof.grajuny.game.Game
 import no.sigurof.grajuny.shader.Shader
 import org.joml.Vector4f
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.opengl.GL30
 
 class RenderingEngine(
-    val window: Long
+    private val window: Long
 ) {
 
     init {
@@ -31,7 +31,7 @@ class RenderingEngine(
             game.onUpdate()
             game.render(shader)
         }
-        Camera.activeCamera?.move(window)
+        CameraManager.activeCamera?.update(window)
     }
 
     private fun clearScreen(background: Vector4f) {
