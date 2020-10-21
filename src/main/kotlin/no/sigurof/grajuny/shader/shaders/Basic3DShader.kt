@@ -6,7 +6,6 @@ import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.CameraShader
 import no.sigurof.grajuny.shader.interfaces.ColorShader
 import no.sigurof.grajuny.shader.interfaces.LightShader
-import no.sigurof.grajuny.shader.interfaces.ProjectionMatrixShader
 import no.sigurof.grajuny.shader.interfaces.Shader3D
 import no.sigurof.grajuny.shader.interfaces.SpecularShader
 import no.sigurof.grajuny.shader.interfaces.TextureShader
@@ -41,7 +40,6 @@ object Basic3DShader : Shader(
     ColorShader,
     SpecularShader,
     Shader3D,
-    ProjectionMatrixShader,
     CameraShader,
     LightShader {
 

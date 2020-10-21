@@ -29,6 +29,10 @@ class Maths {
             return matrix4f
         }
 
+        fun createViewMatrix(pos: Vector3f, lookAt: Vector3f, up: Vector3f): Matrix4f {
+            return Matrix4f().lookAt(pos, lookAt, up)
+        }
+
         fun createViewMatrix(camera: Camera): Matrix4f {
             return Matrix4f().lookAt(
                 camera.pos,

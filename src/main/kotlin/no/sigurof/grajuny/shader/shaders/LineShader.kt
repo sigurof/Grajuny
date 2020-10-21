@@ -4,7 +4,6 @@ import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.CameraShader
 import no.sigurof.grajuny.shader.interfaces.ColorShader
-import no.sigurof.grajuny.shader.interfaces.ProjectionMatrixShader
 import no.sigurof.grajuny.shader.interfaces.Shader3D
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -22,7 +21,6 @@ object LineShader : Shader(
         "color"
     )
 ),
-    ProjectionMatrixShader,
     CameraShader,
     ColorShader,
     Shader3D {

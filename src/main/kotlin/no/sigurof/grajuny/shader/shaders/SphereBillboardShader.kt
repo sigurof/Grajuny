@@ -7,7 +7,6 @@ import no.sigurof.grajuny.shader.interfaces.BillboardShader
 import no.sigurof.grajuny.shader.interfaces.CameraShader
 import no.sigurof.grajuny.shader.interfaces.ColorShader
 import no.sigurof.grajuny.shader.interfaces.LightShader
-import no.sigurof.grajuny.shader.interfaces.ProjectionMatrixShader
 import no.sigurof.grajuny.shader.interfaces.SpecularShader
 import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.joml.Matrix4f
@@ -42,7 +41,6 @@ object SphereBillboardShader : Shader(
     TextureShader,
     ColorShader,
     SpecularShader,
-    ProjectionMatrixShader,
     CameraShader,
     LightShader,
     BillboardShader {

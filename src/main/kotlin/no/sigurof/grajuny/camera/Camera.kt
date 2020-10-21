@@ -1,7 +1,9 @@
 package no.sigurof.grajuny.camera
 
 import no.sigurof.grajuny.shader.interfaces.CameraShader
+import no.sigurof.grajuny.utils.Maths
 import no.sigurof.grajuny.utils.ORIGIN
+import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.GLFW_KEY_A
@@ -16,7 +18,10 @@ import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
 class Camera private constructor(
     internal val pos: Vector3f,
     lookingAt: Vector3f,
-    private val speed: Float
+    private val speed: Float,
+    val fov: Float = 70f,
+    val nearPlane: Float = 0.1f,
+    val farPlane: Float = 1000f
 ) {
     private val up: Vector3f = Vector3f(0f, 1f, 0f)
     internal val fwAxis: Vector3f = lookingAt.sub(pos, Vector3f()).normalize()
@@ -119,11 +124,21 @@ class Camera private constructor(
 
     fun render(shader: CameraShader) {
         shader.loadCameraPosition(pos)
+        shader.loadProjectionMatrix(createProjectionMatrix())
+        shader.loadViewMatrix(createViewMatrix())
     }
 
     fun activateCursor(window: Long) {
         setCursorPosCallback(window)
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
+    }
+
+    private fun createProjectionMatrix(): Matrix4f {
+        return Maths.createProjectionMatrix(fov, nearPlane, farPlane)
+    }
+
+    private fun createViewMatrix(): Matrix4f {
+        return Maths.createViewMatrix(pos, pos.add(fwAxis, Vector3f()), upAxis)
     }
 
     companion object {

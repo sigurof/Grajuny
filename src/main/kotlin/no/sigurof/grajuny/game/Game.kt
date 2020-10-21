@@ -6,18 +6,13 @@ import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.interfaces.CameraShader
 import no.sigurof.grajuny.shader.interfaces.LightShader
-import no.sigurof.grajuny.shader.interfaces.ProjectionMatrixShader
-import no.sigurof.grajuny.utils.Maths
 import org.joml.Matrix4f
 import org.joml.Vector4f
 
 abstract class Game(
     val window: Long,
     val root: GameObject = GameObject.buildRoot(),
-    var background: Vector4f,
-    private val fov: Float = 70f,
-    private val nearPlane: Float = 0.1f,
-    private val farPlane: Float = 1000f
+    var background: Vector4f
 ) {
 
     abstract val camera: Camera
@@ -40,18 +35,7 @@ abstract class Game(
         lastTime = System.currentTimeMillis()
     }
 
-    private fun createProjectionMatrix(): Matrix4f {
-        return Maths.createProjectionMatrix(fov, nearPlane, farPlane)
-    }
-
-    private fun createViewMatrix(): Matrix4f {
-        return Maths.createViewMatrix(camera)
-    }
-
     fun activate(shader: Shader) {
-        if (shader is ProjectionMatrixShader) {
-            shader.loadProjectionMatrix(createProjectionMatrix())
-        }
         if (shader is LightShader){
             LightSource.LIGHT_SOURCES.forEach {
                 it.render(shader)
@@ -62,7 +46,6 @@ abstract class Game(
                 println("WARN: No active camera. Using default.")
                 Camera.default()
             }).render(shader)
-            shader.loadViewMatrix(createViewMatrix())
         }
     }
 
