@@ -8,7 +8,6 @@ import no.sigurof.grajuny.game.SolarSystemGame
 - multi gradient
 - quaternion camera
 - attaching camera to gameobject
-- multiple cameras
 - camera which always looks at an object
 - post processing
 -- adding glow
@@ -18,6 +17,7 @@ import no.sigurof.grajuny.game.SolarSystemGame
 * DONE:
 - featureless shader for billboard  (can enable and disable diffuse/specular in RegularMaterial)
 - Fix the Mesh api
+- multiple cameras
 */
 fun main() {
     CoreEngine.play { window ->

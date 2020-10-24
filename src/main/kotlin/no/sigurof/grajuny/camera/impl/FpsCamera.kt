@@ -1,10 +1,11 @@
-package no.sigurof.grajuny.camera
+package no.sigurof.grajuny.camera.impl
 
+import no.sigurof.grajuny.camera.Camera
+import no.sigurof.grajuny.camera.CameraManager
 import no.sigurof.grajuny.shader.interfaces.CameraShader
 import no.sigurof.grajuny.utils.Maths
 import org.joml.Matrix4f
 import org.joml.Vector3f
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.GLFW_KEY_A
 import org.lwjgl.glfw.GLFW.GLFW_KEY_D
 import org.lwjgl.glfw.GLFW.GLFW_KEY_E
@@ -12,9 +13,8 @@ import org.lwjgl.glfw.GLFW.GLFW_KEY_Q
 import org.lwjgl.glfw.GLFW.GLFW_KEY_S
 import org.lwjgl.glfw.GLFW.GLFW_KEY_W
 import org.lwjgl.glfw.GLFW.glfwGetKey
-import org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback
 
-class DefaultCamera private constructor(
+class FpsCamera private constructor(
     private val pos: Vector3f,
     lookingAt: Vector3f,
     private val speed: Float,
@@ -49,14 +49,12 @@ class DefaultCamera private constructor(
             shouldCaptureMouse = true
             window = win
         }
-
         fun fov(value: Float) = apply { fov = value }
-
-        fun build(): DefaultCamera {
+        fun build(): FpsCamera {
             if (at?.equals(lookingAt) == true) {
                 error("Camera position must be different from the position it looks towards")
             }
-            val camera = DefaultCamera(
+            val camera = FpsCamera(
                 pos = at ?: error("Must supply camera position"),
                 lookingAt = lookingAt ?: error("Must supply point to look at"),
                 speed = speed,
@@ -132,26 +130,11 @@ class DefaultCamera private constructor(
     }
 
     override fun activate() {
-        activateCursorCapture()
+        CameraManager.activateCursorCapture(window, lastX, lastY, ::mouseCallback)
     }
 
     override fun deactivate() {
-        deactivateCursorCapture()
-    }
-
-    private fun activateCursorCapture() {
-        window?.let {
-            GLFW.glfwSetInputMode(it, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
-            GLFW.glfwSetCursorPos(it, lastX, lastY)
-            glfwSetCursorPosCallback(it, ::mouseCallback)
-        }
-    }
-
-    private fun deactivateCursorCapture() {
-        window?.let {
-            GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL)
-            glfwSetCursorPosCallback(window, null)
-        }
+        CameraManager.deactivateCursorCapture(window, lastX, lastY, ::mouseCallback)
     }
 
     private fun createProjectionMatrix(): Matrix4f {

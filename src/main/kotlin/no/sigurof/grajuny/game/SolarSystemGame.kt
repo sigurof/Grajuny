@@ -2,7 +2,8 @@ package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.CameraManager
-import no.sigurof.grajuny.camera.DefaultCamera
+import no.sigurof.grajuny.camera.impl.FpsCamera
+import no.sigurof.grajuny.camera.impl.SpaceShipCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.YELLOW
@@ -39,14 +40,14 @@ class SolarSystemGame(
     init {
         val sunPos = Vector3f(1f, 0f, 0f)
         LightSource.Builder().position(sunPos).build()
-        val cameraPos = Vector3f(0f, 0f, 20f)
+        val cameraPos = Vector3f(0f, 10f, 20f)
         cameras = listOf(
-            DefaultCamera.Builder()
+            SpaceShipCamera.Builder()
                 .at(cameraPos)
                 .lookingAt(ORIGIN)
                 .capturingMouseInput(window)
                 .build(),
-            DefaultCamera.Builder()
+            FpsCamera.Builder()
                 .at(Vector3f(100f, 0f, 0f))
                 .lookingAt(ORIGIN)
                 .capturingMouseInput(window)
@@ -87,6 +88,7 @@ class SolarSystemGame(
         )
             .attachTo(earthObj)
             .build()
+//        earthObj.addGameComponent(cameras[0])
     }
 
     override fun onUpdate() {

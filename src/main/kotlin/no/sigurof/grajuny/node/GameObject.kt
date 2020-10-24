@@ -5,7 +5,7 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class GameObject private constructor(
-    private var parent: GameObject? = null,
+    var parent: GameObject? = null,
     val children: MutableList<GameObject> = mutableListOf(),
     val components: MutableList<GameComponent> = mutableListOf(),
     var transform: Matrix4f = Matrix4f().identity()

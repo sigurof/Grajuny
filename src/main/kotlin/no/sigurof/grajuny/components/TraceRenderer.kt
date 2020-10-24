@@ -2,6 +2,7 @@ package no.sigurof.grajuny.components
 
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
+import no.sigurof.grajuny.rendable.Rendable
 import no.sigurof.grajuny.resource.TraceResource
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.LineShader
@@ -12,14 +13,11 @@ import org.joml.Vector3f
 class TraceRenderer private constructor(
     private val color: Vector3f,
     private val numberOfPoints: Int,
-    parent: GameObject,
-    points: MutableList<Vector3f>
-) : GameComponent(
-    shadersToUse = listOf(LineShader),
-    parent = parent
+    points: MutableList<Vector3f>,
+    override var parent: GameObject?
+) : GameComponent, Rendable(
+    shadersToUse = listOf(LineShader)
 ) {
-    override var transform: Matrix4f = Matrix4f()
-
     private val trace = TraceResource(points)
 
     data class Builder(
@@ -29,7 +27,7 @@ class TraceRenderer private constructor(
     ) {
         private var parent: GameObject? = null
         fun attachTo(value: GameObject) = apply { parent = value }
-        fun firstPos(value: Vector3f) = apply { firstPos = value  }
+        fun firstPos(value: Vector3f) = apply { firstPos = value }
         fun build(): TraceRenderer {
             val trace = TraceRenderer(
                 color = color,
@@ -46,16 +44,14 @@ class TraceRenderer private constructor(
 
     }
 
-    override fun upload(shader: Shader, transform: Matrix4f) {
-        if (shader in shadersToUse) {
-            if (shader is LineShader) {
-                shader.loadTransformationMatrix(Matrix4f())
-                shader.loadColor(color)
-                trace.addPoint(transform.getColumn(3, Vector3f()))
-                trace.activate()
-                trace.render()
-                trace.deactivate()
-            }
+    override fun onRender(shader: Shader, transform: Matrix4f) {
+        if (shader is LineShader) {
+            shader.loadTransformationMatrix(Matrix4f())
+            shader.loadColor(color)
+            trace.addPoint(transform.getColumn(3, Vector3f()))
+            trace.activate()
+            trace.render()
+            trace.deactivate()
         }
     }
 
