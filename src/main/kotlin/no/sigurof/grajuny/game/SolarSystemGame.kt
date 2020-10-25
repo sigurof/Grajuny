@@ -80,7 +80,7 @@ class SolarSystemGame(
         val sunObject = GameObject.withComponent(sun).at(sunPos).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
-        (cameras[0] as SpaceShipCamera).parent = root
+        (cameras[0] as SpaceShipCamera).parent = moonObj
         TraceRenderer.Builder(
             color = GRAY, numberOfPoints = 500
         )
