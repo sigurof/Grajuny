@@ -2,8 +2,7 @@ package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.CameraManager
-import no.sigurof.grajuny.camera.impl.FpsCamera
-import no.sigurof.grajuny.camera.impl.SpaceShipCamera
+import no.sigurof.grajuny.camera.impl.CompCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.YELLOW
@@ -15,10 +14,12 @@ import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.material.RegularMaterial
 import no.sigurof.grajuny.utils.CyclicCounter
-import no.sigurof.grajuny.utils.ORIGIN
+import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
+import kotlin.math.cos
+import kotlin.math.sin
 
 class SolarSystemGame(
     window: Long
@@ -26,6 +27,7 @@ class SolarSystemGame(
     window = window,
     background = Vector4f(0f, 0f, 0.5f, 1f)
 ) {
+    private var moonObj: GameObject
     private var earthMoonObject: GameObject
     private var solarSystem: GameObject
     private val cameras: List<Camera>
@@ -36,22 +38,20 @@ class SolarSystemGame(
 
     //    private val earth: GameComponent
 //    private val moon: GameComponent
+    val sunRadius = 0.1f
+    val moonRadius = 2f
+    val earthRadius = 10f
 
     init {
         val sunPos = Vector3f(1f, 0f, 0f)
         LightSource.Builder().position(sunPos).build()
         val cameraPos = Vector3f(0f, 10f, 20f)
         cameras = listOf(
-            SpaceShipCamera.Builder()
-                .at(cameraPos)
-                .lookingAt(ORIGIN)
-                .capturingMouseInput(window)
-                .build(),
-            FpsCamera.Builder()
-                .at(Vector3f(100f, 0f, 0f))
-                .lookingAt(ORIGIN)
-                .capturingMouseInput(window)
-                .build()
+            CompCamera(
+                window = null,
+                transform = Matrix4f().translation(Vector3f(0f, 20f, -1f)),
+                origFwVector = Vector3f(0f, -1f, 0.001f)
+            )
         )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = false)
@@ -72,34 +72,39 @@ class SolarSystemGame(
             radius = 0.5f,
             position = Vector3f(0f, 0f, 0f)
         )
-        val moonObj = GameObject.withComponent(moon).at(Vector3f(7f, 0f, 0f)).build()
-        val earthObj = GameObject.withComponent(earth).at(Vector3f(1f, 0f, 0f)).build()
-        earthMoonObject = GameObject.withChildren(earthObj, moonObj).at(earthMoonPos).build()
+        moonObj = GameObject.withComponent(moon).at(Vector3f(moonRadius, 0f, 0f)).build()
+        val earthObj = GameObject.withComponent(earth).at(Vector3f(0f, 0f, 0f)).build()
+        earthMoonObject = GameObject.withChildren(earthObj, moonObj).at(Vector3f(earthRadius, 0f, 0f)).build()
         val sunObject = GameObject.withComponent(sun).at(sunPos).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
+        cameras[0].parent = moonObj
         TraceRenderer.Builder(
-            color = GRAY, numberOfPoints = 50
+            color = GRAY, numberOfPoints = 500
         )
             .attachTo(moonObj)
             .build()
         TraceRenderer.Builder(
-            color = BLUE, numberOfPoints = 50
+            color = BLUE, numberOfPoints = 500
         )
             .attachTo(earthObj)
             .build()
-//        earthObj.addGameComponent(cameras[0])
     }
+
+    var angle = 0f
 
     override fun onUpdate() {
         val elapsedSeconds = elapsedMs / 1000f
-        val angle = deltaTime / 300f
-        solarSystem.transform.rotate(angle / 12f, Vector3f(0f, 1f, 0f))
-        earthMoonObject.transform.rotate(angle, Vector3f(0f, 1f, 0f))
+        val deltaAngle = deltaTime / 3000f
+
+        earthMoonObject.transform =
+            Matrix4f().translation(Vector3f(earthRadius * cos(angle), 0f, earthRadius * sin(angle)))
+        moonObj.transform = Matrix4f().translation(Vector3f(moonRadius * cos(12*angle), 0f, moonRadius * sin(12*angle)))
         if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW.GLFW_TRUE) {
             cameraIndex.incrementByOne()
             CameraManager.activeCamera = cameras[cameraIndex.current]
         }
+        angle += deltaAngle
 
     }
 }

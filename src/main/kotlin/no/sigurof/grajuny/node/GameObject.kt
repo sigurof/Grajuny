@@ -11,6 +11,10 @@ class GameObject private constructor(
     var transform: Matrix4f = Matrix4f().identity()
 ) {
 
+    init {
+        children.forEach { it.parent = this }
+    }
+
     fun addChild(gameObject: GameObject) {
         gameObject.parent = this
         this.children.add(gameObject)
