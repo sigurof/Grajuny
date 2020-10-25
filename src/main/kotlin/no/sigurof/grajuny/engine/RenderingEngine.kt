@@ -23,7 +23,7 @@ class RenderingEngine(
     }
 
     fun render(game: Game) {
-        clearScreen(game.background)
+        clearScreen(game.background) // Why is this called also between shader calls? Shouldn't it just be called once before all shading starts?
         ShaderManager.activeShaders.forEach { shader ->
             shader.use()
             game.render(shader)

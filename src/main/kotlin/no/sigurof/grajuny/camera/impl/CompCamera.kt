@@ -79,7 +79,7 @@ class CompCamera(
 //        val fw = compositeTransform.transformDirection(Vector3f(0f, 0f, 1f), Vector3f())
 //        val up = compositeTransform.transformDirection(Vector3f(0f, 1f, 0f), Vector3f())
         shader.loadViewMatrix(
-            compositeTransform.invert()
+            compositeTransform.invert(Matrix4f())
         )
     }
 
