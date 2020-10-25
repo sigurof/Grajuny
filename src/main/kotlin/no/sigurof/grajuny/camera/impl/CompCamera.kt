@@ -6,6 +6,7 @@ import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.shader.interfaces.CameraShader
 import no.sigurof.grajuny.utils.Maths
 import org.joml.Matrix4f
+import org.joml.Quaternionf
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW
 
@@ -101,6 +102,14 @@ class CompCamera(
         val sensitivity = 0.005f
         xoffset *= sensitivity
         yoffset *= sensitivity
+        recalculateAxes(xoffset, yoffset)
+    }
+
+    private fun recalculateAxes(xoffset: Double, yoffset: Double) {
+        val rtAxis = (Vector3f(1f, 0f, 0f))
+        val upAxis = (Vector3f(0f, 1f, 0f))
+        val quat = Quaternionf().rotateAxis(-xoffset.toFloat(), upAxis).rotateAxis(yoffset.toFloat(), rtAxis)
+        transform.rotate(quat)
     }
 
     private fun createProjectionMatrix(): Matrix4f {
@@ -118,9 +127,10 @@ class CompCamera(
     }
 
     private fun getCompositeTransform(): Matrix4f {
-        val plus = getParents().reversed().map { it.transform }.plus(this.transform)
-//        val plus = listOf(this.transform).plus(getParents().map { it.transform }).reversed()
-        return plus
+        return getParents()
+            .reversed()
+            .map { it.transform }
+            .plus(this.transform)
             .reduce { acc: Matrix4f, transform: Matrix4f -> acc.mul(transform, Matrix4f()) }
 
     }

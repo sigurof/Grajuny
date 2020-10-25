@@ -6,7 +6,6 @@ import no.sigurof.grajuny.camera.impl.CompCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.YELLOW
-import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.light.LightSource
@@ -32,7 +31,7 @@ class SolarSystemGame(
     private var earthMoonObject: GameObject
     private var solarSystem: GameObject
     private val cameras: List<Camera>
-    private val cameraIndex: CyclicCounter = CyclicCounter.exclusiveMax(2)
+    private val cameraIndex: CyclicCounter
 
     //    private val baryCenter: GameObject
     private val sun: GameComponent
@@ -40,8 +39,8 @@ class SolarSystemGame(
     //    private val earth: GameComponent
 //    private val moon: GameComponent
     val sunRadius = 0.1f
-    val moonRadius = 2f
-    val earthRadius = 10f
+    val moonRadius = 8f
+    val earthRadius = 100f
 
     init {
         val sunPos = Vector3f(1f, 0f, 0f)
@@ -49,21 +48,26 @@ class SolarSystemGame(
         val cameraPos = Vector3f(0f, 10f, 20f)
         cameras = listOf(
             CompCamera(
-                window = null,
+                window = window,
                 transform = Matrix4f()
                     .translate(Vector3f(0f, 2f, -3f))
                     .lookAt(Vector3f(0f, 3f, -3f), ORIGIN, Vector3f(0f, 1f, 0f))
-
             )
+//            SpaceShipCamera(
+//                window = window,
+//                pos = Vector3f(0f, 0f, -10f),
+//                lookingAt = ORIGIN
+//            )
         )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = false)
         val blueShiny = RegularMaterial(BLUE, 10f, 100f)
         val gray = RegularMaterial(GRAY, 1f, 100f)
         val earthMoonPos = Vector3f(15f, 0f, 0f)
-        sun = MeshRenderer(
-            meshName = "torus",
-            material = diffuseYellow
+        sun = SphereBillboardRenderer(
+            material = pureYellow,
+            radius = 5f,
+            position = Vector3f(0f, 0f, 0f)
         )
         val earth = SphereBillboardRenderer(
             material = blueShiny,
@@ -81,7 +85,7 @@ class SolarSystemGame(
         val sunObject = GameObject.withComponent(sun).at(sunPos).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
-        cameras[0].parent = earthObj
+        (cameras[0] as CompCamera).parent = root
         TraceRenderer.Builder(
             color = GRAY, numberOfPoints = 500
         )
@@ -92,6 +96,7 @@ class SolarSystemGame(
         )
             .attachTo(earthObj)
             .build()
+        cameraIndex  = CyclicCounter.exclusiveMax(cameras.size)
     }
 
     private var angle = 0f
