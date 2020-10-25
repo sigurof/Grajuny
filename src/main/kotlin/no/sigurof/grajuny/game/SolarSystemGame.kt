@@ -14,6 +14,7 @@ import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.material.RegularMaterial
 import no.sigurof.grajuny.utils.CyclicCounter
+import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -49,8 +50,10 @@ class SolarSystemGame(
         cameras = listOf(
             CompCamera(
                 window = null,
-                transform = Matrix4f().translation(Vector3f(0f, 20f, -1f)),
-                origFwVector = Vector3f(0f, -1f, 0.001f)
+                transform = Matrix4f()
+                    .translate(Vector3f(0f, 2f, -3f))
+                    .lookAt(Vector3f(0f, 3f, -3f), ORIGIN, Vector3f(0f, 1f, 0f))
+
             )
         )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
@@ -78,7 +81,7 @@ class SolarSystemGame(
         val sunObject = GameObject.withComponent(sun).at(sunPos).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
-        cameras[0].parent = moonObj
+        cameras[0].parent = earthObj
         TraceRenderer.Builder(
             color = GRAY, numberOfPoints = 500
         )
@@ -91,15 +94,16 @@ class SolarSystemGame(
             .build()
     }
 
-    var angle = 0f
+    private var angle = 0f
 
     override fun onUpdate() {
         val elapsedSeconds = elapsedMs / 1000f
-        val deltaAngle = deltaTime / 3000f
+        val deltaAngle = deltaTime / 30000f
 
         earthMoonObject.transform =
             Matrix4f().translation(Vector3f(earthRadius * cos(angle), 0f, earthRadius * sin(angle)))
-        moonObj.transform = Matrix4f().translation(Vector3f(moonRadius * cos(12*angle), 0f, moonRadius * sin(12*angle)))
+        moonObj.transform =
+            Matrix4f().translation(Vector3f(moonRadius * cos(12 * angle), 0f, moonRadius * sin(12 * angle)))
         if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW.GLFW_TRUE) {
             cameraIndex.incrementByOne()
             CameraManager.activeCamera = cameras[cameraIndex.current]
