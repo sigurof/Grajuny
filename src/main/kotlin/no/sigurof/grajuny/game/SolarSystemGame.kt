@@ -2,7 +2,7 @@ package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.CameraManager
-import no.sigurof.grajuny.camera.impl.CompCamera
+import no.sigurof.grajuny.camera.impl.SpaceShipCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.YELLOW
@@ -47,17 +47,12 @@ class SolarSystemGame(
         LightSource.Builder().position(sunPos).build()
         val cameraPos = Vector3f(0f, 10f, 20f)
         cameras = listOf(
-            CompCamera(
+            SpaceShipCamera(
                 window = window,
                 transform = Matrix4f()
                     .translate(Vector3f(0f, 2f, -3f))
                     .lookAt(Vector3f(0f, 3f, -3f), ORIGIN, Vector3f(0f, 1f, 0f))
             )
-//            SpaceShipCamera(
-//                window = window,
-//                pos = Vector3f(0f, 0f, -10f),
-//                lookingAt = ORIGIN
-//            )
         )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = false)
@@ -85,7 +80,7 @@ class SolarSystemGame(
         val sunObject = GameObject.withComponent(sun).at(sunPos).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
-        (cameras[0] as CompCamera).parent = root
+        (cameras[0] as SpaceShipCamera).parent = root
         TraceRenderer.Builder(
             color = GRAY, numberOfPoints = 500
         )
