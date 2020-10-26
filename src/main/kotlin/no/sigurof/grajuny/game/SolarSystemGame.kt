@@ -45,15 +45,6 @@ class SolarSystemGame(
     init {
         val sunPos = Vector3f(1f, 0f, 0f)
         LightSource.Builder().position(sunPos).build()
-        val cameraPos = Vector3f(0f, 10f, 20f)
-        cameras = listOf(
-            SpaceShipCamera(
-                window = window,
-                transform = Matrix4f()
-                    .lookAt(Vector3f(0f, 2f, -3f), ORIGIN, Vector3f(0f, 1f, 0f))
-                    .invert()
-            )
-        )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = false)
         val blueShiny = RegularMaterial(BLUE, 10f, 100f)
@@ -80,7 +71,29 @@ class SolarSystemGame(
         val sunObject = GameObject.withComponent(sun).at(sunPos).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
-        (cameras[0] as SpaceShipCamera).parent = moonObj
+        cameras = listOf(
+            SpaceShipCamera(
+                parent = moonObj,
+                window = window,
+                lookAt = ORIGIN,
+                at = Vector3f(0f, 2f, -3f),
+                upDir = Vector3f(0f, 1f, 0f)
+            ),
+            SpaceShipCamera(
+                window = window,
+                lookAt = ORIGIN,
+                at = Vector3f(0f, 2f, -3f),
+                upDir = Vector3f(0f, 1f, 0f)
+            ),
+            SpaceShipCamera(
+                parent = earthObj,
+                window = window,
+                lookAt = ORIGIN,
+                at = Vector3f(0f, 2f, -3f),
+                upDir = Vector3f(0f, 1f, 0f)
+            )
+
+        )
         TraceRenderer.Builder(
             color = GRAY, numberOfPoints = 500
         )
@@ -91,7 +104,7 @@ class SolarSystemGame(
         )
             .attachTo(earthObj)
             .build()
-        cameraIndex  = CyclicCounter.exclusiveMax(cameras.size)
+        cameraIndex = CyclicCounter.exclusiveMax(cameras.size)
     }
 
     private var angle = 0f

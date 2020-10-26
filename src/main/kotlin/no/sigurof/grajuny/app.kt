@@ -5,6 +5,7 @@ import no.sigurof.grajuny.game.SolarSystemGame
 
 
 /* Wished features:
+- multiple light sources
 - camera which always looks at an object
 - multi gradient
 - post processing
