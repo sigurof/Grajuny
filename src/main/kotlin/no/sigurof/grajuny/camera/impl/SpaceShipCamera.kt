@@ -69,11 +69,11 @@ class SpaceShipCamera(
     }
 
     override fun render(shader: CameraShader) {
-        val compositeTransform = getCompositeTransform()
-        val pos = compositeTransform.getColumn(3, Vector3f())
+        val totalTransform = getCompositeTransform().mul(transform, Matrix4f())
+        val pos = totalTransform.getColumn(3, Vector3f())
         shader.loadCameraPosition(pos)
         shader.loadProjectionMatrix(createProjectionMatrix())
-        shader.loadViewMatrix(compositeTransform.invert(Matrix4f()))
+        shader.loadViewMatrix(totalTransform.invert(Matrix4f()))
     }
 
     private fun mouseCallback(window: Long, xpos: Double, ypos: Double): Unit {
@@ -115,7 +115,6 @@ class SpaceShipCamera(
         return getParents()
             .reversed()
             .map { it.transform }
-            .plus(this.transform)
             .reduce { acc: Matrix4f, transform: Matrix4f -> acc.mul(transform, Matrix4f()) }
 
     }

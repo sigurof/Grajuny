@@ -50,8 +50,8 @@ class SolarSystemGame(
             SpaceShipCamera(
                 window = window,
                 transform = Matrix4f()
-                    .translate(Vector3f(0f, 2f, -3f))
-                    .lookAt(Vector3f(0f, 3f, -3f), ORIGIN, Vector3f(0f, 1f, 0f))
+                    .lookAt(Vector3f(0f, 2f, -3f), ORIGIN, Vector3f(0f, 1f, 0f))
+                    .invert()
             )
         )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
