@@ -11,9 +11,7 @@ import org.lwjgl.opengl.GL11.glCullFace
 import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.opengl.GL30
 
-class RenderingEngine(
-    private val window: Long
-) {
+object RenderingEngine {
 
     init {
         glClearColor(0f, 0f, 0f, 0f)
@@ -23,7 +21,7 @@ class RenderingEngine(
     }
 
     fun render(game: Game) {
-        clearScreen(game.background) // Why is this called also between shader calls? Shouldn't it just be called once before all shading starts?
+        clearScreen(game.background)
         ShaderManager.activeShaders.forEach { shader ->
             shader.use()
             game.render(shader)

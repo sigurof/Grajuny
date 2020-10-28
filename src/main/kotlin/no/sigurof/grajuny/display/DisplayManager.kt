@@ -13,13 +13,47 @@ class DisplayManager {
         internal var WIDTH: Int = 1280
         internal var HEIGHT: Int = 720
         var FPS = 120
-        private var window: Long? = null
+        var window: Long? = null
+            private set
         private var lastUpdate: Long = currentTimeMillis()
 
         fun withWindowOpen(program: (window: Long) -> Unit) {
             val win = createDisplay()
             program(win)
             closeDisplay(win)
+        }
+
+        fun eachFrameDo(func: (() -> Unit)) {
+            while (isOpen()) {
+                window
+                    ?.let {
+                        val now = currentTimeMillis()
+                        if (now - lastUpdate > (1000 / FPS).toLong()) {
+                            func.invoke()
+                            lastUpdate = now
+                        }
+                        GLFW.glfwPollEvents()
+                        glfwSwapBuffers(it)
+                    }
+            }
+        }
+
+        private fun windowResizeCallback(w: Long, width: Int, height: Int) {
+            resizeWindow(width, height)
+        }
+
+        fun resizeWindow(width: Int, height: Int) {
+            WIDTH = width
+            HEIGHT = height
+            GL20.glViewport(0, 0, WIDTH, HEIGHT)
+        }
+
+        private fun isOpen(): Boolean {
+            return window?.let { !GLFW.glfwWindowShouldClose(it) } ?: false
+        }
+
+        private fun closeDisplay(window: Long) {
+            GLFW.glfwDestroyWindow(window)
         }
 
         private fun createDisplay(): Long {
@@ -42,37 +76,8 @@ class DisplayManager {
                 GLFW.glfwShowWindow(window!!)
                 GL.createCapabilities()
             }
-            GLFW.glfwSetWindowSizeCallback(window!!, Companion::windowResizeCallback)
+            GLFW.glfwSetWindowSizeCallback(window!!, ::windowResizeCallback)
             return window!!
-        }
-
-        private fun windowResizeCallback(w: Long, width: Int, height: Int) {
-            WIDTH = width
-            HEIGHT = height
-            GL20.glViewport(0, 0, WIDTH, HEIGHT)
-        }
-
-        fun eachFrameDo(func: (() -> Unit)) {
-            while (isOpen()){
-                window
-                    ?.let {
-                        val now = currentTimeMillis()
-                        if (now - lastUpdate > (1000 / FPS).toLong()) {
-                            func.invoke()
-                            lastUpdate = now
-                        }
-                        GLFW.glfwPollEvents()
-                        glfwSwapBuffers(it)
-                    }
-            }
-        }
-
-        private fun closeDisplay(window: Long) {
-            GLFW.glfwDestroyWindow(window)
-        }
-
-        private fun isOpen(): Boolean {
-            return window?.let { !GLFW.glfwWindowShouldClose(it) } ?: false
         }
     }
 }

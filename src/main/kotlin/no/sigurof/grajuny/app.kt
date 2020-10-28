@@ -5,11 +5,11 @@ import no.sigurof.grajuny.game.SolarSystemGame
 
 
 /* Wished features:
+- post processing
+-- adding glow https://learnopengl.com/Advanced-Lighting/Bloom
 - multiple light sources
 - camera which always looks at an object
 - multi gradient
-- post processing
--- adding glow
 -- adding select feature
 - rendering all billboards in the same shader call
 - quaternion camera

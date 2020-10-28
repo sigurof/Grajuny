@@ -6,17 +6,17 @@ import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.rendable.Rendable
 import no.sigurof.grajuny.resource.BillboardResource
 import no.sigurof.grajuny.resource.material.Material
-import no.sigurof.grajuny.resource.texture.Texture
+import no.sigurof.grajuny.resource.texture.TextureRenderer
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class SphereBillboardRenderer(
-    val texture: Texture? = null,
+    val textureRenderer: TextureRenderer? = null,
     val material: Material,
     val radius: Float,
-    val position: Vector3f
+    val position: Vector3f// TODO DElete this property
 ) : GameComponent, Rendable(
     shadersToUse = listOf(SphereBillboardShader)
 ) {
@@ -32,13 +32,17 @@ class SphereBillboardRenderer(
             material.render(shader)
             shader.loadSphereCenter(transform.getColumn(3, Vector3f()))
             shader.loadSphereRadius(radius)
-            texture?.render(shader) ?: shader.loadUseTexture(false)
-            texture?.activate()
-            texture?.render(shader)
+            // TODO rewrite as
+//            texture?.let {
+//                it.activate()
+//                it.render(shader)
+//            } ?: shader.loadUseTexture(false)
+            textureRenderer?.activate()
+            textureRenderer?.render(shader) ?: shader.loadUseTexture(false)
             billboard.activate()
             billboard.render()
             billboard.deactivate()
-            texture?.deactivate()
+            textureRenderer?.deactivate()
         }
     }
 

@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL30
 
 class BillboardResource(
-    val vao: Int,
+    private val vao: Int,
     private val vertexCount: Int = 4
 ) {
 

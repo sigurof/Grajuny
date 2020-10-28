@@ -5,13 +5,17 @@ import no.sigurof.grajuny.camera.CameraManager
 import no.sigurof.grajuny.camera.impl.SpaceShipCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
+import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
+import no.sigurof.grajuny.postprocessing.PostProcessingEffect
+import no.sigurof.grajuny.postprocessing.PostProcessingManager
 import no.sigurof.grajuny.resource.material.RegularMaterial
+import no.sigurof.grajuny.resource.texture.TextureRenderer
 import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Matrix4f
@@ -39,10 +43,12 @@ class SolarSystemGame(
     //    private val earth: GameComponent
 //    private val moon: GameComponent
     val sunRadius = 0.1f
-    val moonRadius = 8f
-    val earthRadius = 100f
+    private val moonRadius = 8f
+    private val earthRadius = 100f
+
 
     init {
+        PostProcessingManager.addEffect(PostProcessingEffect())
         val sunPos = Vector3f(1f, 0f, 0f)
         LightSource.Builder().position(sunPos).build()
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
@@ -56,9 +62,10 @@ class SolarSystemGame(
             position = Vector3f(0f, 0f, 0f)
         )
         val earth = SphereBillboardRenderer(
-            material = blueShiny,
+            material = RegularMaterial(WHITE, 10f, 100f) ,
             radius = 1f,
-            position = Vector3f(0f, 0f, 0f)
+            position = Vector3f(0f, 0f, 0f),
+            textureRenderer = TextureRenderer.fromName("earth512")
         )
         val moon = SphereBillboardRenderer(
             material = gray,

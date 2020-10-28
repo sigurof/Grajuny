@@ -14,6 +14,8 @@ object ShaderManager {
     var activeShaders: MutableSet<Shader> = mutableSetOf()
         private set
 
+    var activePostProcessingShader: Shader? = null
+
     fun cleanUp() {
         activeShaders.forEach { it.cleanUp() }
     }

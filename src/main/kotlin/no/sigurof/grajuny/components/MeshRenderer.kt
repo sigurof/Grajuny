@@ -6,14 +6,14 @@ import no.sigurof.grajuny.rendable.Rendable
 import no.sigurof.grajuny.resource.MeshResource
 import no.sigurof.grajuny.resource.material.Material
 import no.sigurof.grajuny.resource.mesh.MeshManager
-import no.sigurof.grajuny.resource.texture.Texture
+import no.sigurof.grajuny.resource.texture.TextureRenderer
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.Basic3DShader
 
 import org.joml.Matrix4f
 
 class MeshRenderer(
-    val texture: Texture? = null,
+    val textureRenderer: TextureRenderer? = null,
     val material: Material,
     meshName: String
 ) : GameComponent, Rendable(
@@ -29,13 +29,13 @@ class MeshRenderer(
     override fun onRender(shader: Shader, transform: Matrix4f) {
         if (shader is Basic3DShader) {
             material.render(shader)
-            texture?.activate()
-            texture?.render(shader) ?: shader.loadUseTexture(false)
+            textureRenderer?.activate()
+            textureRenderer?.render(shader) ?: shader.loadUseTexture(false)
             shader.loadTransformationMatrix(transform)
             mesh.activate()
             mesh.render()
             mesh.deactivate()
-            texture?.deactivate()
+            textureRenderer?.deactivate()
         }
     }
 

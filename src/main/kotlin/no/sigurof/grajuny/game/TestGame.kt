@@ -10,11 +10,8 @@ import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
-import no.sigurof.grajuny.resource.MeshResource
 import no.sigurof.grajuny.resource.material.RegularMaterial
-import no.sigurof.grajuny.resource.mesh.MeshManager
-import no.sigurof.grajuny.resource.texture.Texture
-import no.sigurof.grajuny.resource.texture.TextureManager
+import no.sigurof.grajuny.resource.texture.TextureRenderer
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector3fc
@@ -35,18 +32,14 @@ class TestGame(
     private val sphere: GameComponent
 
     init {
-//        val texture = Texture(TextureManager.get("stall"))
-        val earthTex = Texture(TextureManager.get("earth512"))
-//        val torusMesh = MeshResource(MeshManager.getMesh("torus"), listOf(0, 1, 2))
-        val cubeMesh = MeshResource(MeshManager.getMesh("cube"), listOf(0, 1, 2))
-//        val blueShiny = ReflectiveMaterial(BLUE, 1f, 100f)
+        val earthTex = TextureRenderer.fromName("earth512")
         val redShiny = RegularMaterial(RED, 1f, 100f)
         val yellowShiny = RegularMaterial(YELLOW, 10f, 100f)
         cube = GameObject.withChild(
             GameObject.withComponent(
                 MeshRenderer(
                     meshName = "cube",
-                    texture = null,
+                    textureRenderer = TextureRenderer.fromName("earth512"),
                     material = yellowShiny
                 )
             )
@@ -63,7 +56,7 @@ class TestGame(
 //            material = blueShiny
 //        )
         sphere = SphereBillboardRenderer(
-            texture = earthTex,
+            textureRenderer = earthTex,
             material = redShiny,
             radius = 1f,
             position = Vector3f(0f, 0f, 0f)
@@ -111,7 +104,7 @@ class TestGame(
         val angle = deltaTime / 1000f
 //        torus.transform.rotate(angle, Vector3f(0f, 1f, 0f))
         cube.rotate(angle, Vector3f(0f, 0f, 1f))
-        sphereObj.transform=
+        sphereObj.transform =
             Matrix4f().translate(10 * Vector3f(cos(elapsedSeconds), sin(elapsedSeconds), sin(sin(elapsedSeconds))))
     }
 
