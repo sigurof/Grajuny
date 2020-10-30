@@ -15,13 +15,16 @@ out vec3 surfaceNormal;
 out vec3 toLightVec;
 out vec3 toCameraVec;
 
+void oldCalculation(){
 
-void main(void){
     vec4 worldPos = trMatrix * vec4(position, 1.0);
     gl_Position = prjMatrix*viewMatrix*worldPos;
     passTextureCoords = textureCoords;
     surfaceNormal = (trMatrix * vec4(normal, 0.0)).xyz;
     toLightVec = (lightPos - worldPos.xyz);
     toCameraVec =  cameraPos - worldPos.xyz;
+}
 
+void main(void){
+    oldCalculation();
 }

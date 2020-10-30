@@ -49,12 +49,6 @@ class TestGame(
         root.addChild(
             cube
         )
-//        torus = MeshRenderer(torusMesh, texture, blueShiny)
-//        sphere2 = MeshRenderer(
-//            mesh = MeshResource(MeshManager.getMesh("sphere"), listOf(0, 1, 2)),
-//            texture = earthTex,
-//            material = blueShiny
-//        )
         sphere = SphereBillboardRenderer(
             textureRenderer = earthTex,
             material = redShiny,
@@ -63,18 +57,6 @@ class TestGame(
         )
         sphereObj = GameObject.withComponent(sphere).build()
         root.addChild(sphereObj)
-//        dragon = GameObject.withComponent(
-//            MeshRenderer(
-//                mesh = MeshResource(MeshManager.getMesh("dragon"), listOf(0, 1, 2)),
-//                material = yellowShiny,
-//                shadersToUse = listOf(SilhouetteShader)
-//            ).apply { transform = Matrix4f().translate(Vector3f(10f, 0f, 0f)) }
-//        ).at(Vector3f(0f, 0f, 0f)).build()
-//        root.addGameComponent(torus)
-//        root.addChild(GameObject.withComponent(sphere).build())
-//        root.addChild(GameObject.withComponent(sphere2).at(Vector3f(1f, -1f, 0f)).build())
-//        root.addChild(dragon)
-        // Make light
         LightSource.Builder().position(Vector3f(0f, 100f, 40f)).build()
         val cameraPos = Vector3f(0f, 0f, 20f)
         camera = FpsCamera.Builder()
@@ -82,17 +64,6 @@ class TestGame(
             .lookingAt(cube.getPosition())
             .capturingMouseInput(window)
             .build()
-/*
-        line = LineRenderer(
-            line = LineResource.fromPoints(
-                mutableListOf(
-                    ORIGIN, Vector3f(1f, 1f, 0f), Vector3f(2f, 2f, 0.1f)
-                )
-            ),
-            color = RED
-        )
-*/
-//        root.addGameComponent(line)
         TraceRenderer.Builder(color = WHITE, numberOfPoints = 50)
             .attachTo(sphereObj)
             .build()

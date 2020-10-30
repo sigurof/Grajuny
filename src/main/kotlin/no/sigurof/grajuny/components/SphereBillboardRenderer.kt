@@ -33,7 +33,7 @@ class SphereBillboardRenderer(
             shader.loadSphereCenter(transform.getColumn(3, Vector3f()))
             shader.loadSphereRadius(radius)
             // TODO rewrite as
-//            texture?.let {
+//            mesh?.let {
 //                it.activate()
 //                it.render(shader)
 //            } ?: shader.loadUseTexture(false)

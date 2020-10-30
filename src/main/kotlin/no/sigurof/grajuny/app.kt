@@ -1,8 +1,7 @@
 package no.sigurof.grajuny
 
 import no.sigurof.grajuny.engine.CoreEngine
-import no.sigurof.grajuny.game.SolarSystemGame
-
+import no.sigurof.grajuny.game.LightingTestGame
 
 /* Wished features:
 - post processing
@@ -23,6 +22,7 @@ import no.sigurof.grajuny.game.SolarSystemGame
 fun main() {
     CoreEngine.play { window ->
 //        TestGame(window)
-        SolarSystemGame(window)
+//        SolarSystemGame(window)
+        LightingTestGame(window)
     }
 }

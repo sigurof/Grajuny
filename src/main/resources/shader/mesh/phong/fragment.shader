@@ -54,10 +54,9 @@ vec4 addDiffuseAndSpecular(vec3 finalColor){
     return outColor;
 }
 
+vec4 originalColorComputation(){
 
-void main(void){
-
-    // Combine base color with texture color
+    // Combine base color with mesh color
     vec3 finalColor = color;
     vec4 textureColor =texture(textureSampler, passTextureCoords);
     if (useTexture){
@@ -65,5 +64,9 @@ void main(void){
         finalColor.g = min(textureColor.g, color.g);
         finalColor.b = min(textureColor.b, color.b);
     }
-    out_Color = addDiffuseAndSpecular(finalColor);
+    return addDiffuseAndSpecular(finalColor);
+}
+
+void main(void){
+    out_Color = originalColorComputation();
 }

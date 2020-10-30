@@ -15,7 +15,7 @@ class LightSource(
     data class Builder(
         var position: Vector3f = Vector3f(0f, 0f, 0f),
         var color: Vector3f = Vector3f(1f, 1f, 1f),
-        var ambient: Float = 0f
+        var ambient: Float = 0.3f
     ) {
         fun position(position: Vector3f) = apply { this.position = position }
         fun color(color: Vector3f) = apply { this.color = color }

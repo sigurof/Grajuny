@@ -12,9 +12,9 @@ import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-object Basic3DShader : Shader(
-    vtxSource = "/shader/texture/vertex.shader",
-    frgSource = "/shader/texture/fragment.shader",
+object PhongMeshShader : Shader(
+    vtxSource = "/shader/mesh/phong/vertex.shader",
+    frgSource = "/shader/mesh/phong/fragment.shader",
     attributes = listOf(
         0 to "position",
         1 to "textureCoords",

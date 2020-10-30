@@ -31,7 +31,7 @@ object TextureManager {
     fun get(name: String): TextureResource {
         textures[name] ?: let {
             textures[name] = loadTexture(
-                sources[name] ?: error("Couldn't find a texture associated with the name $name")
+                sources[name] ?: error("Couldn't find a mesh associated with the name $name")
             )
         }
         return textures[name]!!

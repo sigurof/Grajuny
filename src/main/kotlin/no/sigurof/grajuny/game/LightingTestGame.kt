@@ -1,7 +1,6 @@
 package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
-import no.sigurof.grajuny.camera.CameraManager
 import no.sigurof.grajuny.camera.impl.SpaceShipCamera
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
@@ -9,7 +8,6 @@ import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
-import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
@@ -17,21 +15,21 @@ import no.sigurof.grajuny.postprocessing.PostProcessingEffect
 import no.sigurof.grajuny.postprocessing.PostProcessingManager
 import no.sigurof.grajuny.resource.material.RegularMaterial
 import no.sigurof.grajuny.resource.texture.TextureRenderer
+import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
-import org.joml.Matrix4f
+import org.joml.Quaternionf
 import org.joml.Vector3f
 import org.joml.Vector4f
-import org.lwjgl.glfw.GLFW
-import kotlin.math.cos
-import kotlin.math.sin
 
-class SolarSystemGame(
+class LightingTestGame(
     window: Long
 ) : Game(
     window = window,
     background = Vector4f(0f, 0f, 0.5f, 1f)
 ) {
+    private var sphereObj: GameObject
+    private var light: LightSource
     private var moonObj: GameObject
     private var earthMoonObject: GameObject
     private var solarSystem: GameObject
@@ -39,79 +37,62 @@ class SolarSystemGame(
     private val cameraIndex: CyclicCounter
 
     private val sun: GameComponent
-    private val moonRadius = 8f
-    private val earthRadius = 100f
 
     init {
         PostProcessingManager.addEffect(PostProcessingEffect())
-        val sunPos = Vector3f(1f, 0f, 0f)
-        LightSource.Builder().position(sunPos).ambient(0.05f).build()
+        light = LightSource.Builder().position(Vector3f(0f, 3f, 0f)).ambient(0.05f).build()
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = true)
-        val blueShiny = RegularMaterial(BLUE, 10f, 100f)
-        val gray = RegularMaterial(GRAY, 1f, 100f)
-        val earthMoonPos = Vector3f(15f, 0f, 0f)
+        val blueShiny = RegularMaterial(BLUE, 0.5f, 32f, diffuse = true, specular = true)
+        val gray = RegularMaterial(GRAY, 0.5f, 32f)
         sun = SphereBillboardRenderer(
             material = pureYellow,
-            radius = 5f,
+            radius = 1f,
             position = Vector3f(0f, 0f, 0f)
         )
         val sunFriend = MeshRenderer(
             material = diffuseYellow,
-            meshName = "torus"
+            meshName = "torus",
+            shadersToUse = listOf(PhongMeshShader2)
+        )
+        val sphere = MeshRenderer(
+            material = blueShiny,
+            meshName = "sphere",
+            shadersToUse = listOf(PhongMeshShader2)
         )
         val earth = SphereBillboardRenderer(
-            material = RegularMaterial(WHITE, 10f, 100f),
+            material = RegularMaterial(WHITE, 0.5f, 32f),
             radius = 1f,
             position = Vector3f(0f, 0f, 0f),
             textureRenderer = TextureRenderer.fromName("earth512")
         )
         val moon = SphereBillboardRenderer(
             material = gray,
-            radius = 0.5f,
+            radius = 1f,
             position = Vector3f(0f, 0f, 0f)
         )
-        moonObj = GameObject.withComponent(moon).at(Vector3f(moonRadius, 0f, 0f)).build()
-        val sunFriendObj = GameObject.withComponent(sunFriend).at(Vector3f(10f, 0f, 0f)).build()
-        val earthObj = GameObject.withComponent(earth).at(Vector3f(0f, 0f, 0f)).build()
-        earthMoonObject = GameObject.withChildren(earthObj, moonObj).at(Vector3f(earthRadius, 0f, 0f)).build()
-        val sunObject = GameObject.withComponent(sun).at(sunPos).build()
+        moonObj = GameObject.withComponent(moon).at(Vector3f(0f, 0f, 0f)).build()
+
+        sphereObj = GameObject.withChild(GameObject.withComponent(sphere).at(Vector3f(0f, 0f, 0f)).build()).at(Vector3f(0f, 0f, -4f)).build()
+        sphereObj.children[0].transform.scale(20f, 1f, 1f)
+        val sunFriendObj = GameObject.withComponent(sunFriend).at(Vector3f(2f, -2f, 0f)).build()
+        sunFriendObj.transform.scale(1f, 2f, 1f)
+        val earthObj = GameObject.withComponent(earth).at(Vector3f(0f, 0f, 2f)).build()
+        earthMoonObject = GameObject.withChildren(earthObj, moonObj).at(Vector3f(2f, 0f, 2f)).build()
+        val sunObject = GameObject.withComponent(sun).at(Vector3f(0f, 4f, 0f)).build()
         solarSystem = GameObject.withChildren(sunObject, earthMoonObject).build()
         root.addChild(solarSystem)
         root.addChild(sunFriendObj)
+        root.addChild(sphereObj)
         cameras = listOf(
             SpaceShipCamera(
                 parent = moonObj,
                 window = window,
                 lookAt = ORIGIN,
-                at = Vector3f(0f, 2f, -3f),
-                upDir = Vector3f(0f, 1f, 0f)
-            ),
-            SpaceShipCamera(
-                window = window,
-                lookAt = ORIGIN,
-                at = Vector3f(0f, 2f, -3f),
-                upDir = Vector3f(0f, 1f, 0f)
-            ),
-            SpaceShipCamera(
-                parent = earthObj,
-                window = window,
-                lookAt = ORIGIN,
-                at = Vector3f(0f, 2f, -3f),
+                at = Vector3f(5f, 5f, 5f),
                 upDir = Vector3f(0f, 1f, 0f)
             )
-
         )
-        TraceRenderer.Builder(
-            color = GRAY, numberOfPoints = 500
-        )
-            .attachTo(moonObj)
-            .build()
-        TraceRenderer.Builder(
-            color = BLUE, numberOfPoints = 500
-        )
-            .attachTo(earthObj)
-            .build()
         cameraIndex = CyclicCounter.exclusiveMax(cameras.size)
     }
 
@@ -119,17 +100,10 @@ class SolarSystemGame(
 
     override fun onUpdate() {
         val elapsedSeconds = elapsedMs / 1000f
-        val deltaAngle = deltaTime / 30000f
-
-        earthMoonObject.transform =
-            Matrix4f().translation(Vector3f(earthRadius * cos(angle), 0f, earthRadius * sin(angle)))
-        moonObj.transform =
-            Matrix4f().translation(Vector3f(moonRadius * cos(12 * angle), 0f, moonRadius * sin(12 * angle)))
-        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW.GLFW_TRUE) {
-            cameraIndex.incrementByOne()
-            CameraManager.activeCamera = cameras[cameraIndex.current]
-        }
+        val deltaAngle = deltaTime / 3000f
         angle += deltaAngle
+        sphereObj.transform.rotate(Quaternionf().rotateAxis(deltaAngle, Vector3f(0f, 1f, 0f)))
+
 
     }
 }
