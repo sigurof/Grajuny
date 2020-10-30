@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.shader.shaders
 
-import no.sigurof.grajuny.light.PhongBulb
+import no.sigurof.grajuny.light.PhongLight
 import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.ShaderManager
@@ -66,7 +66,7 @@ object PhongMeshShader2 : Shader(
         ShaderManager.loadVector3(locations.getValue(CAMERA_POS), cameraPosition)
     }
 
-    fun loadLight(light: PhongBulb) {
+    fun loadLight(light: PhongLight) {
         ShaderManager.loadVector3(locations.getValue(LIGHT_POSITION), light.position)
         ShaderManager.loadVector3(locations.getValue(LIGHT_AMBIENT), light.ambient)
         ShaderManager.loadVector3(locations.getValue(LIGHT_DIFFUSE), light.diffuse)

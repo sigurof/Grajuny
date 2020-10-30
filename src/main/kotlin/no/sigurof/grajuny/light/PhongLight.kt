@@ -6,17 +6,17 @@ import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Vector3f
 
-class PhongBulb(
+class PhongLight(
     val position: Vector3f,
     val ambient: Vector3f,
     val diffuse: Vector3f,
     val specular: Vector3f
-) : Bulb {
+) : Light {
 
     override fun render(shader: Shader) {
         if (shader is SphereBillboardShader) {
             shader.loadLight(
-                LightBulb(
+                OldLight(
                     position = position,
                     color = diffuse,
                     ambient = ambient.length()
@@ -25,7 +25,7 @@ class PhongBulb(
         }
         if (shader is PhongMeshShader) {
             shader.loadLight(
-                LightBulb(
+                OldLight(
                     position = position,
                     color = diffuse,
                     ambient = ambient.length()

@@ -8,7 +8,7 @@ import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.light.LightManager
-import no.sigurof.grajuny.light.PhongBulb
+import no.sigurof.grajuny.light.PhongLight
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.postprocessing.PostProcessingEffect
@@ -42,7 +42,7 @@ class LightingTestGame(
         PostProcessingManager.addEffect(PostProcessingEffect())
         LightManager.LIGHT_SOURCES.addAll(
             listOf(
-                PhongBulb(
+                PhongLight(
                     position = Vector3f(0f, 0f, 0f),
                     ambient = Vector3f(0.2f, 0.2f, 0.2f),
                     diffuse = Vector3f(0.75f, 0.75f, 0.75f),

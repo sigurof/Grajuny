@@ -1,7 +1,8 @@
 package no.sigurof.grajuny.light
 
-object LightManager {
+import no.sigurof.grajuny.shader.Shader
 
-    val LIGHT_SOURCES: MutableList<Bulb> = mutableListOf()
+interface Light {
 
+    fun render(shader: Shader)
 }

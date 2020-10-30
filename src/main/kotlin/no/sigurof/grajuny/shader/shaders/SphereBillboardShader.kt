@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.shader.shaders
 
-import no.sigurof.grajuny.light.LightBulb
+import no.sigurof.grajuny.light.OldLight
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.BillboardShader
@@ -75,7 +75,7 @@ object SphereBillboardShader : Shader(
         ShaderManager.loadVector3(locations.getValue("frCameraPos"), cameraPosition)
     }
 
-    fun loadLight(lightBulb: LightBulb) {
+    fun loadLight(lightBulb: OldLight) {
         ShaderManager.loadVector3(locations.getValue("lightPos"), lightBulb.position)
         ShaderManager.loadVector3(locations.getValue("lightCol"), lightBulb.color)
         ShaderManager.loadFloat(locations.getValue("ambient"), lightBulb.ambient)
