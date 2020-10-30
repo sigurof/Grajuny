@@ -10,7 +10,6 @@ import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
-import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.postprocessing.PostProcessingEffect
@@ -45,7 +44,7 @@ class SolarSystemGame(
     init {
         PostProcessingManager.addEffect(PostProcessingEffect())
         val sunPos = Vector3f(1f, 0f, 0f)
-        LightSource.Builder().position(sunPos).ambient(0.05f).build()
+
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
         val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = true)
         val blueShiny = RegularMaterial(BLUE, 10f, 100f)

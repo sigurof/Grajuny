@@ -1,7 +1,7 @@
 package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.CameraManager
-import no.sigurof.grajuny.light.LightSource
+import no.sigurof.grajuny.light.LightManager
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.interfaces.CameraShader
@@ -30,7 +30,7 @@ abstract class Game(
 
     fun render(shader: Shader) {
         if (shader is LightShader) {
-            LightSource.LIGHT_SOURCES.forEach {
+            LightManager.LIGHT_SOURCES.forEach {
                 it.render(shader)
             }
         }

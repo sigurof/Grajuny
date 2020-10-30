@@ -41,13 +41,10 @@ class MeshRenderer(
         }
         if (shader is PhongMeshShader2) {
             material.render(shader)
-            textureRenderer?.activate()
-            textureRenderer?.render(shader) ?: shader.loadUseTexture(false)
             shader.loadTransformationMatrix(transform)
             mesh.activate()
             mesh.render()
             mesh.deactivate()
-            textureRenderer?.deactivate()
         }
     }
 

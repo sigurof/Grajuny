@@ -2,17 +2,18 @@ package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.impl.SpaceShipCamera
-import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
 import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
-import no.sigurof.grajuny.light.LightSource
+import no.sigurof.grajuny.light.LightManager
+import no.sigurof.grajuny.light.PhongBulb
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.postprocessing.PostProcessingEffect
 import no.sigurof.grajuny.postprocessing.PostProcessingManager
+import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.resource.material.RegularMaterial
 import no.sigurof.grajuny.resource.texture.TextureRenderer
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
@@ -29,7 +30,6 @@ class LightingTestGame(
     background = Vector4f(0f, 0f, 0.5f, 1f)
 ) {
     private var sphereObj: GameObject
-    private var light: LightSource
     private var moonObj: GameObject
     private var earthMoonObject: GameObject
     private var solarSystem: GameObject
@@ -40,10 +40,17 @@ class LightingTestGame(
 
     init {
         PostProcessingManager.addEffect(PostProcessingEffect())
-        light = LightSource.Builder().position(Vector3f(0f, 3f, 0f)).ambient(0.05f).build()
+        LightManager.LIGHT_SOURCES.addAll(
+            listOf(
+                PhongBulb(
+                    position = Vector3f(0f, 0f, 0f),
+                    ambient = Vector3f(0.2f, 0.2f, 0.2f),
+                    diffuse = Vector3f(0.75f, 0.75f, 0.75f),
+                    specular = Vector3f(1.5f, 1.5f, 1.5f)
+                )
+            )
+        )
         val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
-        val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = true)
-        val blueShiny = RegularMaterial(BLUE, 0.5f, 32f, diffuse = true, specular = true)
         val gray = RegularMaterial(GRAY, 0.5f, 32f)
         sun = SphereBillboardRenderer(
             material = pureYellow,
@@ -51,12 +58,12 @@ class LightingTestGame(
             position = Vector3f(0f, 0f, 0f)
         )
         val sunFriend = MeshRenderer(
-            material = diffuseYellow,
-            meshName = "torus",
+            material = PhongMaterial.gold,
+            meshName = "cube",
             shadersToUse = listOf(PhongMeshShader2)
         )
         val sphere = MeshRenderer(
-            material = blueShiny,
+            material = PhongMaterial.copper,
             meshName = "sphere",
             shadersToUse = listOf(PhongMeshShader2)
         )
@@ -73,10 +80,11 @@ class LightingTestGame(
         )
         moonObj = GameObject.withComponent(moon).at(Vector3f(0f, 0f, 0f)).build()
 
-        sphereObj = GameObject.withChild(GameObject.withComponent(sphere).at(Vector3f(0f, 0f, 0f)).build()).at(Vector3f(0f, 0f, -4f)).build()
-        sphereObj.children[0].transform.scale(20f, 1f, 1f)
+        sphereObj = GameObject.withChild(GameObject.withComponent(sphere).at(Vector3f(0f, 0f, 0f)).build())
+            .at(Vector3f(0f, 0f, -4f)).build()
+//        sphereObj.children[0].transform.scale(2f, 1f, 1f)
         val sunFriendObj = GameObject.withComponent(sunFriend).at(Vector3f(2f, -2f, 0f)).build()
-        sunFriendObj.transform.scale(1f, 2f, 1f)
+//        sunFriendObj.transform.scale(1f, 2f, 1f)
         val earthObj = GameObject.withComponent(earth).at(Vector3f(0f, 0f, 2f)).build()
         earthMoonObject = GameObject.withChildren(earthObj, moonObj).at(Vector3f(2f, 0f, 2f)).build()
         val sunObject = GameObject.withComponent(sun).at(Vector3f(0f, 4f, 0f)).build()
@@ -103,7 +111,6 @@ class LightingTestGame(
         val deltaAngle = deltaTime / 3000f
         angle += deltaAngle
         sphereObj.transform.rotate(Quaternionf().rotateAxis(deltaAngle, Vector3f(0f, 1f, 0f)))
-
 
     }
 }

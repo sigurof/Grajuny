@@ -1,42 +1,27 @@
 package no.sigurof.grajuny.shader.shaders
 
-import no.sigurof.grajuny.light.LightSource
+import no.sigurof.grajuny.light.PhongBulb
+import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.CameraShader
-import no.sigurof.grajuny.shader.interfaces.ColorShader
 import no.sigurof.grajuny.shader.interfaces.LightShader
 import no.sigurof.grajuny.shader.interfaces.Shader3D
-import no.sigurof.grajuny.shader.interfaces.SpecularShader
-import no.sigurof.grajuny.shader.interfaces.TextureShader
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
-const val trMatrix = "trMatrix"
-
-const val prjMatrix = "prjMatrix"
-
-const val viewMatrix = "viewMatrix"
-
-const val lightPos = "lightPos"
-
-const val cameraPos = "cameraPos"
-
-const val lightCol = "lightCol"
-
-const val shineDamper = "shineDamper"
-
-const val reflectivity = "reflectivity"
-
-const val ambientStrength = "ambientStrength"
-
-const val color = "color"
-
-const val useTexture = "useTexture"
-
-const val useSpec = "useSpecular"
-
-const val useDiffuse = "useDiffuse"
+const val TR_MATRIX = "trMatrix"
+const val PRJ_MATRIX = "prjMatrix"
+const val VIEW_MATRIX = "viewMatrix"
+const val CAMERA_POS = "cameraPos"
+const val LIGHT_POSITION = "light.position"
+const val LIGHT_AMBIENT = "light.ambient"
+const val LIGHT_DIFFUSE = "light.diffuse"
+const val LIGHT_SPECULAR = "light.specular"
+const val MATERIAL_AMBIENT = "material.ambient"
+const val MATERIAL_DIFFUSE = "material.diffuse"
+const val MATERIAL_SPECULAR = "material.specular"
+const val MATERIAL_SHININESSS = "material.shininess"
 
 object PhongMeshShader2 : Shader(
     vtxSource = "/shader/mesh/newphong/vertex.shader",
@@ -47,69 +32,52 @@ object PhongMeshShader2 : Shader(
         2 to "normal"
     ),
     uniforms = listOf(
-        trMatrix,
-        prjMatrix,
-        viewMatrix,
-        lightPos,
-        cameraPos,
-        lightCol,
-        shineDamper,
-        reflectivity,
-        ambientStrength,
-        color,
-        useTexture,
-        useSpec,
-        useDiffuse
+        TR_MATRIX,
+        PRJ_MATRIX,
+        VIEW_MATRIX,
+        CAMERA_POS,
+        LIGHT_POSITION,
+        LIGHT_AMBIENT,
+        LIGHT_DIFFUSE,
+        LIGHT_SPECULAR,
+        MATERIAL_AMBIENT,
+        MATERIAL_DIFFUSE,
+        MATERIAL_SPECULAR,
+        MATERIAL_SHININESSS
     )
 ),
-    TextureShader,
-    ColorShader,
-    SpecularShader,
+    LightShader,
     Shader3D,
-    CameraShader,
-    LightShader {
+    CameraShader{
 
     override fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
-        ShaderManager.loadMatrix(locations.getValue(trMatrix), transformationMatrix)
+        ShaderManager.loadMatrix(locations.getValue(TR_MATRIX), transformationMatrix)
     }
 
     override fun loadProjectionMatrix(projectionMatrix: Matrix4f) {
-        ShaderManager.loadMatrix(locations.getValue(prjMatrix), projectionMatrix)
+        ShaderManager.loadMatrix(locations.getValue(PRJ_MATRIX), projectionMatrix)
     }
 
     override fun loadViewMatrix(viewMatrix: Matrix4f) {
-        ShaderManager.loadMatrix(locations.getValue(no.sigurof.grajuny.shader.shaders.viewMatrix), viewMatrix)
-    }
-
-    override fun loadSpecularValues(damper: Float, reflectivity: Float) {
-        ShaderManager.loadFloat(locations.getValue(shineDamper), damper)
-        ShaderManager.loadFloat(locations.getValue(no.sigurof.grajuny.shader.shaders.reflectivity), reflectivity)
+        ShaderManager.loadMatrix(locations.getValue(VIEW_MATRIX), viewMatrix)
     }
 
     override fun loadCameraPosition(cameraPosition: Vector3f) {
-        ShaderManager.loadVector3(locations.getValue(cameraPos), cameraPosition)
+        ShaderManager.loadVector3(locations.getValue(CAMERA_POS), cameraPosition)
     }
 
-    override fun loadColor(color: Vector3f) {
-        ShaderManager.loadVector3(locations.getValue(no.sigurof.grajuny.shader.shaders.color), color);
+    fun loadLight(light: PhongBulb) {
+        ShaderManager.loadVector3(locations.getValue(LIGHT_POSITION), light.position)
+        ShaderManager.loadVector3(locations.getValue(LIGHT_AMBIENT), light.ambient)
+        ShaderManager.loadVector3(locations.getValue(LIGHT_DIFFUSE), light.diffuse)
+        ShaderManager.loadVector3(locations.getValue(LIGHT_SPECULAR), light.specular)
     }
 
-    override fun loadLight(lightSource: LightSource) {
-        ShaderManager.loadVector3(locations.getValue(lightPos), lightSource.position)
-        ShaderManager.loadVector3(locations.getValue(lightCol), lightSource.color)
-        ShaderManager.loadFloat(locations.getValue(ambientStrength), lightSource.ambient)
-    }
-
-    override fun loadUseTexture(useTexture: Boolean) {
-        ShaderManager.loadBoolean(locations.getValue(no.sigurof.grajuny.shader.shaders.useTexture), useTexture)
-    }
-
-    fun loadUseSpecular(useSpecular: Boolean) {
-        ShaderManager.loadBoolean(locations.getValue(useSpec), useSpecular)
-    }
-
-    fun loadUseDiffuse(useDiffuse: Boolean) {
-        ShaderManager.loadBoolean(locations.getValue(no.sigurof.grajuny.shader.shaders.useDiffuse), useDiffuse)
+    fun loadMaterial(phongMaterial: PhongMaterial) {
+        ShaderManager.loadVector3(locations.getValue(MATERIAL_AMBIENT), phongMaterial.ambient)
+        ShaderManager.loadVector3(locations.getValue(MATERIAL_DIFFUSE), phongMaterial.diffuse)
+        ShaderManager.loadVector3(locations.getValue(MATERIAL_SPECULAR), phongMaterial.specular)
+        ShaderManager.loadFloat(locations.getValue(MATERIAL_SHININESSS), phongMaterial.shininess)
     }
 
 }

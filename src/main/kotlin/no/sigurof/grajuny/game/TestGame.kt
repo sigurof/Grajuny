@@ -7,7 +7,6 @@ import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
-import no.sigurof.grajuny.light.LightSource
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.resource.material.RegularMaterial
@@ -57,7 +56,6 @@ class TestGame(
         )
         sphereObj = GameObject.withComponent(sphere).build()
         root.addChild(sphereObj)
-        LightSource.Builder().position(Vector3f(0f, 100f, 40f)).build()
         val cameraPos = Vector3f(0f, 0f, 20f)
         camera = FpsCamera.Builder()
             .at(cameraPos)

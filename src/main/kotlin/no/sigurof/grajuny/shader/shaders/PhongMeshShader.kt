@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.shader.shaders
 
-import no.sigurof.grajuny.light.LightSource
+import no.sigurof.grajuny.light.LightBulb
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.ShaderManager
 import no.sigurof.grajuny.shader.interfaces.CameraShader
@@ -68,10 +68,10 @@ object PhongMeshShader : Shader(
         ShaderManager.loadVector3(locations.getValue("color"), color);
     }
 
-    override fun loadLight(lightSource: LightSource) {
-        ShaderManager.loadVector3(locations.getValue("lightPos"), lightSource.position)
-        ShaderManager.loadVector3(locations.getValue("lightCol"), lightSource.color)
-        ShaderManager.loadFloat(locations.getValue("ambient"), lightSource.ambient)
+    fun loadLight(lightBulb: LightBulb) {
+        ShaderManager.loadVector3(locations.getValue("lightPos"), lightBulb.position)
+        ShaderManager.loadVector3(locations.getValue("lightCol"), lightBulb.color)
+        ShaderManager.loadFloat(locations.getValue("ambient"), lightBulb.ambient)
     }
 
     override fun loadUseTexture(useTexture: Boolean) {
