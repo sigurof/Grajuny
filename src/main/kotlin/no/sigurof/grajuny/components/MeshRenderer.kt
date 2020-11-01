@@ -30,6 +30,8 @@ class MeshRenderer(
 
     override fun onRender(shader: Shader, transform: Matrix4f) {
         if (shader is PhongMeshShader) {
+            // TODO remove textureRenderer here
+            material.activate()
             material.render(shader)
             textureRenderer?.activate()
             textureRenderer?.render(shader) ?: shader.loadUseTexture(false)
@@ -38,13 +40,16 @@ class MeshRenderer(
             mesh.render()
             mesh.deactivate()
             textureRenderer?.deactivate()
+            material.deactivate()
         }
         if (shader is PhongMeshShader2) {
+            material.activate()
             material.render(shader)
             shader.loadTransformationMatrix(transform)
             mesh.activate()
             mesh.render()
             mesh.deactivate()
+            material.deactivate()
         }
     }
 

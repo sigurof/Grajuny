@@ -102,4 +102,8 @@ object ShaderManager {
         GL20.glUniformMatrix4fv(location, false, matrixBuffer)
     }
 
+    fun loadInt(location: Int, value: Int) {
+        GL20.glUniform1i(location, value)
+    }
+
 }

@@ -6,7 +6,7 @@ import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Vector3f
 
-class PhongLight(
+data class PhongLight(
     val position: Vector3f,
     val ambient: Vector3f,
     val diffuse: Vector3f,

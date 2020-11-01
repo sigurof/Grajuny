@@ -1,6 +1,9 @@
 package no.sigurof.grajuny.resource.texture
 
 import de.matthiasmann.twl.utils.PNGDecoder
+import no.sigurof.grajuny.resource.mesh.Loader
+import org.joml.Vector3f
+import org.lwjgl.opengl.GL11.GL_FLOAT
 import org.lwjgl.opengl.GL11.GL_LINEAR
 import org.lwjgl.opengl.GL11.GL_RGB
 import org.lwjgl.opengl.GL11.GL_TEXTURE_2D
@@ -23,7 +26,9 @@ object TextureManager {
         "default" to "/model/default-texture.png",
         "earth512" to "/texture/earth512.png",
         "earth1024" to "/texture/earth1024.png",
-        "earth8192" to "/texture/earth8192.png"
+        "earth8192" to "/texture/earth8192.png",
+        "container-diff" to "/texture/container2.png",
+        "container-spec" to "/texture/container2_specular.png"
     )
 
     private val textures = mutableMapOf<String, TextureResource>()
@@ -37,13 +42,33 @@ object TextureManager {
         return textures[name]!!
     }
 
+    fun get1x1Texture(color: Vector3f): TextureResource {
+        val colorBuffer: FloatBuffer = Loader.storeDataInFloatBuffer(listOf(color.x, color.y, color.z).toFloatArray())
+        val texColorBuffer = glGenTextures()
+        glBindTexture(GL_TEXTURE_2D, texColorBuffer)
+        glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0,
+            GL_RGB, GL_FLOAT, colorBuffer
+        )
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glBindTexture(GL_TEXTURE_2D, 0)
+        return TextureResource(
+            tex = texColorBuffer,
+            width = 1,
+            height = 1
+        )
+
+    }
+
     fun getEmptyTexture(width: Int, height: Int): TextureRenderer {
         val nul: FloatBuffer? = null
         val texColorBuffer = glGenTextures()
         glBindTexture(GL_TEXTURE_2D, texColorBuffer)
         glTexImage2D(
             GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, nul)
+            GL_RGB, GL_UNSIGNED_BYTE, nul
+        )
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
         glBindTexture(GL_TEXTURE_2D, 0)

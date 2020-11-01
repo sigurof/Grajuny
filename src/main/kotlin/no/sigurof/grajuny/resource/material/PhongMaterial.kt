@@ -1,21 +1,57 @@
 package no.sigurof.grajuny.resource.material
 
+import no.sigurof.grajuny.resource.texture.TextureManager
+import no.sigurof.grajuny.resource.texture.TextureResource
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import org.joml.Vector3f
+import org.lwjgl.opengl.GL30
 
-class PhongMaterial(
+data class PhongMaterial private constructor(
+    val shininess: Float,
     val ambient: Vector3f,
-    val diffuse: Vector3f,
-    val specular: Vector3f,
-    shine: Float
+    val diffuse: TextureResource,
+    val specular: Vector3f
 ) : Material {
-    val shininess = shine * 128f
+
+    constructor(
+        ambient: Vector3f,
+        diffuse: TextureResource,
+        specular: Vector3f,
+        shine: Float
+    ) : this(
+        shininess = shine * 128f,
+        ambient = ambient,
+        diffuse = diffuse,
+        specular = specular
+    )
+
+    constructor(
+        ambient: Vector3f,
+        diffuse: Vector3f,
+        specular: Vector3f,
+        shine: Float
+
+    ) : this(
+        ambient = ambient,
+        diffuse = TextureManager.get1x1Texture(diffuse),
+        specular = specular,
+        shine = shine
+    )
 
     override fun render(shader: Shader) {
         if (shader is PhongMeshShader2) {
             shader.loadMaterial(this)
         }
+    }
+
+    override fun activate() {
+        GL30.glActiveTexture(GL30.GL_TEXTURE0)
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.diffuse.tex)
+    }
+
+    override fun deactivate() {
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0)
     }
 
     companion object {

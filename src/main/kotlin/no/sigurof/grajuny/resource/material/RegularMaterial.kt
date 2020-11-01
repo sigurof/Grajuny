@@ -28,4 +28,10 @@ class RegularMaterial(
         }
     }
 
+    override fun activate() {
+    }
+
+    override fun deactivate() {
+    }
+
 }

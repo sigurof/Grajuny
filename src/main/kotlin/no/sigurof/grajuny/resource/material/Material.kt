@@ -4,4 +4,6 @@ import no.sigurof.grajuny.shader.Shader
 
 interface Material {
     fun render(shader: Shader)
+    fun activate()
+    fun deactivate()
 }

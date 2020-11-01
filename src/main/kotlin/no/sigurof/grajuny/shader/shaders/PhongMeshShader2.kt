@@ -21,7 +21,7 @@ const val LIGHT_SPECULAR = "light.specular"
 const val MATERIAL_AMBIENT = "material.ambient"
 const val MATERIAL_DIFFUSE = "material.diffuse"
 const val MATERIAL_SPECULAR = "material.specular"
-const val MATERIAL_SHININESSS = "material.shininess"
+const val MATERIAL_SHININESS = "material.shininess"
 
 object PhongMeshShader2 : Shader(
     vtxSource = "/shader/mesh/newphong/vertex.shader",
@@ -43,12 +43,12 @@ object PhongMeshShader2 : Shader(
         MATERIAL_AMBIENT,
         MATERIAL_DIFFUSE,
         MATERIAL_SPECULAR,
-        MATERIAL_SHININESSS
+        MATERIAL_SHININESS
     )
 ),
     LightShader,
     Shader3D,
-    CameraShader{
+    CameraShader {
 
     override fun loadTransformationMatrix(transformationMatrix: Matrix4f) {
         ShaderManager.loadMatrix(locations.getValue(TR_MATRIX), transformationMatrix)
@@ -75,9 +75,9 @@ object PhongMeshShader2 : Shader(
 
     fun loadMaterial(phongMaterial: PhongMaterial) {
         ShaderManager.loadVector3(locations.getValue(MATERIAL_AMBIENT), phongMaterial.ambient)
-        ShaderManager.loadVector3(locations.getValue(MATERIAL_DIFFUSE), phongMaterial.diffuse)
+        ShaderManager.loadInt(locations.getValue(MATERIAL_DIFFUSE), 0)
         ShaderManager.loadVector3(locations.getValue(MATERIAL_SPECULAR), phongMaterial.specular)
-        ShaderManager.loadFloat(locations.getValue(MATERIAL_SHININESSS), phongMaterial.shininess)
+        ShaderManager.loadFloat(locations.getValue(MATERIAL_SHININESS), phongMaterial.shininess)
     }
 
 }
