@@ -1,6 +1,6 @@
 package no.sigurof.grajuny.shader.shaders
 
-import no.sigurof.grajuny.light.PhongLight
+import no.sigurof.grajuny.light.phong.PointLight
 import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.ShaderManager
@@ -15,6 +15,9 @@ const val PRJ_MATRIX = "prjMatrix"
 const val VIEW_MATRIX = "viewMatrix"
 const val CAMERA_POS = "cameraPos"
 const val LIGHT_POSITION = "light.position"
+const val LIGHT_CONSTANT = "light.constant"
+const val LIGHT_LINEAR = "light.linear"
+const val LIGHT_QUADRATIC = "light.quadratic"
 const val LIGHT_AMBIENT = "light.ambient"
 const val LIGHT_DIFFUSE = "light.diffuse"
 const val LIGHT_SPECULAR = "light.specular"
@@ -40,6 +43,9 @@ object PhongMeshShader2 : Shader(
         LIGHT_AMBIENT,
         LIGHT_DIFFUSE,
         LIGHT_SPECULAR,
+        LIGHT_CONSTANT,
+        LIGHT_LINEAR,
+        LIGHT_QUADRATIC,
         MATERIAL_AMBIENT,
         MATERIAL_DIFFUSE,
         MATERIAL_SPECULAR,
@@ -66,17 +72,29 @@ object PhongMeshShader2 : Shader(
         ShaderManager.loadVector3(locations.getValue(CAMERA_POS), cameraPosition)
     }
 
-    fun loadLight(light: PhongLight) {
+    fun loadLight(light: PointLight) {
         ShaderManager.loadVector3(locations.getValue(LIGHT_POSITION), light.position)
+        ShaderManager.loadFloat(locations.getValue(LIGHT_CONSTANT), light.constant)
+        ShaderManager.loadFloat(locations.getValue(LIGHT_LINEAR), light.linear)
+        ShaderManager.loadFloat(locations.getValue(LIGHT_QUADRATIC), light.quadratic)
         ShaderManager.loadVector3(locations.getValue(LIGHT_AMBIENT), light.ambient)
         ShaderManager.loadVector3(locations.getValue(LIGHT_DIFFUSE), light.diffuse)
         ShaderManager.loadVector3(locations.getValue(LIGHT_SPECULAR), light.specular)
     }
 
     fun loadMaterial(phongMaterial: PhongMaterial) {
-        ShaderManager.loadInt(locations.getValue(MATERIAL_AMBIENT), phongMaterial.indexToGlTexture["ambient"]?.first ?: error(""))
-        ShaderManager.loadInt(locations.getValue(MATERIAL_DIFFUSE), phongMaterial.indexToGlTexture["diffuse"]?.first ?: error(""))
-        ShaderManager.loadInt(locations.getValue(MATERIAL_SPECULAR), phongMaterial.indexToGlTexture["specular"]?.first ?: error(""))
+        ShaderManager.loadInt(
+            locations.getValue(MATERIAL_AMBIENT),
+            phongMaterial.indexToGlTexture["ambient"]?.first ?: error("")
+        )
+        ShaderManager.loadInt(
+            locations.getValue(MATERIAL_DIFFUSE),
+            phongMaterial.indexToGlTexture["diffuse"]?.first ?: error("")
+        )
+        ShaderManager.loadInt(
+            locations.getValue(MATERIAL_SPECULAR),
+            phongMaterial.indexToGlTexture["specular"]?.first ?: error("")
+        )
         ShaderManager.loadFloat(locations.getValue(MATERIAL_SHININESS), phongMaterial.shininess)
     }
 

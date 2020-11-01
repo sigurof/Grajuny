@@ -4,7 +4,7 @@ import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.impl.SpaceShipCamera
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.light.LightManager
-import no.sigurof.grajuny.light.PhongLight
+import no.sigurof.grajuny.light.phong.PointLight
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.postprocessing.PostProcessingEffect
 import no.sigurof.grajuny.postprocessing.PostProcessingManager
@@ -17,6 +17,9 @@ import no.sigurof.grajuny.utils.plus
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import org.joml.Vector4f
+import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFW.GLFW_TRUE
+import org.lwjgl.glfw.GLFW.glfwGetKey
 
 class LightingTestGame(
     window: Long
@@ -36,8 +39,11 @@ class LightingTestGame(
         PostProcessingManager.addEffect(PostProcessingEffect())
         LightManager.LIGHT_SOURCES.addAll(
             listOf(
-                PhongLight(
+                PointLight(
                     position = Vector3f(0f, 10f, -2f),
+                    constant = 1f,
+                    linear = 0.014f,
+                    quadratic = 0.0007f,
                     ambient = Vector3f(0.2f, 0.2f, 0.2f),
                     diffuse = Vector3f(0.8f, 0.8f, 0.8f),
                     specular = Vector3f(1.5f, 1.5f, 1.5f)
@@ -108,6 +114,12 @@ class LightingTestGame(
         val deltaAngle = deltaTime / 3000f
         angle += deltaAngle
         sphereObj.transform.rotate(Quaternionf().rotateAxis(deltaAngle, Vector3f(0f, 1f, 0f)))
+        if (glfwGetKey(window, GLFW.GLFW_KEY_R) == GLFW_TRUE){
+            sunFriendObj3.transform.translate(Vector3f(0f, 10*deltaAngle, 0f))
+        }
+        if (glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW_TRUE){
+            sunFriendObj3.transform.translate(Vector3f(0f, -10*deltaAngle, 0f))
+        }
 
     }
 }

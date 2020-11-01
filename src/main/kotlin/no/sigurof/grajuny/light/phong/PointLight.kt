@@ -1,13 +1,18 @@
-package no.sigurof.grajuny.light
+package no.sigurof.grajuny.light.phong
 
+import no.sigurof.grajuny.light.Light
+import no.sigurof.grajuny.light.OldLight
 import no.sigurof.grajuny.shader.Shader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
 import org.joml.Vector3f
 
-data class PhongLight(
+data class PointLight(
     val position: Vector3f,
+    val constant: Float,
+    val linear: Float,
+    val quadratic: Float,
     val ambient: Vector3f,
     val diffuse: Vector3f,
     val specular: Vector3f
