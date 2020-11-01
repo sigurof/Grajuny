@@ -74,9 +74,9 @@ object PhongMeshShader2 : Shader(
     }
 
     fun loadMaterial(phongMaterial: PhongMaterial) {
-        ShaderManager.loadVector3(locations.getValue(MATERIAL_AMBIENT), phongMaterial.ambient)
-        ShaderManager.loadInt(locations.getValue(MATERIAL_DIFFUSE), 0)
-        ShaderManager.loadVector3(locations.getValue(MATERIAL_SPECULAR), phongMaterial.specular)
+        ShaderManager.loadInt(locations.getValue(MATERIAL_AMBIENT), phongMaterial.indexToGlTexture["ambient"]?.first ?: error(""))
+        ShaderManager.loadInt(locations.getValue(MATERIAL_DIFFUSE), phongMaterial.indexToGlTexture["diffuse"]?.first ?: error(""))
+        ShaderManager.loadInt(locations.getValue(MATERIAL_SPECULAR), phongMaterial.indexToGlTexture["specular"]?.first ?: error(""))
         ShaderManager.loadFloat(locations.getValue(MATERIAL_SHININESS), phongMaterial.shininess)
     }
 

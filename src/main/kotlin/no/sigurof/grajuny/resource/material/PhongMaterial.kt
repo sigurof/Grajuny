@@ -7,23 +7,19 @@ import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import org.joml.Vector3f
 import org.lwjgl.opengl.GL30
 
-data class PhongMaterial private constructor(
-    val shininess: Float,
-    val ambient: Vector3f,
+class PhongMaterial(
+    val ambient: TextureResource,
     val diffuse: TextureResource,
-    val specular: Vector3f
+    val specular: TextureResource,
+    shine: Float
 ) : Material {
 
-    constructor(
-        ambient: Vector3f,
-        diffuse: TextureResource,
-        specular: Vector3f,
-        shine: Float
-    ) : this(
-        shininess = shine * 128f,
-        ambient = ambient,
-        diffuse = diffuse,
-        specular = specular
+    val shininess = shine * 128f
+
+    val indexToGlTexture = mapOf(
+        "ambient" to (0 to GL30.GL_TEXTURE0),
+        "diffuse" to (1 to GL30.GL_TEXTURE1),
+        "specular" to (2 to GL30.GL_TEXTURE2)
     )
 
     constructor(
@@ -31,11 +27,10 @@ data class PhongMaterial private constructor(
         diffuse: Vector3f,
         specular: Vector3f,
         shine: Float
-
     ) : this(
-        ambient = ambient,
+        ambient = TextureManager.get1x1Texture(ambient),
         diffuse = TextureManager.get1x1Texture(diffuse),
-        specular = specular,
+        specular = TextureManager.get1x1Texture(specular),
         shine = shine
     )
 
@@ -46,8 +41,12 @@ data class PhongMaterial private constructor(
     }
 
     override fun activate() {
-        GL30.glActiveTexture(GL30.GL_TEXTURE0)
+        GL30.glActiveTexture(indexToGlTexture["ambient"]?.second ?: error(""))
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.ambient.tex)
+        GL30.glActiveTexture(indexToGlTexture["diffuse"]?.second ?: error(""))
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.diffuse.tex)
+        GL30.glActiveTexture(indexToGlTexture["specular"]?.second ?: error(""))
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, this.specular.tex)
     }
 
     override fun deactivate() {

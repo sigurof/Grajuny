@@ -1,9 +1,9 @@
 #version 420 core
 
 struct Material {
-    vec3 ambient;
+    sampler2D ambient;
     sampler2D diffuse;
-    vec3 specular;
+    sampler2D specular;
     float shininess;
 };
 
@@ -26,13 +26,12 @@ uniform Material material;
 uniform Light light;
 
 vec3 calculateAmbientLight(){
-    return light.ambient * material.ambient;
+    return light.ambient * texture(material.ambient, passTextureCoords).rgb;
 }
 
 vec3 calculateDiffuseLight(vec3 unitNormal, vec3 unitToLight){
     float nDotL = dot(unitNormal, unitToLight);
     float brightness = max(nDotL, 0.0);
-    //    return light.diffuse * (brightness * vec3(texture(material.diffuse, passTextureCoords)));
     return light.diffuse * brightness * texture(material.diffuse, passTextureCoords).rgb;
 }
 
@@ -44,7 +43,7 @@ vec3 calculateSpecularLight(vec3 unitNormal, vec3 unitToLight){
     float specularFactor = dot(reflectedLightDir, unitVectorToCamera);
     specularFactor = max(specularFactor, 0.0);
     float dampedFactor = pow(specularFactor, material.shininess);// = spec
-    return light.specular * dampedFactor * material.specular;
+    return light.specular * dampedFactor * texture(material.specular, passTextureCoords).rgb;
 }
 
 
