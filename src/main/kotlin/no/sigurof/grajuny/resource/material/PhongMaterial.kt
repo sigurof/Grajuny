@@ -1,18 +1,20 @@
 package no.sigurof.grajuny.resource.material
 
+import no.sigurof.grajuny.color.BLACK
+import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.resource.texture.TextureManager
 import no.sigurof.grajuny.resource.texture.TextureResource
 import no.sigurof.grajuny.shader.Shader
-import no.sigurof.grajuny.shader.shaders.PhongBillboardShader
-import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
+import no.sigurof.grajuny.shader.shaders.phong.PhongBillboardShader
+import no.sigurof.grajuny.shader.shaders.phong.PhongMeshShader
 import org.joml.Vector3f
 import org.lwjgl.opengl.GL30
 
 class PhongMaterial(
     val ambient: TextureResource,
-    val diffuse: TextureResource,
-    val specular: TextureResource,
-    shine: Float
+    val diffuse: TextureResource = ambient,
+    val specular: TextureResource = TextureManager.get1x1Texture(WHITE),
+    shine: Float = 0.5f
 ) : Material {
 
     val shininess = shine * 128f
@@ -25,9 +27,9 @@ class PhongMaterial(
 
     constructor(
         ambient: Vector3f,
-        diffuse: Vector3f,
-        specular: Vector3f,
-        shine: Float
+        diffuse: Vector3f = ambient,
+        specular: Vector3f = WHITE,
+        shine: Float = 0.5f
     ) : this(
         ambient = TextureManager.get1x1Texture(ambient),
         diffuse = TextureManager.get1x1Texture(diffuse),
@@ -35,8 +37,25 @@ class PhongMaterial(
         shine = shine
     )
 
+    data class Builder(
+        var ambient: TextureResource = TextureManager.get1x1Texture(BLACK),
+        var diffuse: TextureResource = ambient,
+        var specular: TextureResource = TextureManager.get1x1Texture(WHITE),
+        var shine: Float = 0.5f
+    ) {
+        fun ambient(value: Vector3f) = apply { ambient = TextureManager.get1x1Texture(value) }
+        fun diffuse(value: Vector3f) = apply { diffuse = TextureManager.get1x1Texture(value) }
+        fun specular(value: Vector3f) = apply { specular = TextureManager.get1x1Texture(value) }
+        fun ambient(value: TextureResource) = apply { ambient = value }
+        fun diffuse(value: TextureResource) = apply { diffuse = value }
+        fun specular(value: TextureResource) = apply { specular = value }
+        fun ambient(value: Float) = apply { shine = value }
+        fun build(): PhongMaterial =
+            PhongMaterial(ambient = ambient, diffuse = diffuse, specular = specular, shine = shine)
+    }
+
     override fun render(shader: Shader) {
-        if (shader is PhongMeshShader2) {
+        if (shader is PhongMeshShader) {
             shader.loadMaterial(this)
         }
         if (shader is PhongBillboardShader) {

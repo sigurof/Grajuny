@@ -12,8 +12,8 @@ import no.sigurof.grajuny.postprocessing.PostProcessingEffect
 import no.sigurof.grajuny.postprocessing.PostProcessingManager
 import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.resource.texture.TextureManager
-import no.sigurof.grajuny.shader.shaders.PhongBillboardShader
-import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
+import no.sigurof.grajuny.shader.shaders.phong.PhongBillboardShader
+import no.sigurof.grajuny.shader.shaders.phong.PhongMeshShader
 import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
 import no.sigurof.grajuny.utils.plus
@@ -72,7 +72,7 @@ class LightingTestGame(
                 shine = 10f
             ),
             meshName = "cube",
-            shadersToUse = listOf(PhongMeshShader2)
+            shadersToUse = listOf(PhongMeshShader)
         )
         val sunFriend2 = MeshRenderer(
             material = PhongMaterial(
@@ -82,7 +82,7 @@ class LightingTestGame(
                 shine = 10f
             ),
             meshName = "cube",
-            shadersToUse = listOf(PhongMeshShader2)
+            shadersToUse = listOf(PhongMeshShader)
         )
         val sunFriend3 = MeshRenderer(
             material = PhongMaterial(
@@ -92,12 +92,12 @@ class LightingTestGame(
                 shine = 10f
             ),
             meshName = "cube",
-            shadersToUse = listOf(PhongMeshShader2)
+            shadersToUse = listOf(PhongMeshShader)
         )
         val sphere = MeshRenderer(
             material = PhongMaterial.emerald,
             meshName = "sphere",
-            shadersToUse = listOf(PhongMeshShader2)
+            shadersToUse = listOf(PhongMeshShader)
         )
         sphereObj = GameObject.withChild(GameObject.withComponent(sphere).at(Vector3f(0f, -10f, -0.6f)).build())
             .at(Vector3f(0f, 0f, -4f)).build()

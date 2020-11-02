@@ -9,8 +9,8 @@ import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
-import no.sigurof.grajuny.resource.material.RegularMaterial
-import no.sigurof.grajuny.resource.texture.TextureRenderer
+import no.sigurof.grajuny.resource.material.PhongMaterial
+import no.sigurof.grajuny.resource.texture.TextureManager
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector3fc
@@ -31,14 +31,12 @@ class TestGame(
     private val sphere: GameComponent
 
     init {
-        val earthTex = TextureRenderer.fromName("earth512")
-        val redShiny = RegularMaterial(RED, 1f, 100f)
-        val yellowShiny = RegularMaterial(YELLOW, 10f, 100f)
+        val redShiny = PhongMaterial(ambient = RED)
+        val yellowShiny = PhongMaterial.Builder().ambient(YELLOW).diffuse(TextureManager.get("earth512")).build()
         cube = GameObject.withChild(
             GameObject.withComponent(
                 MeshRenderer(
                     meshName = "cube",
-                    textureRenderer = TextureRenderer.fromName("earth512"),
                     material = yellowShiny
                 )
             )
@@ -49,7 +47,6 @@ class TestGame(
             cube
         )
         sphere = SphereBillboardRenderer(
-            textureRenderer = earthTex,
             material = redShiny,
             radius = 1f,
             position = Vector3f(0f, 0f, 0f)

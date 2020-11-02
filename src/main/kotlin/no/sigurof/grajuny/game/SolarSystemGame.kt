@@ -3,19 +3,21 @@ package no.sigurof.grajuny.game
 import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.CameraManager
 import no.sigurof.grajuny.camera.impl.SpaceShipCamera
+import no.sigurof.grajuny.color.BLACK
 import no.sigurof.grajuny.color.BLUE
 import no.sigurof.grajuny.color.GRAY
-import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.color.YELLOW
 import no.sigurof.grajuny.components.MeshRenderer
 import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.components.TraceRenderer
+import no.sigurof.grajuny.light.LightManager
+import no.sigurof.grajuny.light.phong.PointLight
 import no.sigurof.grajuny.node.GameComponent
 import no.sigurof.grajuny.node.GameObject
 import no.sigurof.grajuny.postprocessing.PostProcessingEffect
 import no.sigurof.grajuny.postprocessing.PostProcessingManager
-import no.sigurof.grajuny.resource.material.RegularMaterial
-import no.sigurof.grajuny.resource.texture.TextureRenderer
+import no.sigurof.grajuny.resource.material.PhongMaterial
+import no.sigurof.grajuny.resource.texture.TextureManager
 import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
 import org.joml.Matrix4f
@@ -43,13 +45,24 @@ class SolarSystemGame(
 
     init {
         PostProcessingManager.addEffect(PostProcessingEffect())
+        LightManager.LIGHT_SOURCES.addAll(
+            listOf(
+                PointLight(
+                    position = ORIGIN,
+                    constant = 1f,
+                    linear = 0.0014f,
+                    quadratic = 0.00007f,
+                    ambient = Vector3f(0.2f, 0.2f, 0.2f),
+                    diffuse = Vector3f(0.8f, 0.8f, 0.8f),
+                    specular = Vector3f(1.5f, 1.5f, 1.5f)
+                )
+            )
+        )
         val sunPos = Vector3f(1f, 0f, 0f)
 
-        val pureYellow = RegularMaterial(YELLOW, diffuse = false, specular = false)
-        val diffuseYellow = RegularMaterial(YELLOW, diffuse = true, specular = true)
-        val blueShiny = RegularMaterial(BLUE, 10f, 100f)
-        val gray = RegularMaterial(GRAY, 1f, 100f)
-        val earthMoonPos = Vector3f(15f, 0f, 0f)
+        val pureYellow = PhongMaterial(ambient = YELLOW, diffuse = BLACK, specular = BLACK)
+        val diffuseYellow = PhongMaterial(ambient = YELLOW, specular = BLACK)
+        val gray = PhongMaterial(ambient = GRAY)
         sun = SphereBillboardRenderer(
             material = pureYellow,
             radius = 5f,
@@ -60,10 +73,9 @@ class SolarSystemGame(
             meshName = "torus"
         )
         val earth = SphereBillboardRenderer(
-            material = RegularMaterial(WHITE, 10f, 100f),
+            material = PhongMaterial(ambient = TextureManager.get("earth512")),
             radius = 1f,
-            position = Vector3f(0f, 0f, 0f),
-            textureRenderer = TextureRenderer.fromName("earth512")
+            position = Vector3f(0f, 0f, 0f)
         )
         val moon = SphereBillboardRenderer(
             material = gray,
