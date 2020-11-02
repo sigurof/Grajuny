@@ -63,9 +63,6 @@ vec4 calculatePointLight(){
 
     float distance = length(light.position - worldPos.xyz);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-//    if (light.constant == 0){
-//        return vec4(0, 1, 0, 1);
-//    }
 
     return vec4((ambient + diffuse + specular)*attenuation, 1);
 }

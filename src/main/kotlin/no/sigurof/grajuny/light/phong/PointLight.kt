@@ -3,6 +3,7 @@ package no.sigurof.grajuny.light.phong
 import no.sigurof.grajuny.light.Light
 import no.sigurof.grajuny.light.OldLight
 import no.sigurof.grajuny.shader.Shader
+import no.sigurof.grajuny.shader.shaders.PhongBillboardShader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import no.sigurof.grajuny.shader.shaders.SphereBillboardShader
@@ -38,6 +39,9 @@ data class PointLight(
             )
         }
         if (shader is PhongMeshShader2) {
+            shader.loadLight(this)
+        }
+        if (shader is PhongBillboardShader) {
             shader.loadLight(this)
         }
     }

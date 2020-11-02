@@ -3,6 +3,7 @@ package no.sigurof.grajuny.resource.material
 import no.sigurof.grajuny.resource.texture.TextureManager
 import no.sigurof.grajuny.resource.texture.TextureResource
 import no.sigurof.grajuny.shader.Shader
+import no.sigurof.grajuny.shader.shaders.PhongBillboardShader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import org.joml.Vector3f
 import org.lwjgl.opengl.GL30
@@ -36,6 +37,9 @@ class PhongMaterial(
 
     override fun render(shader: Shader) {
         if (shader is PhongMeshShader2) {
+            shader.loadMaterial(this)
+        }
+        if (shader is PhongBillboardShader) {
             shader.loadMaterial(this)
         }
     }

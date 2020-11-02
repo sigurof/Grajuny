@@ -2,7 +2,9 @@ package no.sigurof.grajuny.game
 
 import no.sigurof.grajuny.camera.Camera
 import no.sigurof.grajuny.camera.impl.SpaceShipCamera
+import no.sigurof.grajuny.color.WHITE
 import no.sigurof.grajuny.components.MeshRenderer
+import no.sigurof.grajuny.components.SphereBillboardRenderer
 import no.sigurof.grajuny.light.LightManager
 import no.sigurof.grajuny.light.phong.PointLight
 import no.sigurof.grajuny.node.GameObject
@@ -10,6 +12,7 @@ import no.sigurof.grajuny.postprocessing.PostProcessingEffect
 import no.sigurof.grajuny.postprocessing.PostProcessingManager
 import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.resource.texture.TextureManager
+import no.sigurof.grajuny.shader.shaders.PhongBillboardShader
 import no.sigurof.grajuny.shader.shaders.PhongMeshShader2
 import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
@@ -49,6 +52,17 @@ class LightingTestGame(
                     specular = Vector3f(1.5f, 1.5f, 1.5f)
                 )
             )
+        )
+        val earth = SphereBillboardRenderer(
+            material = PhongMaterial(
+                ambient = TextureManager.get("earth512"),
+                diffuse = TextureManager.get("earth512"),
+                specular = TextureManager.get1x1Texture(WHITE),
+                shine = 0.1f
+            ),
+            shadersToUse = listOf(PhongBillboardShader),
+            position = Vector3f(),
+            radius = 2f
         )
         val sunFriend = MeshRenderer(
             material = PhongMaterial(
@@ -94,6 +108,8 @@ class LightingTestGame(
         root.addChild(sunFriendObj)
         root.addChild(sunFriendObj2)
         root.addChild(sunFriendObj3)
+        val earthObj = GameObject.withComponent(earth).at(Vector3f(1f, 1f, 1f)).build()
+        root.addChild(earthObj)
         root.addChild(sphereObj)
         cameras = listOf(
             SpaceShipCamera(
@@ -114,11 +130,11 @@ class LightingTestGame(
         val deltaAngle = deltaTime / 3000f
         angle += deltaAngle
         sphereObj.transform.rotate(Quaternionf().rotateAxis(deltaAngle, Vector3f(0f, 1f, 0f)))
-        if (glfwGetKey(window, GLFW.GLFW_KEY_R) == GLFW_TRUE){
-            sunFriendObj3.transform.translate(Vector3f(0f, 10*deltaAngle, 0f))
+        if (glfwGetKey(window, GLFW.GLFW_KEY_R) == GLFW_TRUE) {
+            sunFriendObj3.transform.translate(Vector3f(0f, 10 * deltaAngle, 0f))
         }
-        if (glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW_TRUE){
-            sunFriendObj3.transform.translate(Vector3f(0f, -10*deltaAngle, 0f))
+        if (glfwGetKey(window, GLFW.GLFW_KEY_C) == GLFW_TRUE) {
+            sunFriendObj3.transform.translate(Vector3f(0f, -10 * deltaAngle, 0f))
         }
 
     }
