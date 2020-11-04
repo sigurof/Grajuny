@@ -30,9 +30,7 @@ abstract class Game(
 
     fun render(shader: Shader) {
         if (shader is LightShader) {
-            LightManager.LIGHT_SOURCES.forEach {
-                it.render(shader)
-            }
+            shader.render(LightManager.LIGHT_SOURCES)
         }
         if (shader is CameraShader) {
             (CameraManager.activeCamera ?: run {

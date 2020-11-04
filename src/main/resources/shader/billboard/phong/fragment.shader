@@ -19,14 +19,18 @@ struct PointLight {
     vec3 specular;
 };
 
-uniform mat4 frPrjMatrix;// TODO Use uniform blocks to share with vertex shader
-uniform mat4 frViewMatrix;
-uniform float frSphereRadius;
-uniform vec3 frCameraPos;
-uniform vec3 frSphereCenter;
+uniform mat4 prjMatrix;// TODO Use uniform blocks to share with vertex shader
+uniform mat4 viewMatrix;
+uniform float sphereRadius;
+uniform vec3 sphereCenter;
+uniform vec3 cameraPos;
 
 uniform Material material;
-uniform PointLight light;
+//uniform PointLight light;
+
+#define MAX_NR_POINT_LIGHTS 10 // can be increased
+uniform PointLight lights[MAX_NR_POINT_LIGHTS];
+uniform int numberOfPointLights;
 
 // Which point on the billboard disk we're at "spherical space"
 in vec2 coord2d;
@@ -48,17 +52,17 @@ out vec4 out_Color;
 float pi = 3.14159265;
 
 vec3 findThePointOnSphereSurface(){
-    vec3 bbdPointToCameraUnit = normalize(frCameraPos - billboardVertexPosition); // Ray
-    vec3 sphereToBbdPoint = billboardVertexPosition - frSphereCenter;
+    vec3 bbdPointToCameraUnit = normalize(cameraPos - billboardVertexPosition); // Ray
+    vec3 sphereToBbdPoint = billboardVertexPosition - sphereCenter;
     float B = 2*dot(bbdPointToCameraUnit, sphereToBbdPoint);
-    float C = dot(sphereToBbdPoint, sphereToBbdPoint) - frSphereRadius*frSphereRadius;
+    float C = dot(sphereToBbdPoint, sphereToBbdPoint) - sphereRadius*sphereRadius;
     float distance = (-B + sqrt(B*B - 4*C))/2;
     return billboardVertexPosition + distance * bbdPointToCameraUnit;
 }
 
 float calculateFragmentDepth(vec3 point){
     // Transforming the point to clip space coordinates
-    vec4 pointInClipSpace = frPrjMatrix * frViewMatrix  * vec4(point, 1.0);
+    vec4 pointInClipSpace = prjMatrix * viewMatrix  * vec4(point, 1.0);
     // Finding the normalized device coordinates depth (z)
     float ndcDepth = pointInClipSpace.z / pointInClipSpace.w;
     // Calculating the depth based on ndc
@@ -79,18 +83,18 @@ vec2 getTextureCoordinatesOfPoint(vec3 point, vec3 sphereCenter, float radius){
     return vec2((frPolarAngles.x+pi)/2/pi, (frPolarAngles.y)/pi);
 }
 
-vec3 calculateAmbientLight(vec2 textureCoordinates){
+vec3 calculateAmbientLight(PointLight light, vec2 textureCoordinates){
     return light.ambient * texture(material.ambient, textureCoordinates).rgb;
 }
 
-vec3 calculateDiffuseLight(vec3 unitNormal, vec3 unitToLight, vec2 textureCoordinates){
+vec3 calculateDiffuseLight(PointLight light, vec3 unitNormal, vec3 unitToLight, vec2 textureCoordinates){
     float nDotL = dot(unitNormal, unitToLight);
     float brightness = max(nDotL, 0.0);
     return light.diffuse * brightness * texture(material.diffuse, textureCoordinates).rgb;
 }
 
-vec3 calculateSpecularLight(vec3 unitNormal, vec3 unitToLight, vec3 fragPosition, vec2 textureCoordinates){
-    vec3 toCameraVec =  frCameraPos - fragPosition.xyz;
+vec3 calculateSpecularLight(PointLight light, vec3 unitNormal, vec3 unitToLight, vec3 fragPosition, vec2 textureCoordinates){
+    vec3 toCameraVec =  cameraPos - fragPosition.xyz;
     vec3 unitVectorToCamera = normalize(toCameraVec);
     vec3 lightDirection = -unitToLight;
     vec3 reflectedLightDir = reflect(lightDirection, unitNormal);
@@ -100,13 +104,13 @@ vec3 calculateSpecularLight(vec3 unitNormal, vec3 unitToLight, vec3 fragPosition
     return light.specular * dampedFactor * texture(material.specular, textureCoordinates).rgb;
 }
 
-vec4 calculatePointLight(vec3 fragPosition, vec2 textureCoordinates){
-    vec3 unitNormal = normalize(fragPosition - frSphereCenter);// Valid because we're dealing with a sphere
+vec4 calculatePointLight(PointLight light, vec3 fragPosition, vec2 textureCoordinates){
+    vec3 unitNormal = normalize(fragPosition - sphereCenter);// Valid because we're dealing with a sphere
     vec3 unitToLight = normalize(light.position - fragPosition);
 
-    vec3 ambient = calculateAmbientLight(textureCoordinates);
-    vec3 diffuse = calculateDiffuseLight(unitNormal, unitToLight, textureCoordinates);
-    vec3 specular = calculateSpecularLight(unitNormal, unitToLight, fragPosition, textureCoordinates);
+    vec3 ambient = calculateAmbientLight(light, textureCoordinates);
+    vec3 diffuse = calculateDiffuseLight(light, unitNormal, unitToLight, textureCoordinates);
+    vec3 specular = calculateSpecularLight(light, unitNormal, unitToLight, fragPosition, textureCoordinates);
 
     float distance = length(light.position - fragPosition.xyz);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
@@ -119,9 +123,13 @@ vec4 calculateSphere(){
     // Writing the appropriate fragment depth value to the depth buffer
     gl_FragDepth = calculateFragmentDepth(fragPosition);
     // Texture
-    vec2 textureCoordinates = getTextureCoordinatesOfPoint(fragPosition, frSphereCenter, frSphereRadius);
+    vec2 textureCoordinates = getTextureCoordinatesOfPoint(fragPosition, sphereCenter, sphereRadius);
 
-    return calculatePointLight(fragPosition, textureCoordinates);
+    vec4 finalColor = vec4(0, 0, 0, 0);
+    for (int i = 0; i< numberOfPointLights; i++){
+        finalColor += calculatePointLight(lights[i], fragPosition, textureCoordinates);
+    }
+    return finalColor;
 }
 
 void main(void){

@@ -1,5 +1,6 @@
 package no.sigurof.grajuny.shader.shaders.phong
 
+import no.sigurof.grajuny.light.Light
 import no.sigurof.grajuny.light.phong.PointLight
 import no.sigurof.grajuny.resource.material.PhongMaterial
 import no.sigurof.grajuny.shader.Shader
@@ -23,17 +24,23 @@ object PhongMeshShader : Shader(
         PRJ_MATRIX,
         VIEW_MATRIX,
         CAMERA_POS,
-        LIGHT_POSITION,
-        LIGHT_AMBIENT,
-        LIGHT_DIFFUSE,
-        LIGHT_SPECULAR,
-        LIGHT_CONSTANT,
-        LIGHT_LINEAR,
-        LIGHT_QUADRATIC,
         MATERIAL_AMBIENT,
         MATERIAL_DIFFUSE,
         MATERIAL_SPECULAR,
-        MATERIAL_SHININESS
+        MATERIAL_SHININESS,
+        NUMBER_OF_POINT_LIGHTS
+    ).plus(
+        (0 until MAX_NR_POINT_LIGHTS).flatMap { i ->
+            listOf(
+                "lights[$i].position",
+                "lights[$i].constant",
+                "lights[$i].linear",
+                "lights[$i].quadratic",
+                "lights[$i].ambient",
+                "lights[$i].diffuse",
+                "lights[$i].specular"
+            )
+        }
     )
 ),
     LightShader,
@@ -56,16 +63,6 @@ object PhongMeshShader : Shader(
         ShaderManager.loadVector3(locations.getValue(CAMERA_POS), cameraPosition)
     }
 
-    fun loadLight(light: PointLight) {
-        ShaderManager.loadVector3(locations.getValue(LIGHT_POSITION), light.position)
-        ShaderManager.loadFloat(locations.getValue(LIGHT_CONSTANT), light.constant)
-        ShaderManager.loadFloat(locations.getValue(LIGHT_LINEAR), light.linear)
-        ShaderManager.loadFloat(locations.getValue(LIGHT_QUADRATIC), light.quadratic)
-        ShaderManager.loadVector3(locations.getValue(LIGHT_AMBIENT), light.ambient)
-        ShaderManager.loadVector3(locations.getValue(LIGHT_DIFFUSE), light.diffuse)
-        ShaderManager.loadVector3(locations.getValue(LIGHT_SPECULAR), light.specular)
-    }
-
     fun loadMaterial(phongMaterial: PhongMaterial) {
         ShaderManager.loadInt(
             locations.getValue(MATERIAL_AMBIENT),
@@ -80,6 +77,24 @@ object PhongMeshShader : Shader(
             phongMaterial.indexToGlTexture["specular"]?.first ?: error("")
         )
         ShaderManager.loadFloat(locations.getValue(MATERIAL_SHININESS), phongMaterial.shininess)
+    }
+
+    fun render(pointLight: PointLight, index: Int) {
+        ShaderManager.loadVector3(locations.getValue("lights[$index].position"), pointLight.position)
+        ShaderManager.loadFloat(locations.getValue("lights[$index].constant"), pointLight.constant)
+        ShaderManager.loadFloat(locations.getValue("lights[$index].linear"), pointLight.linear)
+        ShaderManager.loadFloat(locations.getValue("lights[$index].quadratic"), pointLight.quadratic)
+        ShaderManager.loadVector3(locations.getValue("lights[$index].ambient"), pointLight.ambient)
+        ShaderManager.loadVector3(locations.getValue("lights[$index].diffuse"), pointLight.diffuse)
+        ShaderManager.loadVector3(locations.getValue("lights[$index].specular"), pointLight.specular)
+    }
+
+    override fun render(lights: MutableList<Light>) {
+        val pointLights = lights.filterIsInstance<PointLight>()
+        ShaderManager.loadInt(locations.getValue(NUMBER_OF_POINT_LIGHTS), pointLights.count())
+        pointLights
+            .take(MAX_NR_POINT_LIGHTS)
+            .forEachIndexed { index, pointLight -> render(pointLight, index) }
     }
 
 }

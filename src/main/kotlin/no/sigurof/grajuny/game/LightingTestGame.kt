@@ -17,6 +17,7 @@ import no.sigurof.grajuny.shader.shaders.phong.PhongMeshShader
 import no.sigurof.grajuny.utils.CyclicCounter
 import no.sigurof.grajuny.utils.ORIGIN
 import no.sigurof.grajuny.utils.plus
+import no.sigurof.grajuny.utils.randomVector3f
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import org.joml.Vector4f
@@ -41,17 +42,20 @@ class LightingTestGame(
     init {
         PostProcessingManager.addEffect(PostProcessingEffect())
         LightManager.LIGHT_SOURCES.addAll(
-            listOf(
-                PointLight(
-                    position = Vector3f(0f, 10f, -2f),
-                    constant = 1f,
-                    linear = 0.014f,
-                    quadratic = 0.0007f,
-                    ambient = Vector3f(0.2f, 0.2f, 0.2f),
-                    diffuse = Vector3f(0.8f, 0.8f, 0.8f),
-                    specular = Vector3f(1.5f, 1.5f, 1.5f)
-                )
-            )
+            (0 until 5)
+                .map { randomVector3f(-20f, 20f) }
+                .map {
+                    PointLight(
+                        position = it,
+                        constant = 1f,
+                        linear = 0.014f,
+                        quadratic = 0.0007f,
+                        ambient = Vector3f(0.1f, 0.1f, 0.1f),
+                        diffuse = Vector3f(0.3f, 0.3f, 0.3f),
+                        specular = Vector3f(1f, 1f, 1f)
+                    )
+                }
+
         )
         val earth = SphereBillboardRenderer(
             material = PhongMaterial(

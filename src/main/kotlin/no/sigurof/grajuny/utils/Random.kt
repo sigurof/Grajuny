@@ -12,6 +12,14 @@ fun randomDirection(): Vector3f {
     ).normalize()
 }
 
+fun randomVector3f(min: Float, max: Float) : Vector3f{
+    return Vector3f(
+        randomFloatBetween(min, max),
+        randomFloatBetween(min, max),
+        randomFloatBetween(min, max)
+    )
+}
+
 fun randomEulerAngles(): Vector3f {
     return Vector3f(
         randomFloatBetween(0f, 2f * 3.14159265f),
@@ -23,3 +31,4 @@ fun randomEulerAngles(): Vector3f {
 fun randomFloatBetween(min: Float, max: Float): Float {
     return min + Random.nextFloat() * (max - min)
 }
+

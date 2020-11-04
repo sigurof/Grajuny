@@ -28,19 +28,22 @@ out vec4 out_Color;
 
 uniform vec3 cameraPos;
 uniform Material material;
-uniform PointLight light;
 
-vec3 calculateAmbientLight(){
+#define MAX_NR_POINT_LIGHTS 10 // can be increased
+uniform PointLight lights[MAX_NR_POINT_LIGHTS];
+uniform int numberOfPointLights;
+
+vec3 calculateAmbientLight(PointLight light){
     return light.ambient * texture(material.ambient, passTextureCoords).rgb;
 }
 
-vec3 calculateDiffuseLight(vec3 unitNormal, vec3 unitToLight){
+vec3 calculateDiffuseLight(PointLight light, vec3 unitNormal, vec3 unitToLight){
     float nDotL = dot(unitNormal, unitToLight);
     float brightness = max(nDotL, 0.0);
     return light.diffuse * brightness * texture(material.diffuse, passTextureCoords).rgb;
 }
 
-vec3 calculateSpecularLight(vec3 unitNormal, vec3 unitToLight){
+vec3 calculateSpecularLight(PointLight light, vec3 unitNormal, vec3 unitToLight){
     vec3 toCameraVec =  cameraPos - worldPos.xyz;
     vec3 unitVectorToCamera = normalize(toCameraVec);
     vec3 lightDirection = -unitToLight;
@@ -52,14 +55,14 @@ vec3 calculateSpecularLight(vec3 unitNormal, vec3 unitToLight){
 }
 
 
-vec4 calculatePointLight(){
+vec4 calculatePointLight(PointLight light){
     vec3 toLightVec = light.position - worldPos.xyz;
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitToLight = normalize(toLightVec);
 
-    vec3 ambient = calculateAmbientLight();
-    vec3 diffuse = calculateDiffuseLight(unitNormal, unitToLight);
-    vec3 specular = calculateSpecularLight(unitNormal, unitToLight);
+    vec3 ambient = calculateAmbientLight(light);
+    vec3 diffuse = calculateDiffuseLight(light, unitNormal, unitToLight);
+    vec3 specular = calculateSpecularLight(light, unitNormal, unitToLight);
 
     float distance = length(light.position - worldPos.xyz);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
@@ -67,7 +70,16 @@ vec4 calculatePointLight(){
     return vec4((ambient + diffuse + specular)*attenuation, 1);
 }
 
+vec4 caluclatePointLights(){
+    vec4 finalColor = vec4(0, 0 , 0, 0);
+    for (int i = 0; i < numberOfPointLights; i++){
+        finalColor += calculatePointLight(lights[i]);
+    }
+    return finalColor;
+}
+
 void main(void){
 
-    out_Color = calculatePointLight();
+
+    out_Color = caluclatePointLights();
 }
